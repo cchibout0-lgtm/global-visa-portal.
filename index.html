@@ -1,238 +1,527 @@
 <!DOCTYPE html>
-<html lang="en" id="htmlRoot" dir="ltr">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Visa & Career Portal 2026</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Global Visa Portal - Worldwide Visa Statistics & Requirements</title>
+    <!-- Google Fonts & Icons & Chart.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .hero-bg {
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+        :root {
+            --primary: #1e3a8a;
+            --secondary: #3b82f6;
+            --accent: #10b981;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 900;
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 3rem;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            outline: none;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: all 0.3s;
+        }
+        .search-box input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .search-box i {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+        .countries-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .country-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+        .country-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .country-header {
+            background: #f1f5f9;
+            padding: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .country-flag {
+            font-size: 2.5rem;
+        }
+        .country-title h3 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        .country-title span {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        .country-body {
+            padding: 1.2rem;
+        }
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        .stat-row span:last-child {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .badge {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .badge-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .btn-details {
+            display: block;
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--secondary);
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .btn-details:hover {
+            background: var(--primary);
+        }
+        /* Modal Window */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 20px;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.2rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #64748b;
+            background: #f1f5f9;
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .close-modal:hover {
+            background: #e2e8f0;
+            color: #ef4444;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+        .chart-container {
+            position: relative;
+            margin: 1.5rem 0;
+            height: 250px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .info-box {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        .info-box h4 {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 0.3rem;
+        }
+        .info-box p {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #64748b;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+<body>
 
-    <!-- Header & Language Switcher -->
-    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 border-b border-slate-800">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2 space-x-reverse">
-                <span class="text-2xl">🌍</span>
-                <span class="font-bold text-lg tracking-wide">VisaPortal Pro</span>
-            </div>
-            
-            <!-- Language Selector -->
-            <div>
-                <select id="langSelect" onchange="changeLanguage()" class="bg-slate-800 text-white text-sm px-3 py-1.5 rounded-lg border border-slate-700 focus:outline-none">
-                    <option value="en">English</option>
-                    <option value="fr">Français</option>
-                    <option value="ar">العربية</option>
-                    <option value="es">Español</option>
-                    <option value="pt">Português</option>
-                </select>
-            </div>
-        </div>
+    <header>
+        <h1>Global Visa Portal & Statistics</h1>
+        <p>Comprehensive platform for worldwide visa statistics, fees, and requirements</p>
     </header>
 
-    <!-- Hero Section -->
-    <section class="hero-bg text-white py-16 px-4 text-center">
-        <div class="max-w-2xl mx-auto">
-            <h1 id="heroTitle" class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">Check Your Visa & Work Opportunities Worldwide</h1>
-            <p id="heroDesc" class="text-slate-300 text-sm md:text-base mb-8">Select your target country and goal to get instant requirements, cost estimates, and direct official application links.</p>
-        </div>
-    </section>
-
-    <!-- Interactive Form Container -->
-    <main class="container mx-auto px-4 -mt-10 mb-12 max-w-2xl relative z-10">
-        <div class="bg-white shadow-2xl rounded-3xl p-6 md:p-8 border border-slate-100">
-            <form id="visaForm" class="space-y-5">
-                <div>
-                    <label id="lblCountry" class="block text-sm font-semibold text-slate-700 mb-2">Target Country:</label>
-                    <select id="destination" class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:outline-none bg-slate-50 font-medium">
-                        <option value="usa">🇺🇸 United States (USA)</option>
-                        <option value="canada">🇨🇦 Canada</option>
-                        <option value="germany">🇩🇪 Germany</option>
-                        <option value="france">🇫🇷 France</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label id="lblGoal" class="block text-sm font-semibold text-slate-700 mb-2">Goal / Visa Type:</label>
-                    <select id="purpose" class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:outline-none bg-slate-50 font-medium">
-                        <option value="work">Work Visa / Employment</option>
-                        <option value="study">Study / University</option>
-                    </select>
-                </div>
-
-                <button type="button" onclick="calculatePlan()" id="btnCalculate" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-indigo-600/30 text-base">
-                    Calculate & Show Official Portal 🚀
-                </button>
-            </form>
-
-            <!-- Results Panel -->
-            <div id="resultsSection" class="hidden mt-8 pt-6 border-t border-slate-100 space-y-6">
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">💰 Estimated First-Year Cost:</h3>
-                    <p id="costResult" class="p-4 bg-indigo-50 text-indigo-900 rounded-xl font-semibold border border-indigo-100"></p>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">📁 Mandatory Requirements:</h3>
-                    <ul id="docsList" class="list-disc list-inside space-y-2 text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-200"></ul>
-                </div>
-
-                <!-- Direct Official Link Action -->
-                <div class="p-5 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-3">
-                    <p id="txtReady" class="text-sm font-semibold text-blue-900">Ready to apply? Access the official government portal directly:</p>
-                    <a id="officialLink" href="#" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition shadow-md">
-                        🌐 Open Official Application Site
-                    </a>
-                </div>
-
-                <!-- Lead Generation / Customer Support -->
-                <div class="p-5 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-3">
-                    <p id="txtHelp" class="text-sm font-medium text-emerald-900">Need professional assistance or someone to fill the application for you?</p>
-                    <a id="whatsappLink" href="https://wa.me/yourphonenumber" target="_blank" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition shadow-md">
-                        💬 Request Expert Assistance via WhatsApp
-                    </a>
-                </div>
+    <div class="container">
+        <div class="search-filter">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchCountry" placeholder="Search country (e.g. United States, Canada, France...)" onkeyup="filterCountries()">
             </div>
         </div>
-    </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs">
-        <p>© 2026 Global Visa Portal. All official trademarks belong to their respective governments.</p>
+        <div class="countries-grid" id="countriesGrid">
+            <!-- Dynamic country cards will load here -->
+        </div>
+    </div>
+
+    <!-- Country Details & Statistics Modal -->
+    <div class="modal" id="countryModal">
+        <div class="modal-content">
+            <div class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></div>
+            <div id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>All Rights Reserved &copy; 2026 - Global Visa Portal</p>
     </footer>
 
-    <!-- Multi-Language & Logic Engine -->
     <script>
-        const translations = {
-            en: {
-                heroTitle: "Check Your Visa & Work Opportunities Worldwide",
-                heroDesc: "Select your target country and goal to get instant requirements, cost estimates, and direct official application links.",
-                lblCountry: "Target Country:",
-                lblGoal: "Goal / Visa Type:",
-                btnCalculate: "Calculate & Show Official Portal 🚀",
-                txtReady: "Ready to apply? Access the official government portal directly:",
-                officialBtn: "🌐 Open Official Application Site",
-                txtHelp: "Need professional assistance or someone to fill the application for you?",
-                whatsappBtn: "💬 Request Expert Assistance via WhatsApp"
+        // Comprehensive database of countries, visas, and statistical data in English
+        const countriesData = [
+            {
+                id: "usa",
+                name: "United States",
+                nameEn: "USA - North America",
+                flag: "🇺🇸",
+                visaType: "Tourist / Business Visa (B1/B2)",
+                fee: "$185 USD",
+                processingTime: "3 to 6 weeks",
+                approvalRate: "78%",
+                successColor: "badge-success",
+                requirements: [
+                    "Complete online Form DS-160",
+                    "Pay the visa application fee ($185)",
+                    "Schedule an interview at the U.S. Embassy",
+                    "Valid passport for at least 6 months",
+                    "Recent passport-sized photograph"
+                ],
+                stats: {
+                    labels: ['2023', '2024', '2025', '2026'],
+                    data: [72, 75, 77, 78]
+                },
+                officialSite: "https://travel.state.gov"
             },
-            fr: {
-                heroTitle: "Vérifiez vos opportunités de visa et de travail dans le monde",
-                heroDesc: "Sélectionnez votre pays cible pour obtenir les exigences, les coûts et les liens officiels de demande.",
-                lblCountry: "Pays cible :",
-                lblGoal: "Objectif / Type de visa :",
-                btnCalculate: "Calculer et afficher le portail officiel 🚀",
-                txtReady: "Prêt à postuler ? Accédez directement au portail gouvernemental officiel :",
-                officialBtn: "🌐 Ouvrir le site officiel de candidature",
-                txtHelp: "Besoin d'aide professionnelle ou de quelqu'un pour remplir votre dossier ?",
-                whatsappBtn: "💬 Demander une assistance via WhatsApp"
+            {
+                id: "canada",
+                name: "Canada",
+                nameEn: "Canada - North America",
+                flag: "🇨🇦",
+                visaType: "Temporary Resident Visa (Visitor)",
+                fee: "$185 CAD (~$135 USD)",
+                processingTime: "4 to 8 weeks",
+                approvalRate: "62%",
+                successColor: "badge",
+                requirements: [
+                    "Create an IRCC secure online account",
+                    "Proof of financial support and bank statements",
+                    "Employment letter or strong ties to home country",
+                    "Medical exam (if required)",
+                    "Biometrics collection (Fingerprints)"
+                ],
+                stats: {
+                    labels: ['2023', '2024', '2025', '2026'],
+                    data: [58, 60, 61, 62]
+                },
+                officialSite: "https://www.cic.gc.ca"
             },
-            ar: {
-                heroTitle: "تحقق من فرص التأشيرة والعمل في جميع أنحاء العالم",
-                heroDesc: "اختر دولتك المستهدفة وهدفك لتحصل فوراً على المتطلبات، التكاليف التقديرية، وروابط التسجيل الرسمية المباشرة.",
-                lblCountry: "الدولة المستهدفة:",
-                lblGoal: "الهدف / نوع التأشيرة:",
-                btnCalculate: "احسب واعرض البوابة الرسمية 🚀",
-                txtReady: "هل أنت مستعد للتسجيل؟ ادخل مباشرة إلى الموقع الحكومي الرسمي:",
-                officialBtn: "🌐 فتح موقع التسجيل الرسمي المباشر",
-                txtHelp: "هل تحتاج إلى مساعدة احترافية أو شخص يتابع معك ملف التسجيل خطوة بخطوة؟",
-                whatsappBtn: "💬 اطلب المساعدة المباشرة عبر واتساب"
+            {
+                id: "france",
+                name: "France (Schengen)",
+                nameEn: "France - Europe",
+                flag: "🇫🇷",
+                visaType: "Short-Stay Schengen Visa",
+                fee: "€80 EUR (~$87 USD)",
+                processingTime: "15 to 21 days",
+                approvalRate: "83%",
+                successColor: "badge-success",
+                requirements: [
+                    "Completed uniform Schengen visa application form",
+                    "Travel medical insurance covering €30,000",
+                    "Confirmed hotel booking or proof of accommodation",
+                    "Flight reservation itinerary",
+                    "Proof of sufficient financial resources"
+                ],
+                stats: {
+                    labels: ['2023', '2024', '2025', '2026'],
+                    data: [80, 81, 82, 83]
+                },
+                officialSite: "https://france-visas.gouv.fr"
             },
-            es: {
-                heroTitle: "Verifique sus oportunidades de visa y trabajo en todo el mundo",
-                heroDesc: "Seleccione su país de destino para obtener requisitos, costos y enlaces oficiales de solicitud.",
-                lblCountry: "País de destino:",
-                lblGoal: "Objetivo / Tipo de visa:",
-                btnCalculate: "Calcular y mostrar el portal oficial 🚀",
-                txtReady: "¿Listo para postularse? Acceda directamente al portal oficial del gobierno:",
-                officialBtn: "🌐 Abrir sitio web oficial de solicitud",
-                txtHelp: "¿Necesita asistencia profesional o ayuda con su solicitud?",
-                whatsappBtn: "💬 Solicitar asistencia por WhatsApp"
-            },
-            pt: {
-                heroTitle: "Verifique suas oportunidades de visto e trabalho em todo o mundo",
-                heroDesc: "Selecione seu país de destino para obter requisitos, custos e links oficiais de inscrição.",
-                lblCountry: "País de destino:",
-                lblGoal: "Objetivo / Tipo de Visto:",
-                btnCalculate: "Calcular e Mostrar o Portal Oficial 🚀",
-                txtReady: "Pronto para se inscrever? Acesse o portal oficial do governo diretamente:",
-                officialBtn: "🌐 Abrir Site Oficial de Inscrição",
-                txtHelp: "Precisa de assistência profissional ou ajuda para preencher sua inscrição?",
-                whatsappBtn: "💬 Solicitar Assistência via WhatsApp"
+            {
+                id: "uk",
+                name: "United Kingdom",
+                nameEn: "UK - Europe",
+                flag: "🇬🇧",
+                visaType: "Standard Visitor Visa",
+                fee: "£115 GBP (~$145 USD)",
+                processingTime: "3 to 4 weeks",
+                approvalRate: "85%",
+                successColor: "badge-success",
+                requirements: [
+                    "Online application via UK GOV portal",
+                    "Valid passport and translated supporting documents",
+                    "Bank statements for the past 6 months",
+                    "Employment or income proof details"
+                ],
+                stats: {
+                    labels: ['2023', '2024', '2025', '2026'],
+                    data: [82, 83, 84, 85]
+                },
+                officialSite: "https://www.gov.uk/standard-visitor"
             }
-        };
+        ];
 
-        function changeLanguage() {
-            const lang = document.getElementById('langSelect').value;
-            const root = document.getElementById('htmlRoot');
+        let activeChart = null;
+
+        function renderCountries(list) {
+            const grid = document.getElementById('countriesGrid');
+            grid.innerHTML = '';
             
-            if (lang === 'ar') {
-                root.setAttribute('dir', 'rtl');
-                root.setAttribute('lang', 'ar');
-            } else {
-                root.setAttribute('dir', 'ltr');
-                root.setAttribute('lang', lang);
-            }
-
-            document.getElementById('heroTitle').innerText = translations[lang].heroTitle;
-            document.getElementById('heroDesc').innerText = translations[lang].heroDesc;
-            document.getElementById('lblCountry').innerText = translations[lang].lblCountry;
-            document.getElementById('lblGoal').innerText = translations[lang].lblGoal;
-            document.getElementById('btnCalculate').innerText = translations[lang].btnCalculate;
-            document.getElementById('txtReady').innerText = translations[lang].txtReady;
-            document.getElementById('officialLink').innerText = translations[lang].officialBtn;
-            document.getElementById('txtHelp').innerText = translations[lang].txtHelp;
-            document.getElementById('whatsappLink').innerText = translations[lang].whatsappBtn;
-        }
-
-        const officialPortals = {
-            usa: "https://travel.state.gov",
-            canada: "https://www.canada.ca/en/services/immigration-citizenship.html",
-            germany: "https://www.make-it-in-germany.com",
-            france: "https://france-visas.gouv.fr"
-        };
-
-        function calculatePlan() {
-            const dest = document.getElementById('destination').value;
-            const resultsSection = document.getElementById('resultsSection');
-            const costResult = document.getElementById('costResult');
-            const docsList = document.getElementById('docsList');
-            const officialLink = document.getElementById('officialLink');
-
-            // Set official direct link based on destination
-            officialLink.href = officialPortals[dest];
-
-            let costText = "Estimated First-Year Budget: ~$12,000 - $15,000 USD equivalent.";
-            let docs = [
-                "Valid International Passport",
-                "Official Language Proficiency Test (IELTS/TCF)",
-                "Academic Transcripts or Professional Certificates",
-                "Proof of Financial Support / Bank Statement"
-            ];
-
-            if (dest === 'germany') {
-                costText = "Blocked Account (Sperrkonto): ~11,200 EUR per year.";
-            } else if (dest === 'usa') {
-                costText = "Visa Application Fees & Living Expenses: ~$15,000+ USD.";
-            }
-
-            costResult.innerText = costText;
-            docsList.innerHTML = "";
-            docs.forEach(d => {
-                let li = document.createElement('li');
-                li.innerText = d;
-                docsList.appendChild(li);
+            list.forEach(country => {
+                const card = document.createElement('div');
+                card.className = 'country-card';
+                card.onclick = () => openCountryModal(country.id);
+                
+                card.innerHTML = `
+                    <div class="country-header">
+                        <div class="country-flag">${country.flag}</div>
+                        <div class="country-title">
+                            <h3>${country.name}</h3>
+                            <span>${country.nameEn}</span>
+                        </div>
+                    </div>
+                    <div class="country-body">
+                        <div class="stat-row">
+                            <span>Visa Type:</span>
+                            <span style="font-size:0.85rem; color:var(--secondary);">${country.visaType}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Estimated Fee:</span>
+                            <span>${country.fee}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Approval Rate:</span>
+                            <span class="badge ${country.successColor}">${country.approvalRate}</span>
+                        </div>
+                        <button class="btn-details">View Statistics & Requirements <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                `;
+                grid.appendChild(card);
             });
-
-            resultsSection.classList.remove('hidden');
-            resultsSection.scrollIntoView({ behavior: 'smooth' });
         }
+
+        function filterCountries() {
+            const query = document.getElementById('searchCountry').value.toLowerCase();
+            const filtered = countriesData.filter(c => 
+                c.name.toLowerCase().includes(query) || 
+                c.nameEn.toLowerCase().includes(query)
+            );
+            renderCountries(filtered);
+        }
+
+        function openCountryModal(id) {
+            const country = countriesData.find(c => c.id === id);
+            const modalBody = document.getElementById('modalBody');
+            
+            modalBody.innerHTML = `
+                <div class="modal-header">
+                    <span style="font-size: 3rem;">${country.flag}</span>
+                    <div>
+                        <h2>${country.name} (${country.nameEn})</h2>
+                        <p style="color: #64748b;">${country.visaType}</p>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h4>Official Visa Fee</h4>
+                        <p>${country.fee}</p>
+                    </div>
+                    <div class="info-box">
+                        <h4>Processing Time</h4>
+                        <p>${country.processingTime}</p>
+                    </div>
+                    <div class="info-box">
+                        <h4>Current Approval Rate</h4>
+                        <p style="color: var(--accent);">${country.approvalRate}</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; color: var(--primary);">📊 Historical Approval Rate Trend</h3>
+                <div class="chart-container">
+                    <canvas id="approvalChart"></canvas>
+                </div>
+
+                <h3 style="margin-top: 1.5rem; color: var(--primary);">📋 Core Requirements</h3>
+                <ul style="margin: 0.8rem 0 1.5rem 1.5rem; line-height: 1.8;">
+                    ${country.requirements.map(req => `<li>${req}</li>`).join('')}
+                </ul>
+
+                <a href="${country.officialSite}" target="_blank" class="btn-details" style="display: block; text-align: center; background: var(--primary);">
+                    <i class="fas fa-external-link-alt"></i> Visit Official Government Portal
+                </a>
+            `;
+
+            document.getElementById('countryModal').style.display = 'flex';
+
+            // Render Chart
+            const ctx = document.getElementById('approvalChart').getContext('2d');
+            if (activeChart) {
+                activeChart.destroy();
+            }
+            activeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: country.stats.labels,
+                    datasets: [{
+                        label: 'Approval Rate (%)',
+                        data: country.stats.data,
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 50,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('countryModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('countryModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Initialize grid
+        renderCountries(countriesData);
     </script>
 </body>
 </html>
