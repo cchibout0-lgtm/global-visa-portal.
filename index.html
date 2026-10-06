@@ -1,267 +1,903 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Visa Portal & Advanced Intelligence Hub</title>
-    <!-- Tailwind CSS CDN for elite styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .hero-bg {
-            background: linear-gradient(135deg, rgba(30, 27, 75, 0.9), rgba(79, 70, 229, 0.85)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
-        }
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobalVisa Pro — Intelligence & Immigration Hub</title>
+<meta name="description" content="Explore visa pathways, estimate fees, and check requirements for 190+ countries.">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<script>
+tailwind.config = {
+  darkMode: 'class',
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+      colors: {
+        brand: {
+          50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',
+          400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',
+          800:'#3730a3',900:'#312e81',950:'#1e1b4b',
+        },
+      },
+      animation: {
+        'fade-in': 'fadeIn .35s ease-out both',
+        'slide-up': 'slideUp .5s cubic-bezier(.16,1,.3,1) both',
+        'pop': 'pop .25s ease-out both',
+        'shimmer': 'shimmer 2s linear infinite',
+      },
+      keyframes: {
+        fadeIn: { from:{opacity:0}, to:{opacity:1} },
+        slideUp: { from:{opacity:0, transform:'translateY(16px)'}, to:{opacity:1, transform:'translateY(0)'} },
+        pop: { from:{opacity:0, transform:'scale(.96)'}, to:{opacity:1, transform:'scale(1)'} },
+        shimmer: { to:{backgroundPosition:'200% center'} },
+      },
+    },
+  },
+};
+</script>
+
+<style>
+  html { -webkit-tap-highlight-color: transparent; }
+  body { font-feature-settings: "cv02","cv03","cv04","cv11"; }
+
+  /* Hero grid overlay */
+  .hero-grid::before {
+    content:''; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+    pointer-events: none;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(99,102,241,.4); border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,.7); }
+  .dark ::-webkit-scrollbar-thumb { background: rgba(129,140,248,.35); }
+
+  /* Dialog styling */
+  dialog::backdrop {
+    background: rgba(15,23,42,.65);
+    backdrop-filter: blur(6px);
+  }
+  dialog[open] { animation: pop .25s ease-out; }
+
+  /* Reveal on scroll */
+  .reveal { opacity:0; transform: translateY(20px); transition: opacity .7s ease, transform .7s cubic-bezier(.16,1,.3,1); }
+  .reveal.in { opacity:1; transform: none; }
+
+  /* Range slider */
+  input[type="range"] { accent-color: #4f46e5; }
+
+  /* Hide scrollbar for tab strip */
+  .no-scrollbar::-webkit-scrollbar { display:none; }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Top Navigation -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="w-11 h-11 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md shadow-indigo-200">
-                    <i class="fa-solid fa-earth-americas text-xl"></i>
-                </div>
-                <div>
-                    <span class="text-xl font-extrabold bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">GlobalVisa Pro</span>
-                    <span class="block text-xs font-medium text-slate-400">Intelligence & Immigration Hub</span>
-                </div>
-            </div>
-            
-            <!-- Navigation Links -->
-            <nav class="hidden md:flex items-center space-x-1 font-medium text-sm">
-                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2 rounded-lg text-indigo-600 bg-indigo-50 transition"><i class="fa-solid fa-house mr-2"></i>Home</button>
-                <button onclick="switchTab('visas')" id="nav-visas" class="nav-btn px-4 py-2 rounded-lg text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition"><i class="fa-solid fa-passport mr-2"></i>Visa Types</button>
-                <button onclick="switchTab('calculator')" id="nav-calculator" class="nav-btn px-4 py-2 rounded-lg text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition"><i class="fa-solid fa-calculator mr-2"></i>Fee & Success Calculator</button>
-                <button onclick="switchTab('requirements')" id="nav-requirements" class="nav-btn px-4 py-2 rounded-lg text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition"><i class="fa-solid fa-list-check mr-2"></i>Requirements Hub</button>
-            </nav>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 font-sans antialiased min-h-screen flex flex-col transition-colors duration-300">
 
-            <div class="flex items-center space-x-3">
-                <button onclick="switchTab('calculator')" class="hidden sm:inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md shadow-indigo-200 transition">
-                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>Check Eligibility
-                </button>
-                <button onclick="toggleMobileMenu()" class="md:hidden text-slate-700 p-2 focus:outline-none">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-4 space-y-1">
-            <button onclick="switchTab('home'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Home</button>
-            <button onclick="switchTab('visas'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Visa Types</button>
-            <button onclick="switchTab('calculator'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Calculator</button>
-            <button onclick="switchTab('requirements'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded-md font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Requirements</button>
-        </div>
-    </header>
+<!-- ============ HEADER ============ -->
+<header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200/70 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
 
-    <!-- Main Dynamic Content Area -->
-    <main class="flex-grow">
+    <!-- Logo -->
+    <a href="#" onclick="switchTab('home'); return false;" class="flex items-center gap-3 group shrink-0">
+      <div class="w-10 h-10 md:w-11 md:h-11 rounded-2xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 group-hover:scale-105 transition">
+        <i class="fa-solid fa-earth-americas"></i>
+      </div>
+      <div class="hidden sm:block leading-tight">
+        <div class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-brand-600 to-violet-600 dark:from-brand-400 dark:to-violet-400 bg-clip-text text-transparent">GlobalVisa Pro</div>
+        <div class="text-[11px] font-medium text-slate-400">Intelligence Hub</div>
+      </div>
+    </a>
 
-        <!-- ================= 1. HOME TAB ================= -->
-        <div id="tab-home" class="tab-content active">
-            <!-- Hero Section -->
-            <div class="hero-bg text-white py-24 px-4 sm:px-6 lg:px-8 text-center relative overflow-hidden">
-                <div class="max-w-4xl mx-auto space-y-6 relative z-10">
-                    <span class="inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 backdrop-blur-md">
-                        <i class="fa-solid fa-star mr-1.5 text-amber-400"></i> Welcome to the Ultimate Global Visa & Migration Portal
-                    </span>
-                    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
-                        Your Gateway to <span class="text-indigo-300">Global Opportunities</span>
-                    </h1>
-                    <p class="text-lg sm:text-xl text-slate-200 max-w-2xl mx-auto font-light">
-                        Explore comprehensive visa pathways, calculate processing fees and approval rates, and discover step-by-step requirements for work, study, tourism, and permanent residency.
-                    </p>
-                    
-                    <!-- Search Bar in Hero -->
-                    <div class="pt-4 max-w-2xl mx-auto">
-                        <div class="glass-card p-2 rounded-2xl shadow-2xl flex items-center">
-                            <i class="fa-solid fa-magnifying-glass text-slate-400 ml-4 text-lg"></i>
-                            <input type="text" id="homeSearchInput" oninput="filterDestinations(this.value)" placeholder="Search country (e.g. United States, Canada, France, Germany...)" class="w-full bg-transparent px-4 py-3 text-slate-800 placeholder-slate-400 focus:outline-none text-base">
-                            <button onclick="switchTab('visas')" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold transition shrink-0 shadow-md">
-                                Explore
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Desktop Nav -->
+    <nav class="hidden lg:flex items-center gap-1 text-sm font-medium" role="tablist" aria-label="Main navigation">
+      <button role="tab" aria-selected="true" data-nav="home" onclick="switchTab('home')" class="nav-btn px-4 py-2 rounded-xl transition"><i class="fa-solid fa-house mr-2 opacity-70"></i>Home</button>
+      <button role="tab" aria-selected="false" data-nav="visas" onclick="switchTab('visas')" class="nav-btn px-4 py-2 rounded-xl transition"><i class="fa-solid fa-passport mr-2 opacity-70"></i>Visas</button>
+      <button role="tab" aria-selected="false" data-nav="calculator" onclick="switchTab('calculator')" class="nav-btn px-4 py-2 rounded-xl transition"><i class="fa-solid fa-calculator mr-2 opacity-70"></i>Calculator</button>
+      <button role="tab" aria-selected="false" data-nav="requirements" onclick="switchTab('requirements')" class="nav-btn px-4 py-2 rounded-xl transition"><i class="fa-solid fa-list-check mr-2 opacity-70"></i>Checklist</button>
+    </nav>
 
-            <!-- Quick Stats & Highlights -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 relative z-20 mb-16">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100 flex items-center space-x-4">
-                        <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-2xl font-bold">
-                            <i class="fa-solid fa-passport"></i>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-extrabold text-slate-900">190+</div>
-                            <div class="text-sm font-medium text-slate-500">Countries & Territories</div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100 flex items-center space-x-4">
-                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl font-bold">
-                            <i class="fa-solid fa-chart-line"></i>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-extrabold text-slate-900">85% Avg</div>
-                            <div class="text-sm font-medium text-slate-500">Calculated Approval Success</div>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-2xl p-6 shadow-xl border border-slate-100 flex items-center space-x-4">
-                        <div class="w-14 h-14 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center text-2xl font-bold">
-                            <i class="fa-solid fa-calculator"></i>
-                        </div>
-                        <div>
-                            <div class="text-2xl font-extrabold text-slate-900">Instant</div>
-                            <div class="text-sm font-medium text-slate-500">Fee & Eligibility Calculator</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Actions -->
+    <div class="flex items-center gap-2">
+      <button onclick="toggleTheme()" aria-label="Toggle theme"
+              class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition">
+        <i id="themeIcon" class="fa-solid fa-moon text-slate-700 dark:text-amber-300"></i>
+      </button>
+      <button onclick="switchTab('calculator')" class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-lg shadow-brand-600/25 transition">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>Check
+      </button>
+      <button onclick="toggleMobileMenu()" aria-label="Open menu"
+              class="lg:hidden w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
 
-            <!-- Featured Visa Categories Preview -->
-            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
-                    <div>
-                        <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Pathways</span>
-                        <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Popular Visa Categories</h2>
-                    </div>
-                    <button onclick="switchTab('visas')" class="mt-4 md:mt-0 text-indigo-600 hover:text-indigo-700 font-semibold flex items-center group">
-                        View all categories <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition"></i>
-                    </button>
-                </div>
+  <!-- Mobile menu -->
+  <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 space-y-1">
+    <button onclick="switchTab('home');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Home</button>
+    <button onclick="switchTab('visas');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Visas</button>
+    <button onclick="switchTab('calculator');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Calculator</button>
+    <button onclick="switchTab('requirements');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Checklist</button>
+  </div>
+</header>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Work Visa -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 group hover:shadow-2xl transition duration-300">
-                        <div class="h-48 overflow-hidden relative">
-                            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=800&q=80" alt="Work Visa" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <div class="absolute top-4 right-4 bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Work & Career</div>
-                        </div>
-                        <div class="p-6 space-y-4">
-                            <h3 class="text-xl font-bold text-slate-900">Work & Employment Visas</h3>
-                            <p class="text-slate-600 text-sm">Secure sponsored employment, skilled worker permits, and digital nomad visas across top global economies.</p>
-                            <div class="pt-2 flex items-center justify-between text-sm">
-                                <span class="font-semibold text-indigo-600">Avg. Processing: 4-12 wks</span>
-                                <button onclick="switchTab('visas')" class="px-4 py-2 bg-indigo-50 text-indigo-600 font-semibold rounded-xl hover:bg-indigo-600 hover:text-white transition">Explore</button>
-                            </div>
-                        </div>
-                    </div>
+<!-- ============ MAIN ============ -->
+<main class="flex-grow">
 
-                    <!-- Study Visa -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 group hover:shadow-2xl transition duration-300">
-                        <div class="h-48 overflow-hidden relative">
-                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80" alt="Study Visa" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <div class="absolute top-4 right-4 bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Education</div>
-                        </div>
-                        <div class="p-6 space-y-4">
-                            <h3 class="text-xl font-bold text-slate-900">Student & Academic Visas</h3>
-                            <p class="text-slate-600 text-sm">Pursue higher education degrees, language courses, and research fellowships with post-graduation work rights.</p>
-                            <div class="pt-2 flex items-center justify-between text-sm">
-                                <span class="font-semibold text-emerald-600">Avg. Processing: 6-8 wks</span>
-                                <button onclick="switchTab('visas')" class="px-4 py-2 bg-emerald-50 text-emerald-600 font-semibold rounded-xl hover:bg-emerald-600 hover:text-white transition">Explore</button>
-                            </div>
-                        </div>
-                    </div>
+  <!-- ====== HOME ====== -->
+  <section id="tab-home" class="tab-panel">
+    <!-- Hero -->
+    <div class="hero-grid relative overflow-hidden bg-slate-900 dark:bg-slate-950">
+      <div class="absolute inset-0 bg-gradient-to-br from-brand-950 via-slate-900 to-violet-950"></div>
+      <div class="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-brand-500/20 blur-3xl"></div>
+      <div class="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-violet-500/20 blur-3xl"></div>
 
-                    <!-- Tourist Visa -->
-                    <div class="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 group hover:shadow-2xl transition duration-300">
-                        <div class="h-48 overflow-hidden relative">
-                            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80" alt="Tourist Visa" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                            <div class="absolute top-4 right-4 bg-violet-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">Tourism</div>
-                        </div>
-                        <div class="p-6 space-y-4">
-                            <h3 class="text-xl font-bold text-slate-900">Tourist & Visitor Visas</h3>
-                            <p class="text-slate-600 text-sm">Fast-track visitor visas, Schengen entries, and electronic travel authorizations (ESTA/ETA) for vacations and family visits.</p>
-                            <div class="pt-2 flex items-center justify-between text-sm">
-                                <span class="font-semibold text-violet-600">Avg. Processing: 2-4 wks</span>
-                                <button onclick="switchTab('visas')" class="px-4 py-2 bg-violet-50 text-violet-600 font-semibold rounded-xl hover:bg-violet-600 hover:text-white transition">Explore</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+      <div class="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center text-white">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-white/10 text-white/90 border border-white/15 backdrop-blur">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+          </span>
+          Live data · 190+ destinations
         </div>
 
-        <!-- ================= 2. VISA TYPES TAB ================= -->
-        <div id="tab-visas" class="tab-content py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-xs font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">Global Database</span>
-                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Comprehensive Visa Categories & Requirements</h1>
-                <p class="text-slate-600 mt-2">Filter and inspect detailed requirements, estimated fees, and approval rates for top destination countries.</p>
+        <h1 class="mt-6 text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-[1.1]">
+          Your Gateway to
+          <span class="bg-gradient-to-r from-brand-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">Global Opportunities</span>
+        </h1>
+
+        <p class="mt-6 text-base sm:text-lg text-slate-300 max-w-2xl mx-auto">
+          Explore visa pathways, calculate fees & approval odds, and discover requirements for work, study, tourism, and residency.
+        </p>
+
+        <!-- Search -->
+        <div class="mt-10 max-w-2xl mx-auto">
+          <div class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl p-2 shadow-2xl ring-1 ring-black/5 flex items-center gap-2">
+            <i class="fa-solid fa-magnifying-glass text-slate-400 ml-3"></i>
+            <input id="homeSearch" type="search" autocomplete="off" placeholder="Search country (USA, Canada, France...)"
+                   class="flex-1 bg-transparent px-2 py-3 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none text-base">
+            <button onclick="submitHomeSearch()" class="bg-brand-600 hover:bg-brand-700 text-white px-5 py-3 rounded-xl font-semibold shadow-lg shadow-brand-600/30 transition">
+              Search
+            </button>
+          </div>
+          <div class="mt-3 flex flex-wrap justify-center gap-2 text-xs">
+            <span class="text-slate-400">Popular:</span>
+            <button onclick="quickSearch('usa')" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/10">🇺🇸 USA</button>
+            <button onclick="quickSearch('canada')" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/10">🇨🇦 Canada</button>
+            <button onclick="quickSearch('germany')" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/10">🇩🇪 Germany</button>
+            <button onclick="quickSearch('uae')" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 border border-white/10">🇦🇪 UAE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div class="reveal bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 flex items-center gap-4">
+          <div class="w-14 h-14 rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center text-2xl">
+            <i class="fa-solid fa-passport"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold text-slate-900 dark:text-white">190+</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Countries & territories</div>
+          </div>
+        </div>
+        <div class="reveal bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 flex items-center gap-4" style="transition-delay:.08s">
+          <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold text-slate-900 dark:text-white">85%</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Avg. approval success</div>
+          </div>
+        </div>
+        <div class="reveal bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 flex items-center gap-4" style="transition-delay:.16s">
+          <div class="w-14 h-14 rounded-2xl bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center text-2xl">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div>
+            <div class="text-2xl font-extrabold text-slate-900 dark:text-white">Instant</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">Fee & eligibility estimate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured categories -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Pathways</span>
+          <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-2">Popular visa categories</h2>
+        </div>
+        <button onclick="switchTab('visas')" class="text-brand-600 dark:text-brand-400 hover:text-brand-700 font-semibold inline-flex items-center gap-2 group">
+          View all <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
+        </button>
+      </div>
+
+      <div id="featuredGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </section>
+  </section>
+
+  <!-- ====== VISAS ====== -->
+  <section id="tab-visas" class="tab-panel hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Global database</span>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">Visa categories & requirements</h1>
+        <p class="text-slate-600 dark:text-slate-400 mt-3">Filter by category or search a country to inspect detailed requirements, fees, and timelines.</p>
+      </div>
+
+      <!-- Search + Filters -->
+      <div class="flex flex-col md:flex-row md:items-center gap-4 mb-8">
+        <div class="relative flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+          <input id="visaSearch" type="search" placeholder="Search country or visa type..."
+                 class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-slate-100">
+        </div>
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="catFilters"></div>
+      </div>
+
+      <div id="visaGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+
+      <p id="emptyState" class="hidden text-center py-20 text-slate-500">
+        <i class="fa-solid fa-magnifying-glass text-4xl mb-3 opacity-40"></i>
+        <span class="block">No visas match your search.</span>
+      </p>
+
+      <!-- Disclaimer -->
+      <div class="mt-12 rounded-2xl border border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/5 p-5 flex gap-3 text-sm">
+        <i class="fa-solid fa-triangle-exclamation text-amber-600 dark:text-amber-400 mt-0.5"></i>
+        <p class="text-amber-900 dark:text-amber-200/90">
+          <strong>Disclaimer:</strong> All fees, timelines, and approval percentages are estimates for illustration only. Always verify with the official embassy or immigration authority of your destination country before applying.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CALCULATOR ====== -->
+  <section id="tab-calculator" class="tab-panel hidden">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Interactive</span>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">Visa fee & success estimator</h1>
+        <p class="text-slate-600 dark:text-slate-400 mt-3">Adjust your profile — results update live.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Inputs -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 space-y-5">
+          <div>
+            <label class="block text-sm font-bold mb-2">Destination country</label>
+            <select id="cCountry" class="calc-input">
+              <option value="usa">🇺🇸 United States</option>
+              <option value="canada">🇨🇦 Canada</option>
+              <option value="uk">🇬🇧 United Kingdom</option>
+              <option value="france">🇫🇷 France / Schengen</option>
+              <option value="germany">🇩🇪 Germany</option>
+              <option value="uae">🇦🇪 UAE</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2">Visa purpose</label>
+            <div class="grid grid-cols-2 gap-2" id="purposeChips"></div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2">Highest education</label>
+            <select id="cEdu" class="calc-input">
+              <option value="phd">PhD / Master's</option>
+              <option value="bachelor" selected>Bachelor's degree</option>
+              <option value="diploma">Vocational / Diploma</option>
+              <option value="highschool">High school</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold mb-2">Language proficiency</label>
+            <select id="cLang" class="calc-input">
+              <option value="native">Native / Bilingual</option>
+              <option value="advanced" selected>Advanced (C1 / IELTS 7.5+)</option>
+              <option value="intermediate">Intermediate (B2 / IELTS 6)</option>
+              <option value="beginner">Beginner</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="flex justify-between text-sm font-bold mb-2">
+              <span>Years of experience</span>
+              <span id="expOut" class="text-brand-600 dark:text-brand-400 font-mono">3 yrs</span>
+            </label>
+            <input id="cExp" type="range" min="0" max="15" value="3" class="w-full">
+          </div>
+        </div>
+
+        <!-- Results -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-brand-950 to-violet-950 text-white p-6 md:p-8 shadow-2xl">
+          <div class="absolute -right-16 -bottom-16 opacity-[.07] text-[16rem] leading-none"><i class="fa-solid fa-passport"></i></div>
+          <div class="relative">
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-[11px] font-bold uppercase tracking-widest bg-white/10 border border-white/15 px-3 py-1 rounded-full">Live estimate</span>
+              <span id="rBadge" class="text-sm font-semibold text-slate-300 font-mono">USA · WORK</span>
             </div>
 
-            <!-- Filter buttons -->
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-10">
-                <button onclick="filterVisaCategory('all')" id="cat-all" class="cat-btn px-5 py-2.5 rounded-xl font-semibold text-sm bg-indigo-600 text-white shadow-md transition">All Categories</button>
-                <button onclick="filterVisaCategory('work')" id="cat-work" class="cat-btn px-5 py-2.5 rounded-xl font-semibold text-sm bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition">Work Visas</button>
-                <button onclick="filterVisaCategory('study')" id="cat-study" class="cat-btn px-5 py-2.5 rounded-xl font-semibold text-sm bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition">Study Visas</button>
-                <button onclick="filterVisaCategory('tourist')" id="cat-tourist" class="cat-btn px-5 py-2.5 rounded-xl font-semibold text-sm bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition">Tourist Visas</button>
-                <button onclick="filterVisaCategory('business')" id="cat-business" class="cat-btn px-5 py-2.5 rounded-xl font-semibold text-sm bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 transition">Business & Investor</button>
+            <div class="mb-6">
+              <div class="text-xs text-slate-300 font-medium mb-2">Approval probability</div>
+              <div id="rScore" class="text-5xl md:text-6xl font-black text-emerald-400 font-mono">—</div>
+              <div class="w-full bg-white/10 h-2.5 rounded-full mt-4 overflow-hidden">
+                <div id="rBar" class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-300 transition-all duration-700" style="width:0%"></div>
+              </div>
             </div>
 
-            <!-- Cards Grid -->
-            <div id="visaGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-                <!-- USA Work -->
-                <div class="visa-card bg-white rounded-3xl p-6 shadow-xl border border-slate-100 flex flex-col justify-between" data-category="work">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-3">
-                                <span class="text-3xl">🇺🇸</span>
-                                <div>
-                                    <h3 class="text-xl font-bold text-slate-900">United States</h3>
-                                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">H-1B / Work Visa</span>
-                                </div>
-                            </div>
-                            <span class="text-xs font-bold bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full">78% Approval Rate</span>
-                        </div>
-                        <p class="text-slate-600 text-sm mb-6">Designed for foreign nationals in specialty occupations requiring theoretical or technical expertise.</p>
-                        
-                        <div class="space-y-3 mb-6 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                            <div class="flex justify-between text-sm"><span class="text-slate-500 font-medium">Estimated Fee:</span><span class="font-bold text-slate-900">$460 - $960 USD</span></div>
-                            <div class="flex justify-between text-sm"><span class="text-slate-500 font-medium">Processing Time:</span><span class="font-bold text-slate-900">3 to 6 Months</span></div>
-                            <div class="flex justify-between text-sm"><span class="text-slate-500 font-medium">Validity:</span><span class="font-bold text-slate-900">Up to 3 Years (Extendable)</span></div>
-                        </div>
-                    </div>
-                    <button onclick="openVisaDetails('USA Work 
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div class="text-xs text-slate-300 font-medium">Govt. fees</div>
+                <div id="rFee" class="text-lg font-bold mt-1 font-mono">—</div>
+              </div>
+              <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div class="text-xs text-slate-300 font-medium">Processing</div>
+                <div id="rTime" class="text-lg font-bold mt-1 font-mono">—</div>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-white/10 text-xs text-slate-400 flex items-start gap-2">
+              <i class="fa-solid fa-circle-info text-brand-400 mt-0.5"></i>
+              <span>Estimates based on historical immigration data. Not legal advice.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== REQUIREMENTS ====== -->
+  <section id="tab-requirements" class="tab-panel hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Checklist</span>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-3">Universal application checklist</h1>
+        <p class="text-slate-600 dark:text-slate-400 mt-3">Prepare these documents before submitting your file.</p>
+      </div>
+
+      <div id="checklistGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-slate-900 dark:bg-black text-slate-400 py-10 mt-20 border-t border-slate-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center text-white">
+        <i class="fa-solid fa-earth-americas"></i>
+      </div>
+      <span class="text-white font-bold">GlobalVisa Pro</span>
+    </div>
+    <p class="text-sm">© 2026 GlobalVisa Hub. Estimates only — not legal advice.</p>
+    <div class="flex gap-6 text-sm">
+      <a href="#" class="hover:text-white transition">Privacy</a>
+      <a href="#" class="hover:text-white transition">Terms</a>
+      <a href="#" class="hover:text-white transition">Support</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ MODAL ============ -->
+<dialog id="visaModal" class="rounded-3xl p-0 max-w-2xl w-[92vw] bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-2xl border-0">
+  <div id="modalBody" class="p-6 md:p-8"></div>
+</dialog>
+
+<!-- ============ TOAST ============ -->
+<div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
+  <div class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl shadow-2xl text-sm font-medium flex items-center gap-2">
+    <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 dark:text-emerald-600"></i>
+    <span id="toastMsg"></span>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const CATEGORIES = [
+  { id:'all',      label:'All',           icon:'fa-layer-group' },
+  { id:'work',     label:'Work',          icon:'fa-briefcase' },
+  { id:'study',    label:'Study',         icon:'fa-graduation-cap' },
+  { id:'tourist',  label:'Tourist',       icon:'fa-plane' },
+  { id:'business', label:'Business',      icon:'fa-chart-pie' },
+];
+
+const VISAS = [
+  {
+    id:'us-work', country:'United States', flag:'🇺🇸', category:'work',
+    type:'H-1B Work Visa', accent:'indigo',
+    blurb:'Specialty occupations requiring theoretical or technical expertise.',
+    fee:'$460 – $960 USD', time:'3–6 months', validity:'Up to 3 years',
+    approval:78,
+    requirements:[
+      'Job offer from a US employer',
+      'Bachelor\'s degree or equivalent',
+      'Labor Condition Application (LCA)',
+      'Passport valid 6+ months beyond stay'
+    ]
+  },
+  {
+    id:'ca-study', country:'Canada', flag:'🇨🇦', category:'study',
+    type:'Study Permit', accent:'emerald',
+    blurb:'Study at designated learning institutions with PGWP eligibility.',
+    fee:'$150 CAD (~$110 USD)', time:'6–8 weeks', validity:'Course + 90 days',
+    approval:85,
+    requirements:[
+      'Letter of acceptance from a DLI',
+      'Proof of funds (~$10,000 CAD/year)',
+      'Police clearance certificate',
+      'Medical exam'
+    ]
+  },
+  {
+    id:'fr-tourist', country:'France (Schengen)', flag:'🇫🇷', category:'tourist',
+    type:'Short-Stay Tourist', accent:'violet',
+    blurb:'Travel across all 29 Schengen countries for tourism or family visits.',
+    fee:'€80 EUR (~$87 USD)', time:'15 days', validity:'90 days / 180',
+    approval:82,
+    requirements:[
+      'Valid passport (3+ months beyond return)',
+      'Round-trip itinerary & hotel reservations',
+      'Travel insurance (€30,000 min)',
+      'Bank statements (last 3–6 months)'
+    ]
+  },
+  {
+    id:'de-work', country:'Germany', flag:'🇩🇪', category:'work',
+    type:'Opportunity Card (Chancenkarte)', accent:'indigo',
+    blurb:'Points-based pathway to find qualified employment in Germany.',
+    fee:'€75 EUR (~$82 USD)', time:'4–8 weeks', validity:'Up to 1 year',
+    approval:88,
+    requirements:[
+      'Recognized degree or vocational training',
+      'German or English proficiency',
+      'Blocked account (€1,027/month)',
+      'Health insurance coverage'
+    ]
+  },
+  {
+    id:'ae-business', country:'United Arab Emirates', flag:'🇦🇪', category:'business',
+    type:'Golden / Business Visa', accent:'amber',
+    blurb:'Long-term residency for investors, entrepreneurs, and top talent.',
+    fee:'$1,000 – $2,500 USD', time:'1–3 weeks', validity:'5–10 years',
+    approval:95,
+    requirements:[
+      'Property investment or business setup',
+      'Professional accreditation',
+      'Talent credentials (if applicable)',
+      'Medical fitness test in UAE'
+    ]
+  },
+  {
+    id:'uk-study', country:'United Kingdom', flag:'🇬🇧', category:'study',
+    type:'Student Visa (Tier 4)', accent:'emerald',
+    blurb:'Enroll at British universities with graduate route privileges.',
+    fee:'£490 GBP (~$620 USD)', time:'3 weeks', validity:'Course + 4 months',
+    approval:89,
+    requirements:[
+      'CAS from licensed sponsor',
+      'IELTS / English proficiency',
+      'Maintenance funds (28-day rule)',
+      'Immigration Health Surcharge'
+    ]
+  },
+];
+
+const CHECKLIST = [
+  { icon:'fa-address-card', color:'indigo', title:'Valid passport',
+    text:'Must be valid 6+ months beyond departure with 2 blank visa pages.' },
+  { icon:'fa-file-invoice-dollar', color:'emerald', title:'Financial proof',
+    text:'Official bank statements for the last 3–6 months showing sufficient funds.' },
+  { icon:'fa-briefcase', color:'violet', title:'Employment contract',
+    text:'Signed sponsor offer with salary, role, and start date.' },
+  { icon:'fa-graduation-cap', color:'amber', title:'Diplomas & transcripts',
+    text:'Certified degrees, transcripts, and translations.' },
+  { icon:'fa-file-shield', color:'rose', title:'Health insurance',
+    text:'International coverage of at least €30,000 for medical emergencies.' },
+  { icon:'fa-language', color:'sky', title:'Language certificate',
+    text:'IELTS, TOEFL, DELF, or Goethe-Zertifikat as required.' },
+];
+
+const FEATURED = ['us-work','ca-study','fr-tourist'];
+
+const COUNTRY_DATA = {
+  usa:    { fee:'$460 – $960 USD',        time:'3–6 months'  },
+  canada: { fee:'$150 CAD (~$110 USD)',   time:'6–8 weeks'   },
+  uk:     { fee:'£490 GBP (~$620 USD)',   time:'3 weeks'     },
+  france: { fee:'€80 EUR (~$87 USD)',     time:'15 days'     },
+  germany:{ fee:'€75 EUR (~$82 USD)',     time:'4–8 weeks'   },
+  uae:    { fee:'$1,000 – $2,500 USD',    time:'1–3 weeks'   },
+};
+
+/* ============================================================
+   THEME
+   ============================================================ */
+const root = document.documentElement;
+const savedTheme = localStorage.getItem('theme');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+if (savedTheme === 'dark' || (!savedTheme && prefersDark)) root.classList.add('dark');
+
+function toggleTheme() {
+  root.classList.toggle('dark');
+  const dark = root.classList.contains('dark');
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  updateThemeIcon();
+}
+function updateThemeIcon() {
+  const dark = root.classList.contains('dark');
+  document.getElementById('themeIcon').className = dark
+    ? 'fa-solid fa-sun text-amber-300'
+    : 'fa-solid fa-moon text-slate-700';
+}
+updateThemeIcon();
+
+/* ============================================================
+   TABS
+   ============================================================ */
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    const active = b.dataset.nav === tab;
+    b.classList.toggle('bg-brand-50', active);
+    b.classList.toggle('dark:bg-brand-500/10', active);
+    b.classList.toggle('text-brand-600', active);
+    b.classList.toggle('dark:text-brand-400', active);
+    b.classList.toggle('text-slate-600', !active);
+    b.classList.toggle('dark:text-slate-300', !active);
+    b.setAttribute('aria-selected', active);
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  revealAll();
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+/* ============================================================
+   RENDER: VISAS
+   ============================================================ */
+const accentMap = {
+  indigo:  { chip:'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
+             grad:'from-indigo-500 to-indigo-600' },
+  emerald: { chip:'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+             grad:'from-emerald-500 to-emerald-600' },
+  violet:  { chip:'bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400',
+             grad:'from-violet-500 to-violet-600' },
+  amber:   { chip:'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400',
+             grad:'from-amber-500 to-amber-600' },
+};
+
+function visaCard(v, compact = false) {
+  const a = accentMap[v.accent] || accentMap.indigo;
+  return `
+  <article data-category="${v.category}" data-search="${(v.country + ' ' + v.type).toLowerCase()}"
+           class="visa-card reveal group bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-lg hover:shadow-2xl ring-1 ring-slate-900/5 dark:ring-white/5 transition-all duration-300 flex flex-col">
+    <div class="flex items-start justify-between gap-3 mb-4">
+      <div class="flex items-center gap-3">
+        <div class="text-3xl">${v.flag}</div>
+        <div>
+          <h3 class="font-extrabold text-slate-900 dark:text-white leading-tight">${v.country}</h3>
+          <span class="inline-block mt-1 text-[11px] font-bold px-2 py-0.5 rounded-md ${a.chip}">${v.type}</span>
+        </div>
+      </div>
+      <div class="shrink-0 text-right">
+        <div class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Approval</div>
+        <div class="font-mono font-bold text-emerald-600 dark:text-emerald-400">${v.approval}%</div>
+      </div>
+    </div>
+
+    <p class="text-sm text-slate-600 dark:text-slate-400 mb-5 flex-grow">${v.blurb}</p>
+
+    <div class="grid grid-cols-3 gap-2 mb-5 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center">
+      <div>
+        <div class="text-[10px] font-bold uppercase text-slate-400">Fee</div>
+        <div class="text-xs font-bold text-slate-900 dark:text-white mt-0.5 leading-tight">${v.fee.split(' ')[0]}</div>
+      </div>
+      <div>
+        <div class="text-[10px] font-bold uppercase text-slate-400">Time</div>
+        <div class="text-xs font-bold text-slate-900 dark:text-white mt-0.5">${v.time}</div>
+      </div>
+      <div>
+        <div class="text-[10px] font-bold uppercase text-slate-400">Validity</div>
+        <div class="text-xs font-bold text-slate-900 dark:text-white mt-0.5 leading-tight">${v.validity}</div>
+      </div>
+    </div>
+
+    <button onclick="openModal('${v.id}')"
+            class="w-full py-3 rounded-xl bg-gradient-to-r ${a.grad} text-white font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition text-sm">
+      View requirements <i class="fa-solid fa-arrow-right ml-1.5"></i>
+    </button>
+  </article>`;
+}
+
+function renderVisaGrid(filter = 'all') {
+  const grid = document.getElementById('visaGrid');
+  const filtered = filter === 'all' ? VISAS : VISAS.filter(v => v.category === filter);
+  grid.innerHTML = filtered.map(v => visaCard(v)).join('');
+  applyVisaSearch();
+  revealAll();
+}
+
+function renderFeatured() {
+  const grid = document.getElementById('featuredGrid');
+  grid.innerHTML = FEATURED.map(id => visaCard(VISAS.find(v => v.id === id))).join('');
+  revealAll();
+}
+
+function renderCategoryFilters() {
+  const el = document.getElementById('catFilters');
+  el.innerHTML = CATEGORIES.map(c => `
+    <button data-cat="${c.id}" onclick="setCategory('${c.id}')"
+      class="cat-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold border transition
+             ${c.id==='all'
+               ? 'bg-brand-600 text-white border-brand-600 shadow-lg shadow-brand-600/25'
+               : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'}">
+      <i class="fa-solid ${c.icon} mr-1.5 opacity-80"></i>${c.label}
+    </button>`).join('');
+}
+
+let currentCategory = 'all';
+function setCategory(cat) {
+  currentCategory = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => {
+    const active = b.dataset.cat === cat;
+    b.className = `cat-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold border transition ${
+      active
+        ? 'bg-brand-600 text-white border-brand-600 shadow-lg shadow-brand-600/25'
+        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'
+    }`;
+  });
+  renderVisaGrid(cat);
+}
+
+function applyVisaSearch() {
+  const q = (document.getElementById('visaSearch').value || '').toLowerCase().trim();
+  let visible = 0;
+  document.querySelectorAll('#visaGrid .visa-card').forEach(card => {
+    const match = !q || card.dataset.search.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('emptyState').classList.toggle('hidden', visible > 0);
+}
+
+/* ============================================================
+   RENDER: CHECKLIST
+   ============================================================ */
+function renderChecklist() {
+  const colorMap = {
+    indigo: 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400',
+    emerald:'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+    violet: 'bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400',
+    amber:  'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400',
+    rose:   'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400',
+    sky:    'bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400',
+  };
+  document.getElementById('checklistGrid').innerHTML = CHECKLIST.map((c, i) => `
+    <div class="reveal bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-lg ring-1 ring-slate-900/5 dark:ring-white/5 hover:-translate-y-1 transition"
+         style="transition-delay:${i*60}ms">
+      <div class="w-12 h-12 rounded-xl ${colorMap[c.color]} flex items-center justify-center text-xl mb-4">
+        <i class="fa-solid ${c.icon}"></i>
+      </div>
+      <h3 class="font-bold text-slate-900 dark:text-white mb-2">${c.title}</h3>
+      <p class="text-sm text-slate-600 dark:text-slate-400">${c.text}</p>
+    </div>`).join('');
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+const modal = document.getElementById('visaModal');
+function openModal(id) {
+  const v = VISAS.find(x => x.id === id);
+  if (!v) return;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="flex items-start justify-between gap-4 mb-6">
+      <div class="flex items-center gap-3">
+        <div class="text-4xl">${v.flag}</div>
+        <div>
+          <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 dark:text-white">${v.country}</h2>
+          <div class="text-sm font-semibold text-brand-600 dark:text-brand-400">${v.type}</div>
+        </div>
+      </div>
+      <button onclick="modal.close()" aria-label="Close"
+              class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mb-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center">
+      <div>
+        <div class="text-[10px] font-bold uppercase text-slate-400">Fee</div>
+        <div class="font-bold text-slate-900 dark:text-white text-sm mt-1">${v.fee}</div>
+      </div>
+      <div>
+        <div class="text-[10px] font-bold uppercase text-slate-400">Processing</div>
+        <div class="font-bold text-slate-900 dark:text-white text-sm mt-1">${v.time}</div>
+      </div>
+      <div>
+        <div class="text-[10px] font-bold uppercase text-slate-400">Approval</div>
+        <div class="font-bold text-emerald-600 dark:text-emerald-400 text-sm mt-1">${v.approval}%</div>
+      </div>
+    </div>
+
+    <h4 class="font-bold text-slate-900 dark:text-white mb-3">Key requirements</h4>
+    <ul class="space-y-2">
+      ${v.requirements.map(r => `
+        <li class="flex items-start gap-3 text-sm text-slate-700 dark:text-slate-300">
+          <i class="fa-solid fa-circle-check text-emerald-500 mt-0.5 shrink-0"></i>
+          <span>${r}</span>
+        </li>`).join('')}
+    </ul>
+
+    <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 flex items-start gap-2">
+      <i class="fa-solid fa-circle-info mt-0.5"></i>
+      <span>Estimates only. Verify with the official embassy before applying.</span>
+    </div>
+  `;
+  modal.showModal();
+}
+
+// Click outside to close
+modal.addEventListener('click', e => {
+  const rect = modal.getBoundingClientRect();
+  const inDialog = e.clientX >= rect.left && e.clientX <= rect.right
+                && e.clientY >= rect.top  && e.clientY <= rect.bottom;
+  if (!inDialog) modal.close();
+});
+
+/* ============================================================
+   CALCULATOR
+   ============================================================ */
+const PURPOSES = ['work','study','tourist','business'];
+let calcPurpose = 'work';
+
+function renderPurposeChips() {
+  document.getElementById('purposeChips').innerHTML = PURPOSES.map(p => `
+    <button type="button" data-purpose="${p}" onclick="setPurpose('${p}')"
+      class="purpose-btn px-3 py-2.5 rounded-xl text-sm font-semibold border transition capitalize
+             ${p===calcPurpose
+               ? 'bg-brand-600 text-white border-brand-600'
+               : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'}">
+      ${p}
+    </button>`).join('');
+}
+function setPurpose(p) {
+  calcPurpose = p;
+  renderPurposeChips();
+  calc();
+}
+
+function calc() {
+  const country = document.getElementById('cCountry').value;
+  const edu     = document.getElementById('cEdu').value;
+  const lang    = document.getElementById('cLang').value;
+  const exp     = parseInt(document.getElementById('cExp').value, 10);
+
+  document.getElementById('expOut').textContent = exp + ' yr' + (exp === 1 ? '' : 's');
+
+  let score = 55;
+  score += { phd:20, bachelor:13, diploma:7, highschool:2 }[edu];
+  score += { native:14, advanced:10, intermediate:5, beginner:-6 }[lang];
+  score += Math.min(exp * 1.8, 15);
+  score += { work:6, study:4, tourist:2, business:7 }[calcPurpose];
+  score = Math.max(28, Math.min(96, Math.round(score)));
+
+  document.getElementById('rScore').textContent = score + '%';
+  document.getElementById('rBar').style.width = score + '%';
+  document.getElementById('rFee').textContent  = COUNTRY_DATA[country].fee;
+  document.getElementById('rTime').textContent = COUNTRY_DATA[country].time;
+  document.getElementById('rBadge').textContent = country.toUpperCase() + ' · ' + calcPurpose.toUpperCase();
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+function submitHomeSearch() {
+  const q = document.getElementById('homeSearch').value.trim();
+  if (!q) { toast('Type a country to search', 'fa-circle-info'); return; }
+  switchTab('visas');
+  document.getElementById('visaSearch').value = q;
+  applyVisaSearch();
+  toast(`Showing results for "${q}"`, 'fa-magnifying-glass');
+}
+function quickSearch(q) {
+  document.getElementById('homeSearch').value = q;
+  submitHomeSearch();
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer;
+function toast(msg, icon = 'fa-circle-check') {
+  const el = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toastIcon').className = `fa-solid ${icon} text-emerald-400 dark:text-emerald-600`;
+  el.classList.remove('hidden');
+  el.firstElementChild.classList.add('animate-pop');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.add('hidden'), 2500);
+}
+
+/* ============================================================
+   REVEAL ON SCROLL
+   ============================================================ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+function revealAll() {
+  document.querySelectorAll('.reveal:not(.in)').forEach(el => io.observe(el));
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderCategoryFilters();
+renderVisaGrid('all');
+renderFeatured();
+renderChecklist();
+renderPurposeChips();
+calc();
+
+document.getElementById('visaSearch').addEventListener('input', applyVisaSearch);
+document.getElementById('homeSearch').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitHomeSearch();
+});
+['cCountry','cEdu','cLang'].forEach(id =>
+  document.getElementById(id).addEventListener('change', calc)
+);
+document.getElementById('cExp').addEventListener('input', calc);
+
+revealAll();
+</script>
+
+<!-- Shared input class -->
+<style>
+  .calc-input {
+    width: 100%;
+    background: rgb(248 250 252);
+    border: 1px solid rgb(226 232 240);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: rgb(30 41 59);
+    font-weight: 500;
+    outline: none;
+    transition: all .2s;
+  }
+  .calc-input:focus { border-color: rgb(99 102 241); box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+  .dark .calc-input { background: rgb(15 23 42); border-color: rgb(30 41 59); color: rgb(226 232 240); }
+</style>
+
+</body>
+</html>
