@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" id="htmlRoot" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Visa & Career Portal 2026</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .hero-bg {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header & Language Switcher -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 border-b border-slate-800">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <span class="text-2xl">🌍</span>
+                <span class="font-bold text-lg tracking-wide">VisaPortal Pro</span>
+            </div>
+            
+            <!-- Language Selector -->
+            <div>
+                <select id="langSelect" onchange="changeLanguage()" class="bg-slate-800 text-white text-sm px-3 py-1.5 rounded-lg border border-slate-700 focus:outline-none">
+                    <option value="en">English</option>
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                    <option value="es">Español</option>
+                    <option value="pt">Português</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-16 px-4 text-center">
+        <div class="max-w-2xl mx-auto">
+            <h1 id="heroTitle" class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">Check Your Visa & Work Opportunities Worldwide</h1>
+            <p id="heroDesc" class="text-slate-300 text-sm md:text-base mb-8">Select your target country and goal to get instant requirements, cost estimates, and direct official application links.</p>
+        </div>
+    </section>
+
+    <!-- Interactive Form Container -->
+    <main class="container mx-auto px-4 -mt-10 mb-12 max-w-2xl relative z-10">
+        <div class="bg-white shadow-2xl rounded-3xl p-6 md:p-8 border border-slate-100">
+            <form id="visaForm" class="space-y-5">
+                <div>
+                    <label id="lblCountry" class="block text-sm font-semibold text-slate-700 mb-2">Target Country:</label>
+                    <select id="destination" class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:outline-none bg-slate-50 font-medium">
+                        <option value="usa">🇺🇸 United States (USA)</option>
+                        <option value="canada">🇨🇦 Canada</option>
+                        <option value="germany">🇩🇪 Germany</option>
+                        <option value="france">🇫🇷 France</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label id="lblGoal" class="block text-sm font-semibold text-slate-700 mb-2">Goal / Visa Type:</label>
+                    <select id="purpose" class="w-full p-3.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-600 focus:outline-none bg-slate-50 font-medium">
+                        <option value="work">Work Visa / Employment</option>
+                        <option value="study">Study / University</option>
+                    </select>
+                </div>
+
+                <button type="button" onclick="calculatePlan()" id="btnCalculate" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-indigo-600/30 text-base">
+                    Calculate & Show Official Portal 🚀
+                </button>
+            </form>
+
+            <!-- Results Panel -->
+            <div id="resultsSection" class="hidden mt-8 pt-6 border-t border-slate-100 space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">💰 Estimated First-Year Cost:</h3>
+                    <p id="costResult" class="p-4 bg-indigo-50 text-indigo-900 rounded-xl font-semibold border border-indigo-100"></p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">📁 Mandatory Requirements:</h3>
+                    <ul id="docsList" class="list-disc list-inside space-y-2 text-sm text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-200"></ul>
+                </div>
+
+                <!-- Direct Official Link Action -->
+                <div class="p-5 bg-blue-50 border border-blue-200 rounded-2xl text-center space-y-3">
+                    <p id="txtReady" class="text-sm font-semibold text-blue-900">Ready to apply? Access the official government portal directly:</p>
+                    <a id="officialLink" href="#" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition shadow-md">
+                        🌐 Open Official Application Site
+                    </a>
+                </div>
+
+                <!-- Lead Generation / Customer Support -->
+                <div class="p-5 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-3">
+                    <p id="txtHelp" class="text-sm font-medium text-emerald-900">Need professional assistance or someone to fill the application for you?</p>
+                    <a id="whatsappLink" href="https://wa.me/yourphonenumber" target="_blank" class="inline-block bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition shadow-md">
+                        💬 Request Expert Assistance via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-xs">
+        <p>© 2026 Global Visa Portal. All official trademarks belong to their respective governments.</p>
+    </footer>
+
+    <!-- Multi-Language & Logic Engine -->
+    <script>
+        const translations = {
+            en: {
+                heroTitle: "Check Your Visa & Work Opportunities Worldwide",
+                heroDesc: "Select your target country and goal to get instant requirements, cost estimates, and direct official application links.",
+                lblCountry: "Target Country:",
+                lblGoal: "Goal / Visa Type:",
+                btnCalculate: "Calculate & Show Official Portal 🚀",
+                txtReady: "Ready to apply? Access the official government portal directly:",
+                officialBtn: "🌐 Open Official Application Site",
+                txtHelp: "Need professional assistance or someone to fill the application for you?",
+                whatsappBtn: "💬 Request Expert Assistance via WhatsApp"
+            },
+            fr: {
+                heroTitle: "Vérifiez vos opportunités de visa et de travail dans le monde",
+                heroDesc: "Sélectionnez votre pays cible pour obtenir les exigences, les coûts et les liens officiels de demande.",
+                lblCountry: "Pays cible :",
+                lblGoal: "Objectif / Type de visa :",
+                btnCalculate: "Calculer et afficher le portail officiel 🚀",
+                txtReady: "Prêt à postuler ? Accédez directement au portail gouvernemental officiel :",
+                officialBtn: "🌐 Ouvrir le site officiel de candidature",
+                txtHelp: "Besoin d'aide professionnelle ou de quelqu'un pour remplir votre dossier ?",
+                whatsappBtn: "💬 Demander une assistance via WhatsApp"
+            },
+            ar: {
+                heroTitle: "تحقق من فرص التأشيرة والعمل في جميع أنحاء العالم",
+                heroDesc: "اختر دولتك المستهدفة وهدفك لتحصل فوراً على المتطلبات، التكاليف التقديرية، وروابط التسجيل الرسمية المباشرة.",
+                lblCountry: "الدولة المستهدفة:",
+                lblGoal: "الهدف / نوع التأشيرة:",
+                btnCalculate: "احسب واعرض البوابة الرسمية 🚀",
+                txtReady: "هل أنت مستعد للتسجيل؟ ادخل مباشرة إلى الموقع الحكومي الرسمي:",
+                officialBtn: "🌐 فتح موقع التسجيل الرسمي المباشر",
+                txtHelp: "هل تحتاج إلى مساعدة احترافية أو شخص يتابع معك ملف التسجيل خطوة بخطوة؟",
+                whatsappBtn: "💬 اطلب المساعدة المباشرة عبر واتساب"
+            },
+            es: {
+                heroTitle: "Verifique sus oportunidades de visa y trabajo en todo el mundo",
+                heroDesc: "Seleccione su país de destino para obtener requisitos, costos y enlaces oficiales de solicitud.",
+                lblCountry: "País de destino:",
+                lblGoal: "Objetivo / Tipo de visa:",
+                btnCalculate: "Calcular y mostrar el portal oficial 🚀",
+                txtReady: "¿Listo para postularse? Acceda directamente al portal oficial del gobierno:",
+                officialBtn: "🌐 Abrir sitio web oficial de solicitud",
+                txtHelp: "¿Necesita asistencia profesional o ayuda con su solicitud?",
+                whatsappBtn: "💬 Solicitar asistencia por WhatsApp"
+            },
+            pt: {
+                heroTitle: "Verifique suas oportunidades de visto e trabalho em todo o mundo",
+                heroDesc: "Selecione seu país de destino para obter requisitos, custos e links oficiais de inscrição.",
+                lblCountry: "País de destino:",
+                lblGoal: "Objetivo / Tipo de Visto:",
+                btnCalculate: "Calcular e Mostrar o Portal Oficial 🚀",
+                txtReady: "Pronto para se inscrever? Acesse o portal oficial do governo diretamente:",
+                officialBtn: "🌐 Abrir Site Oficial de Inscrição",
+                txtHelp: "Precisa de assistência profissional ou ajuda para preencher sua inscrição?",
+                whatsappBtn: "💬 Solicitar Assistência via WhatsApp"
+            }
+        };
+
+        function changeLanguage() {
+            const lang = document.getElementById('langSelect').value;
+            const root = document.getElementById('htmlRoot');
+            
+            if (lang === 'ar') {
+                root.setAttribute('dir', 'rtl');
+                root.setAttribute('lang', 'ar');
+            } else {
+                root.setAttribute('dir', 'ltr');
+                root.setAttribute('lang', lang);
+            }
+
+            document.getElementById('heroTitle').innerText = translations[lang].heroTitle;
+            document.getElementById('heroDesc').innerText = translations[lang].heroDesc;
+            document.getElementById('lblCountry').innerText = translations[lang].lblCountry;
+            document.getElementById('lblGoal').innerText = translations[lang].lblGoal;
+            document.getElementById('btnCalculate').innerText = translations[lang].btnCalculate;
+            document.getElementById('txtReady').innerText = translations[lang].txtReady;
+            document.getElementById('officialLink').innerText = translations[lang].officialBtn;
+            document.getElementById('txtHelp').innerText = translations[lang].txtHelp;
+            document.getElementById('whatsappLink').innerText = translations[lang].whatsappBtn;
+        }
+
+        const officialPortals = {
+            usa: "https://travel.state.gov",
+            canada: "https://www.canada.ca/en/services/immigration-citizenship.html",
+            germany: "https://www.make-it-in-germany.com",
+            france: "https://france-visas.gouv.fr"
+        };
+
+        function calculatePlan() {
+            const dest = document.getElementById('destination').value;
+            const resultsSection = document.getElementById('resultsSection');
+            const costResult = document.getElementById('costResult');
+            const docsList = document.getElementById('docsList');
+            const officialLink = document.getElementById('officialLink');
+
+            // Set official direct link based on destination
+            officialLink.href = officialPortals[dest];
+
+            let costText = "Estimated First-Year Budget: ~$12,000 - $15,000 USD equivalent.";
+            let docs = [
+                "Valid International Passport",
+                "Official Language Proficiency Test (IELTS/TCF)",
+                "Academic Transcripts or Professional Certificates",
+                "Proof of Financial Support / Bank Statement"
+            ];
+
+            if (dest === 'germany') {
+                costText = "Blocked Account (Sperrkonto): ~11,200 EUR per year.";
+            } else if (dest === 'usa') {
+                costText = "Visa Application Fees & Living Expenses: ~$15,000+ USD.";
+            }
+
+            costResult.innerText = costText;
+            docsList.innerHTML = "";
+            docs.forEach(d => {
+                let li = document.createElement('li');
+                li.innerText = d;
+                docsList.appendChild(li);
+            });
+
+            resultsSection.classList.remove('hidden');
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
