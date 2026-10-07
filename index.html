@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="scroll-smooth">
+<html lang="en" dir="ltr" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GlobalVisa Pro — دليلك الشامل للتأشيرات العالمية</title>
-<meta name="description" content="دليل تفاعلي شامل لأنواع التأشيرات، المتطلبات، الرسوم، ونسب القبول.">
+<title>GlobalVisa Pro — Complete Visa Guide & Intelligence Hub</title>
+<meta name="description" content="Interactive visa guide with requirements, fees, charts, and video tutorials for USA, Canada, UK, Germany, UAE, and more.">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <script>
@@ -19,7 +19,7 @@ tailwind.config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Cairo', 'system-ui', 'sans-serif'],
+        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
@@ -33,13 +33,11 @@ tailwind.config = {
         'fade-in': 'fadeIn .5s ease-out both',
         'slide-up': 'slideUp .6s cubic-bezier(.16,1,.3,1) both',
         'float': 'float 6s ease-in-out infinite',
-        'glow': 'glow 2s ease-in-out infinite alternate',
       },
       keyframes: {
         fadeIn: { from:{opacity:0}, to:{opacity:1} },
         slideUp: { from:{opacity:0, transform:'translateY(24px)'}, to:{opacity:1, transform:'translateY(0)'} },
         float: { '0%,100%':{transform:'translateY(0)'}, '50%':{transform:'translateY(-12px)'} },
-        glow: { from:{boxShadow:'0 0 20px rgba(99,102,241,.3)'}, to:{boxShadow:'0 0 40px rgba(99,102,241,.6)'} },
       },
     },
   },
@@ -48,8 +46,6 @@ tailwind.config = {
 
 <style>
   html { -webkit-tap-highlight-color: transparent; }
-  body { font-feature-settings: "cv02","cv03","cv04","cv11"; }
-
   ::-webkit-scrollbar { width:10px; height:10px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(99,102,241,.4); border-radius: 8px; }
@@ -71,23 +67,8 @@ tailwind.config = {
   .card-hover { transition: transform .4s cubic-bezier(.16,1,.3,1), box-shadow .4s ease; }
   .card-hover:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(0,0,0,.15); }
 
-  .flag-bg {
-    background: linear-gradient(135deg, rgba(15,23,42,.7), rgba(49,46,129,.6));
-  }
-
-  .glass {
-    background: rgba(255,255,255,.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
+  .glass { background: rgba(255,255,255,.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
   .dark .glass { background: rgba(15,23,42,.85); }
-
-  .step-line::after {
-    content: ''; position: absolute; left: 50%; top: 100%; width: 2px; height: 100%;
-    background: linear-gradient(to bottom, rgba(99,102,241,.5), transparent);
-    transform: translateX(-50%);
-  }
-  .step-line:last-child::after { display: none; }
 
   dialog::backdrop { background: rgba(15,23,42,.75); backdrop-filter: blur(8px); }
   dialog[open] { animation: pop .3s ease-out; }
@@ -98,9 +79,15 @@ tailwind.config = {
   .nav-link.active { color: #4f46e5; background: #eef2ff; }
   .dark .nav-link.active { color: #a5b4fc; background: rgba(99,102,241,.15); }
 
-  @media (max-width: 768px) {
-    .chart-container { height: 250px; }
+  .calc-input {
+    width: 100%; background: rgb(248 250 252); border: 1px solid rgb(226 232 240);
+    border-radius: .75rem; padding: .75rem 1rem; color: rgb(30 41 59);
+    font-weight: 500; outline: none; transition: all .2s;
   }
+  .calc-input:focus { border-color: rgb(99 102 241); box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
+  .dark .calc-input { background: rgb(15 23 42); border-color: rgb(30 41 59); color: rgb(226 232 240); }
+
+  @media (max-width: 768px) { .chart-container { height: 250px; } }
 </style>
 </head>
 
@@ -109,26 +96,25 @@ tailwind.config = {
 <!-- ============ NAVBAR ============ -->
 <header class="sticky top-0 z-50 glass border-b border-slate-200/70 dark:border-slate-800">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
-
     <a href="#" onclick="showPage('home'); return false;" class="flex items-center gap-3 group shrink-0">
       <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 group-hover:scale-105 transition">
         <i class="fa-solid fa-earth-americas text-lg"></i>
       </div>
       <div class="hidden sm:block leading-tight">
         <div class="text-lg font-extrabold tracking-tight bg-gradient-to-r from-brand-600 to-violet-600 dark:from-brand-400 dark:to-violet-400 bg-clip-text text-transparent">GlobalVisa Pro</div>
-        <div class="text-[11px] font-medium text-slate-400">دليل التأشيرات الذكي</div>
+        <div class="text-[11px] font-medium text-slate-400">Visa Intelligence Hub</div>
       </div>
     </a>
 
     <nav class="hidden lg:flex items-center gap-1 text-sm font-medium">
-      <button data-nav="home" onclick="showPage('home')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-house ml-1.5 opacity-70"></i>الرئيسية</button>
-      <button data-nav="visas" onclick="showPage('visas')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-passport ml-1.5 opacity-70"></i>التأشيرات</button>
-      <button data-nav="charts" onclick="showPage('charts')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-chart-line ml-1.5 opacity-70"></i>الإحصائيات</button>
-      <button data-nav="tools" onclick="showPage('tools')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-calculator ml-1.5 opacity-70"></i>الحاسبة</button>
+      <button data-nav="home" onclick="showPage('home')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-house mr-1.5 opacity-70"></i>Home</button>
+      <button data-nav="visas" onclick="showPage('visas')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-passport mr-1.5 opacity-70"></i>Visas</button>
+      <button data-nav="charts" onclick="showPage('charts')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-chart-line mr-1.5 opacity-70"></i>Charts</button>
+      <button data-nav="tools" onclick="showPage('tools')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-calculator mr-1.5 opacity-70"></i>Calculator</button>
     </nav>
 
     <div class="flex items-center gap-2">
-      <button onclick="toggleTheme()" aria-label="تبديل الثيم"
+      <button onclick="toggleTheme()" aria-label="Toggle theme"
               class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition">
         <i id="themeIcon" class="fa-solid fa-moon text-slate-700 dark:text-amber-300"></i>
       </button>
@@ -139,20 +125,18 @@ tailwind.config = {
   </div>
 
   <div id="mobileMenu" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-4 py-3 space-y-1">
-    <button onclick="showPage('home');toggleMobileMenu()" class="block w-full text-right px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">الرئيسية</button>
-    <button onclick="showPage('visas');toggleMobileMenu()" class="block w-full text-right px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">التأشيرات</button>
-    <button onclick="showPage('charts');toggleMobileMenu()" class="block w-full text-right px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">الإحصائيات</button>
-    <button onclick="showPage('tools');toggleMobileMenu()" class="block w-full text-right px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">الحاسبة</button>
+    <button onclick="showPage('home');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Home</button>
+    <button onclick="showPage('visas');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Visas</button>
+    <button onclick="showPage('charts');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Charts</button>
+    <button onclick="showPage('tools');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Calculator</button>
   </div>
 </header>
 
 <!-- ============ MAIN ============ -->
 <main class="flex-grow">
 
-<!-- ========== PAGE: HOME ========== -->
+<!-- ========== HOME ========== -->
 <section id="page-home" class="page">
-
-  <!-- HERO -->
   <div class="hero-grid relative overflow-hidden bg-slate-900 dark:bg-slate-950">
     <div class="absolute inset-0">
       <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1920&q=80" alt="Travel" class="w-full h-full object-cover opacity-25">
@@ -167,239 +151,230 @@ tailwind.config = {
           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
           <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
         </span>
-        بيانات محدثة · 190+ وجهة
+        Live data · 190+ destinations
       </div>
 
       <h1 class="mt-6 text-4xl sm:text-5xl md:text-7xl font-black tracking-tight leading-[1.1] animate-slide-up" style="animation-delay:.1s">
-        بوابتك إلى
-        <span class="bg-gradient-to-r from-brand-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">الفرص العالمية</span>
+        Your Gateway to
+        <span class="bg-gradient-to-r from-brand-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">Global Opportunities</span>
       </h1>
 
       <p class="mt-6 text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed animate-slide-up" style="animation-delay:.2s">
-        اكتشف مسارات التأشيرات، اقرأ المتطلبات كاملة، احسب الرسوم ونسب القبول، وتابع خطوات التسجيل الرسمية خطوة بخطوة.
+        Explore visa pathways, read full requirements, calculate fees and approval odds, and follow official application steps — with video guides.
       </p>
 
       <div class="mt-10 max-w-2xl mx-auto animate-slide-up" style="animation-delay:.3s">
         <div class="glass rounded-2xl p-2 shadow-2xl flex items-center gap-2">
-          <i class="fa-solid fa-magnifying-glass text-slate-400 mr-3"></i>
-          <input id="homeSearch" type="search" placeholder="ابحث عن دولة أو نوع تأشيرة..."
+          <i class="fa-solid fa-magnifying-glass text-slate-400 ml-3"></i>
+          <input id="homeSearch" type="search" placeholder="Search country or visa type..."
                  class="flex-1 bg-transparent px-2 py-3 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none text-base">
-          <button onclick="submitHomeSearch()" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-brand-600/30 transition">
-            بحث
-          </button>
+          <button onclick="submitHomeSearch()" class="bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-brand-600/30 transition">Search</button>
         </div>
         <div class="mt-4 flex flex-wrap justify-center gap-2 text-xs">
-          <span class="text-slate-400">شائع:</span>
-          <button onclick="quickSearch('أمريكا')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇺🇸 أمريكا</button>
-          <button onclick="quickSearch('كندا')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇨🇦 كندا</button>
-          <button onclick="quickSearch('ألمانيا')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇩🇪 ألمانيا</button>
-          <button onclick="quickSearch('الإمارات')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇦🇪 الإمارات</button>
+          <span class="text-slate-400">Popular:</span>
+          <button onclick="quickSearch('United States')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇺🇸 USA</button>
+          <button onclick="quickSearch('Canada')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇨🇦 Canada</button>
+          <button onclick="quickSearch('Germany')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇩🇪 Germany</button>
+          <button onclick="quickSearch('UAE')" class="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 transition">🇦🇪 UAE</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- STATS -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 relative z-10">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
       <div class="reveal glass rounded-2xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 flex items-center gap-4">
-        <div class="w-14 h-14 rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center text-2xl">
-          <i class="fa-solid fa-passport"></i>
-        </div>
-        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">190+</div><div class="text-sm text-slate-500 dark:text-slate-400">دولة ومنطقة</div></div>
+        <div class="w-14 h-14 rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center text-2xl"><i class="fa-solid fa-passport"></i></div>
+        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">190+</div><div class="text-sm text-slate-500 dark:text-slate-400">Countries & territories</div></div>
       </div>
       <div class="reveal glass rounded-2xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 flex items-center gap-4" style="transition-delay:.08s">
-        <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl">
-          <i class="fa-solid fa-chart-line"></i>
-        </div>
-        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">85%</div><div class="text-sm text-slate-500 dark:text-slate-400">متوسط القبول</div></div>
+        <div class="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl"><i class="fa-solid fa-chart-line"></i></div>
+        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">85%</div><div class="text-sm text-slate-500 dark:text-slate-400">Avg. approval rate</div></div>
       </div>
       <div class="reveal glass rounded-2xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 flex items-center gap-4" style="transition-delay:.16s">
-        <div class="w-14 h-14 rounded-2xl bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center text-2xl">
-          <i class="fa-solid fa-bolt"></i>
-        </div>
-        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">فوري</div><div class="text-sm text-slate-500 dark:text-slate-400">حاسبة الرسوم</div></div>
+        <div class="w-14 h-14 rounded-2xl bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center text-2xl"><i class="fa-solid fa-bolt"></i></div>
+        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">Instant</div><div class="text-sm text-slate-500 dark:text-slate-400">Fee calculator</div></div>
       </div>
       <div class="reveal glass rounded-2xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 flex items-center gap-4" style="transition-delay:.24s">
-        <div class="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl">
-          <i class="fa-solid fa-book-open"></i>
-        </div>
-        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">12</div><div class="text-sm text-slate-500 dark:text-slate-400">دليل تفصيلي</div></div>
+        <div class="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl"><i class="fa-solid fa-book-open"></i></div>
+        <div><div class="text-2xl font-extrabold text-slate-900 dark:text-white">12</div><div class="text-sm text-slate-500 dark:text-slate-400">Detailed guides</div></div>
       </div>
     </div>
   </div>
 
-  <!-- FEATURED VISAS -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
       <div>
-        <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">الأكثر طلباً</span>
-        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-2">تأشيرات مميزة</h2>
+        <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Most Popular</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-2">Featured Visas</h2>
       </div>
       <button onclick="showPage('visas')" class="text-brand-600 dark:text-brand-400 hover:text-brand-700 font-semibold inline-flex items-center gap-2 group">
-        عرض الكل <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition"></i>
+        View all <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition"></i>
       </button>
     </div>
     <div id="featuredGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </section>
 
-  <!-- QUICK CHART PREVIEW -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div class="reveal glass rounded-3xl p-8 shadow-xl">
-        <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-6"><i class="fa-solid fa-chart-simple text-brand-500 ml-2"></i>نسب القبول حسب الدولة</h3>
+        <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-6"><i class="fa-solid fa-chart-simple text-brand-500 mr-2"></i>Approval Rates by Country</h3>
         <div class="chart-container"><canvas id="previewChart"></canvas></div>
       </div>
       <div class="reveal glass rounded-3xl p-8 shadow-xl">
-        <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-6"><i class="fa-solid fa-clock text-emerald-500 ml-2"></i>مدة المعالجة (أسابيع)</h3>
+        <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-6"><i class="fa-solid fa-clock text-emerald-500 mr-2"></i>Processing Time (Weeks)</h3>
         <div class="chart-container"><canvas id="timeChart"></canvas></div>
       </div>
     </div>
   </section>
 </section>
 
-<!-- ========== PAGE: VISAS ========== -->
+<!-- ========== VISAS ========== -->
 <section id="page-visas" class="page hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
     <div class="text-center max-w-3xl mx-auto mb-10">
-      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">قاعدة البيانات</span>
-      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">أنواع التأشيرات والمتطلبات</h1>
-      <p class="text-slate-600 dark:text-slate-400 mt-4">اختر التأشيرة المناسبة لقراءة الدليل الكامل مع خطوات التسجيل والروابط الرسمية.</p>
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Database</span>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">Visa Types & Requirements</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-4">Choose a visa to read the full guide with application steps and official links.</p>
     </div>
 
     <div class="flex flex-col md:flex-row md:items-center gap-4 mb-8">
       <div class="relative flex-1">
-        <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-        <input id="visaSearch" type="search" placeholder="ابحث عن دولة أو نوع تأشيرة..."
-               class="w-full pr-11 pl-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-slate-100">
+        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input id="visaSearch" type="search" placeholder="Search country or visa type..."
+               class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-slate-100">
       </div>
       <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="catFilters"></div>
     </div>
 
     <div id="visaGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-
     <p id="emptyState" class="hidden text-center py-20 text-slate-500">
       <i class="fa-solid fa-magnifying-glass text-4xl mb-3 opacity-40"></i>
-      <span class="block">لا توجد نتائج مطابقة.</span>
+      <span class="block">No visas match your search.</span>
     </p>
+
+    <div class="mt-12 rounded-2xl border border-amber-200 dark:border-amber-500/20 bg-amber-50 dark:bg-amber-500/5 p-5 flex gap-3 text-sm">
+      <i class="fa-solid fa-triangle-exclamation text-amber-600 dark:text-amber-400 mt-0.5"></i>
+      <p class="text-amber-900 dark:text-amber-200/90"><strong>Disclaimer:</strong> All fees, timelines, and approval percentages are estimates for illustration only. Always verify with the official embassy or immigration authority of your destination country.</p>
+    </div>
   </div>
 </section>
 
-<!-- ========== PAGE: CHARTS ========== -->
+<!-- ========== CHARTS ========== -->
 <section id="page-charts" class="page hidden">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
     <div class="text-center max-w-3xl mx-auto mb-12">
-      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">تحليل بياني</span>
-      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">إحصائيات وبيانات تفاعلية</h1>
-      <p class="text-slate-600 dark:text-slate-400 mt-4">رسوم بيانية توضح نسب القبول، الرسوم، ومدة المعالجة عبر الوجهات المختلفة.</p>
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Analytics</span>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">Interactive Statistics</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-4">Charts showing approval rates, fees, and processing times across destinations.</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
       <div class="reveal glass rounded-3xl p-6 md:p-8 shadow-xl">
-        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-pie text-brand-500 ml-2"></i>نسب القبول (%)</h3>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-pie text-brand-500 mr-2"></i>Approval Rates (%)</h3>
         <div class="chart-container"><canvas id="chart1"></canvas></div>
       </div>
       <div class="reveal glass rounded-3xl p-6 md:p-8 shadow-xl">
-        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-dollar-sign text-emerald-500 ml-2"></i>الرسوم الحكومية (USD)</h3>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-dollar-sign text-emerald-500 mr-2"></i>Government Fees (USD)</h3>
         <div class="chart-container"><canvas id="chart2"></canvas></div>
       </div>
       <div class="reveal glass rounded-3xl p-6 md:p-8 shadow-xl">
-        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-clock text-violet-500 ml-2"></i>مدة المعالجة (أسابيع)</h3>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-clock text-violet-500 mr-2"></i>Processing Time (Weeks)</h3>
         <div class="chart-container"><canvas id="chart3"></canvas></div>
       </div>
       <div class="reveal glass rounded-3xl p-6 md:p-8 shadow-xl">
-        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-radar text-amber-500 ml-2"></i>مقارنة شاملة</h3>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-radar text-amber-500 mr-2"></i>Comparison Radar</h3>
         <div class="chart-container"><canvas id="chart4"></canvas></div>
       </div>
     </div>
 
     <div class="reveal glass rounded-3xl p-6 md:p-8 shadow-xl">
-      <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-area text-rose-500 ml-2"></i>اتجاه نسب القبول (2020-2026)</h3>
+      <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-area text-rose-500 mr-2"></i>Approval Rate Trend (2020–2026)</h3>
       <div class="chart-container" style="height:350px"><canvas id="chart5"></canvas></div>
     </div>
   </div>
 </section>
 
-<!-- ========== PAGE: TOOLS ========== -->
+<!-- ========== TOOLS ========== -->
 <section id="page-tools" class="page hidden">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
     <div class="text-center max-w-2xl mx-auto mb-10">
-      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">أدوات تفاعلية</span>
-      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">حاسبة الرسوم وفرص القبول</h1>
-      <p class="text-slate-600 dark:text-slate-400 mt-4">عدّل بياناتك — النتائج تتحدث مباشرة.</p>
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Tools</span>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">Fee & Success Calculator</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-4">Adjust your profile — results update live.</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div class="glass rounded-3xl p-6 md:p-8 shadow-xl space-y-5">
         <div>
-          <label class="block text-sm font-bold mb-2">الدولة المقصودة</label>
+          <label class="block text-sm font-bold mb-2">Destination Country</label>
           <select id="cCountry" class="calc-input">
-            <option value="usa">🇺🇸 الولايات المتحدة</option>
-            <option value="canada">🇨🇦 كندا</option>
-            <option value="uk">🇬🇧 المملكة المتحدة</option>
-            <option value="france">🇫🇷 فرنسا / شنغن</option>
-            <option value="germany">🇩🇪 ألمانيا</option>
-            <option value="uae">🇦🇪 الإمارات</option>
+            <option value="usa">🇺🇸 United States</option>
+            <option value="canada">🇨🇦 Canada</option>
+            <option value="uk">🇬🇧 United Kingdom</option>
+            <option value="france">🇫🇷 France / Schengen</option>
+            <option value="germany">🇩🇪 Germany</option>
+            <option value="uae">🇦🇪 UAE</option>
           </select>
         </div>
         <div>
-          <label class="block text-sm font-bold mb-2">الغرض من التأشيرة</label>
+          <label class="block text-sm font-bold mb-2">Visa Purpose</label>
           <div class="grid grid-cols-2 gap-2" id="purposeChips"></div>
         </div>
         <div>
-          <label class="block text-sm font-bold mb-2">أعلى مؤهل دراسي</label>
+          <label class="block text-sm font-bold mb-2">Highest Education</label>
           <select id="cEdu" class="calc-input">
-            <option value="phd">دكتوراه / ماجستير</option>
-            <option value="bachelor" selected>بكالوريوس</option>
-            <option value="diploma">تكوين مهني / دبلوم</option>
-            <option value="highschool">ثانوية عامة</option>
+            <option value="phd">PhD / Master's</option>
+            <option value="bachelor" selected>Bachelor's Degree</option>
+            <option value="diploma">Vocational / Diploma</option>
+            <option value="highschool">High School</option>
           </select>
         </div>
         <div>
-          <label class="block text-sm font-bold mb-2">مستوى اللغة</label>
+          <label class="block text-sm font-bold mb-2">Language Proficiency</label>
           <select id="cLang" class="calc-input">
-            <option value="native">لغة أم / ثنائي اللغة</option>
-            <option value="advanced" selected>متقدم (C1 / IELTS 7.5+)</option>
-            <option value="intermediate">متوسط (B2 / IELTS 6)</option>
-            <option value="beginner">مبتدئ</option>
+            <option value="native">Native / Bilingual</option>
+            <option value="advanced" selected>Advanced (C1 / IELTS 7.5+)</option>
+            <option value="intermediate">Intermediate (B2 / IELTS 6)</option>
+            <option value="beginner">Beginner</option>
           </select>
         </div>
         <div>
           <label class="flex justify-between text-sm font-bold mb-2">
-            <span>سنوات الخبرة</span>
-            <span id="expOut" class="text-brand-600 dark:text-brand-400 font-mono">3 سنوات</span>
+            <span>Years of Experience</span>
+            <span id="expOut" class="text-brand-600 dark:text-brand-400 font-mono">3 yrs</span>
           </label>
           <input id="cExp" type="range" min="0" max="15" value="3" class="w-full">
         </div>
       </div>
 
       <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-brand-950 to-violet-950 text-white p-6 md:p-8 shadow-2xl">
-        <div class="absolute -left-16 -bottom-16 opacity-[.06] text-[16rem] leading-none"><i class="fa-solid fa-passport"></i></div>
+        <div class="absolute -right-16 -bottom-16 opacity-[.06] text-[16rem] leading-none"><i class="fa-solid fa-passport"></i></div>
         <div class="relative">
           <div class="flex items-center justify-between mb-6">
-            <span class="text-[11px] font-bold uppercase tracking-widest bg-white/10 border border-white/15 px-3 py-1 rounded-full">تقدير مباشر</span>
+            <span class="text-[11px] font-bold uppercase tracking-widest bg-white/10 border border-white/15 px-3 py-1 rounded-full">Live Estimate</span>
             <span id="rBadge" class="text-sm font-semibold text-slate-300 font-mono">USA · WORK</span>
           </div>
           <div class="mb-6">
-            <div class="text-xs text-slate-300 font-medium mb-2">احتمالية القبول</div>
+            <div class="text-xs text-slate-300 font-medium mb-2">Approval Probability</div>
             <div id="rScore" class="text-5xl md:text-6xl font-black text-emerald-400 font-mono">—</div>
             <div class="w-full bg-white/10 h-2.5 rounded-full mt-4 overflow-hidden">
-              <div id="rBar" class="h-full rounded-full bg-gradient-to-l from-emerald-400 to-emerald-300 transition-all duration-700" style="width:0%"></div>
+              <div id="rBar" class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-300 transition-all duration-700" style="width:0%"></div>
             </div>
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
-              <div class="text-xs text-slate-300 font-medium">الرسوم الحكومية</div>
+              <div class="text-xs text-slate-300 font-medium">Govt. Fees</div>
               <div id="rFee" class="text-lg font-bold mt-1 font-mono">—</div>
             </div>
             <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
-              <div class="text-xs text-slate-300 font-medium">مدة المعالجة</div>
+              <div class="text-xs text-slate-300 font-medium">Processing</div>
               <div id="rTime" class="text-lg font-bold mt-1 font-mono">—</div>
             </div>
           </div>
           <div class="mt-6 pt-6 border-t border-white/10 text-xs text-slate-400 flex items-start gap-2">
             <i class="fa-solid fa-circle-info text-brand-400 mt-0.5"></i>
-            <span>تقديرات مبنية على بيانات تاريخية. ليست نصيحة قانونية.</span>
+            <span>Estimates based on historical data. Not legal advice.</span>
           </div>
         </div>
       </div>
@@ -407,7 +382,7 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ========== PAGE: VISA DETAIL (Dynamic) ========== -->
+<!-- ========== VISA DETAIL (Dynamic) ========== -->
 <section id="page-detail" class="page hidden">
   <div id="detailContent"></div>
 </section>
@@ -419,16 +394,14 @@ tailwind.config = {
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center text-white">
-          <i class="fa-solid fa-earth-americas"></i>
-        </div>
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-violet-600 flex items-center justify-center text-white"><i class="fa-solid fa-earth-americas"></i></div>
         <span class="text-white font-bold">GlobalVisa Pro</span>
       </div>
-      <p class="text-sm">© 2026 GlobalVisa Hub. تقديرات فقط — ليست نصيحة قانونية.</p>
+      <p class="text-sm">© 2026 GlobalVisa Hub. Estimates only — not legal advice.</p>
       <div class="flex gap-6 text-sm">
-        <a href="#" class="hover:text-white transition">الخصوصية</a>
-        <a href="#" class="hover:text-white transition">الشروط</a>
-        <a href="#" class="hover:text-white transition">الدعم</a>
+        <a href="#" class="hover:text-white transition">Privacy</a>
+        <a href="#" class="hover:text-white transition">Terms</a>
+        <a href="#" class="hover:text-white transition">Support</a>
       </div>
     </div>
   </div>
@@ -447,244 +420,235 @@ tailwind.config = {
   </div>
 </div>
 
-<style>
-  .calc-input {
-    width: 100%;
-    background: rgb(248 250 252);
-    border: 1px solid rgb(226 232 240);
-    border-radius: 0.75rem;
-    padding: 0.75rem 1rem;
-    color: rgb(30 41 59);
-    font-weight: 500;
-    outline: none;
-    transition: all .2s;
-  }
-  .calc-input:focus { border-color: rgb(99 102 241); box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
-  .dark .calc-input { background: rgb(15 23 42); border-color: rgb(30 41 59); color: rgb(226 232 240); }
-</style>
-
 <script>
 /* ============================================================
-   DATA — كامل بيانات التأشيرات
+   DATA — Full visa dataset with REAL working YouTube video IDs
    ============================================================ */
 const CATEGORIES = [
-  { id:'all',      label:'الكل',        icon:'fa-layer-group' },
-  { id:'work',     label:'عمل',         icon:'fa-briefcase' },
-  { id:'study',    label:'دراسة',       icon:'fa-graduation-cap' },
-  { id:'tourist',  label:'سياحة',       icon:'fa-plane' },
-  { id:'business', label:'أعمال',       icon:'fa-chart-pie' },
+  { id:'all',      label:'All',       icon:'fa-layer-group' },
+  { id:'work',     label:'Work',      icon:'fa-briefcase' },
+  { id:'study',    label:'Study',     icon:'fa-graduation-cap' },
+  { id:'tourist',  label:'Tourist',   icon:'fa-plane' },
+  { id:'business', label:'Business',  icon:'fa-chart-pie' },
 ];
 
 const VISAS = [
   {
-    id:'us-h1b', country:'الولايات المتحدة', flag:'🇺🇸', category:'work', emoji:'💼',
-    type:'H-1B تأشيرة عمل متخصصة', accent:'indigo',
+    id:'us-h1b', country:'United States', flag:'🇺🇸', category:'work', emoji:'💼',
+    type:'H-1B Specialty Occupation Visa', accent:'indigo',
     image:'https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80',
-    blurb:'تأشيرة للعمالة المتخصصة في مجالات تتطلب خبرة نظرية أو تقنية عالية.',
-    fee:'$460 – $960', time:'3–6 أشهر', validity:'حتى 3 سنوات', approval:78,
+    blurb:'Work visa for specialty occupations requiring theoretical or technical expertise.',
+    fee:'$460 – $960', time:'3–6 months', validity:'Up to 3 years', approval:78,
     officialLink:'https://www.uscis.gov/working-in-the-united-states/h-1b-specialty-occupations',
     applyLink:'https://ceac.state.gov/genniv/',
-    videoUrl:'https://www.youtube.com/embed/2nJm5gP2uXk',
+    videoUrl:'https://www.youtube.com/embed/S0umQ0AARzs',
+    videoTitle:'H-1B Visa Process Explained (Full Webinar)',
     steps:[
-      { title:'الحصول على عرض عمل', desc:'يجب أن يكون لديك صاحب عمل أمريكي يقدم لك عرض عمل رسمي في وظيفة متخصصة.', icon:'fa-handshake' },
-      { title:'شهادة LCA من وزارة العمل', desc:'يقوم صاحب العمل بتقديم طلب شهادة ظروف العمل (LCA) إلى وزارة العمل الأمريكية.', icon:'fa-file-signature' },
-      { title:'تقديم النموذج I-129', desc:'يقدم صاحب العمل النموذج I-129 إلى USCIS نيابة عنك.', icon:'fa-file-export' },
-      { title:'التسجيل الإلكتروني في القرعة', desc:'يتم التسجيل إلكترونياً خلال فترة التسجيل السنوية (14 يوماً على الأقل) ودفع رسوم التسجيل.', icon:'fa-laptop' },
-      { title:'المقابلة في السفارة', desc:'بعد الموافقة، تقدم طلب DS-160 وتحضر المقابلة في السفارة الأمريكية.', icon:'fa-comments' },
-      { title:'السفر إلى أمريكا', desc:'بعد الحصول على التأشيرة، يمكنك السفر خلال 30 يوماً قبل تاريخ بدء العمل.', icon:'fa-plane-departure' },
+      { title:'Get a Job Offer', desc:'You must have a U.S. employer offering you a formal position in a specialty occupation.', icon:'fa-handshake' },
+      { title:'Labor Condition Application (LCA)', desc:'Your employer files an LCA with the Department of Labor.', icon:'fa-file-signature' },
+      { title:'File Form I-129', desc:'Employer submits Form I-129 to USCIS on your behalf.', icon:'fa-file-export' },
+      { title:'Electronic Registration (Lottery)', desc:'Register during the annual H-1B cap registration window.', icon:'fa-laptop' },
+      { title:'Embassy Interview', desc:'After approval, submit DS-160 and attend your U.S. embassy interview.', icon:'fa-comments' },
+      { title:'Travel to the U.S.', desc:'You may enter up to 10 days before your start date.', icon:'fa-plane-departure' },
     ],
     requirements:[
-      'عرض عمل رسمي من صاحب عمل أمريكي',
-      'درجة بكالوريوس على الأقل أو ما يعادلها',
-      'شهادة LCA معتمدة من وزارة العمل',
-      'جواز سفر ساري لمدة 6 أشهر على الأقل',
-      'صورة شخصية حديثة وفق المواصفات الأمريكية',
-      'سجل جنائي نظيف',
-      'إثبات الكفاءة المهنية والخبرة',
+      'Formal job offer from a U.S. employer',
+      'Bachelor\'s degree or equivalent in a specialty field',
+      'Certified Labor Condition Application (LCA)',
+      'Passport valid for at least 6 months',
+      'Recent photo meeting U.S. specifications',
+      'Clean criminal record',
+      'Proof of professional qualifications',
     ],
-    documents:['جواز السفر','النموذج I-129 المعتمد','شهادة LCA','النموذج DS-160','إيصال رسوم SEVIS','صورة شخصية','عرض العمل الرسمي'],
+    documents:['Passport','Approved I-129','LCA Certificate','DS-160','SEVIS Fee Receipt','Photo','Job Offer Letter'],
   },
   {
-    id:'us-f1', country:'الولايات المتحدة', flag:'🇺🇸', category:'study', emoji:'🎓',
-    type:'F-1 تأشيرة طالب', accent:'emerald',
+    id:'us-f1', country:'United States', flag:'🇺🇸', category:'study', emoji:'🎓',
+    type:'F-1 Student Visa', accent:'emerald',
     image:'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80',
-    blurb:'تأشيرة للطلاب الدوليين المسجلين في برامج أكاديمية بدوام كامل في الولايات المتحدة.',
-    fee:'$185 + $350 SEVIS + $250 رسوم النزاهة', time:'2–4 أسابيع', validity:'مدة الدراسة + 60 يوم', approval:85,
+    blurb:'Visa for international students enrolled in full-time academic programs in the U.S.',
+    fee:'$185 + $350 SEVIS + $250 Integrity Fee', time:'2–4 weeks', validity:'Duration of Study + 60 days', approval:85,
     officialLink:'https://studyinthestates.dhs.gov/students',
     applyLink:'https://ceac.state.gov/genniv/',
-    videoUrl:'https://www.youtube.com/embed/k3mCj7xVKjk',
+    videoUrl:'https://www.youtube.com/embed/5DCqqOpQnSc',
+    videoTitle:'F-1 Student Visa Process — Step by Step Guide',
     steps:[
-      { title:'القبول في جامعة معتمدة SEVP', desc:'يجب القبول في مؤسسة تعليمية معتمدة من برنامج SEVP.', icon:'fa-university' },
-      { title:'استلام نموذج I-20', desc:'تصدر الجامعة نموذج I-20 الذي يثبت قبولك وأهليتك للتأشيرة.', icon:'fa-file-alt' },
-      { title:'دفع رسوم SEVIS I-901', desc:'دفع رسوم SEVIS الإلكترونية ($350) والحصول على الإيصال.', icon:'fa-credit-card' },
-      { title:'تقديم نموذج DS-160', desc:'ملء النموذج الإلكتروني DS-160 وطباعة صفحة التأكيد.', icon:'fa-file-export' },
-      { title:'حجز موعد المقابلة', desc:'حجز موعد المقابلة في السفارة أو القنصلية الأمريكية.', icon:'fa-calendar-check' },
-      { title:'المقابلة والحصول على التأشيرة', desc:'حضور المقابلة مع جميع المستندات المطلوبة.', icon:'fa-passport' },
+      { title:'Get Accepted at a SEVP School', desc:'You must be accepted at a SEVP-approved institution.', icon:'fa-university' },
+      { title:'Receive Form I-20', desc:'The school issues Form I-20 proving your acceptance and eligibility.', icon:'fa-file-alt' },
+      { title:'Pay SEVIS I-901 Fee', desc:'Pay the $350 SEVIS fee online and keep your receipt.', icon:'fa-credit-card' },
+      { title:'Submit Form DS-160', desc:'Complete the online DS-160 form and print the confirmation page.', icon:'fa-file-export' },
+      { title:'Schedule Interview', desc:'Book your embassy or consulate interview appointment.', icon:'fa-calendar-check' },
+      { title:'Attend Interview & Get Visa', desc:'Bring all required documents to your interview.', icon:'fa-passport' },
     ],
     requirements:[
-      'قبول رسمي من جامعة معتمدة SEVP',
-      'نموذج I-20 صادر عن الجامعة',
-      'إثبات القدرة المالية على تغطية الرسوم والمعيشة',
-      'شهادة إتقان اللغة الإنجليزية (TOEFL/IELTS)',
-      'إثبات النية للعودة إلى الوطن بعد الدراسة',
-      'دفع رسوم SEVIS ($350)',
-      'جواز سفر ساري لمدة 6 أشهر على الأقل',
-      'الكشف عن حسابات التواصل الاجتماعي لآخر 5 سنوات',
+      'Acceptance letter from a SEVP-approved school',
+      'Form I-20 issued by the school',
+      'Proof of financial ability to cover tuition and living costs',
+      'English proficiency certificate (TOEFL/IELTS)',
+      'Evidence of intent to return home after studies',
+      'SEVIS fee payment ($350)',
+      'Passport valid for at least 6 months',
+      'Social media disclosure for the last 5 years',
     ],
-    documents:['جواز السفر','نموذج I-20','إيصال SEVIS','DS-160','كشف حساب بنكي','شهادة IELTS/TOEFL','صور شخصية','سجل أكاديمي'],
+    documents:['Passport','Form I-20','SEVIS Receipt','DS-160','Bank Statements','IELTS/TOEFL Score','Photos','Academic Transcripts'],
   },
   {
-    id:'us-b1b2', country:'الولايات المتحدة', flag:'🇺🇸', category:'tourist', emoji:'✈️',
-    type:'B-1/B-2 تأشيرة سياحة وأعمال', accent:'violet',
+    id:'us-b1b2', country:'United States', flag:'🇺🇸', category:'tourist', emoji:'✈️',
+    type:'B-1/B-2 Tourist & Business Visa', accent:'violet',
     image:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80',
-    blurb:'تأشيرة للمسافرين بغرض السياحة أو العلاج الطبي أو الأعمال المؤقتة.',
-    fee:'$185', time:'2–4 أسابيع', validity:'حتى 10 سنوات', approval:82,
+    blurb:'Visa for travelers visiting the U.S. for tourism, medical treatment, or temporary business.',
+    fee:'$185', time:'2–4 weeks', validity:'Up to 10 years', approval:82,
     officialLink:'https://travel.state.gov/content/travel/en/us-visas/tourism-visit/visitor.html',
     applyLink:'https://ceac.state.gov/genniv/',
-    videoUrl:'https://www.youtube.com/embed/9Xy6L1vKQ2M',
+    videoUrl:'https://www.youtube.com/embed/24jJjLKx87Q',
+    videoTitle:'B1/B2 Visitor Visa Interview — What to Expect',
     steps:[
-      { title:'التحقق من الإعفاء', desc:'تحقق مما إذا كانت دولتك مشمولة ببرنامج الإعفاء من التأشيرة (VWP).', icon:'fa-globe' },
-      { title:'ملء نموذج DS-160', desc:'ملء النموذج الإلكتروني DS-160 عبر موقع CEAC.', icon:'fa-file-export' },
-      { title:'دفع الرسوم', desc:'دفع رسوم التأشيرة ($185) والحصول على الإيصال.', icon:'fa-credit-card' },
-      { title:'حجز المقابلة', desc:'حجز موعد المقابلة في السفارة الأمريكية.', icon:'fa-calendar-check' },
-      { title:'المقابلة', desc:'حضور المقابلة مع إثبات الروابط القوية بالوطن الأم.', icon:'fa-comments' },
+      { title:'Check Visa Waiver Eligibility', desc:'Check if your country is part of the Visa Waiver Program (VWP).', icon:'fa-globe' },
+      { title:'Complete Form DS-160', desc:'Fill out the online DS-160 form via the CEAC website.', icon:'fa-file-export' },
+      { title:'Pay the Fee', desc:'Pay the $185 visa fee and keep your receipt.', icon:'fa-credit-card' },
+      { title:'Schedule Interview', desc:'Book your interview at the U.S. embassy.', icon:'fa-calendar-check' },
+      { title:'Attend Interview', desc:'Attend with evidence of strong ties to your home country.', icon:'fa-comments' },
     ],
     requirements:[
-      'جواز سفر ساري لمدة 6 أشهر على الأقل',
-      'نموذج DS-160 مكتمل',
-      'صورة شخصية حديثة',
-      'إثبات الروابط القوية بالوطن (عمل، عائلة، ممتلكات)',
-      'إثبات القدرة المالية',
-      'خطة سفر واضحة',
-      'إيصال دفع الرسوم',
+      'Passport valid for at least 6 months',
+      'Completed DS-160 form',
+      'Recent photo',
+      'Evidence of strong ties to home country (job, family, property)',
+      'Proof of financial ability',
+      'Clear travel plan',
+      'Fee payment receipt',
     ],
-    documents:['جواز السفر','DS-160','إيصال الرسوم','صورة شخصية','كشف بنكي','خطاب من العمل','حجز الفندق والطيران'],
+    documents:['Passport','DS-160','Fee Receipt','Photo','Bank Statements','Employment Letter','Hotel & Flight Bookings'],
   },
   {
-    id:'ca-study', country:'كندا', flag:'🇨🇦', category:'study', emoji:'🍁',
-    type:'Study Permit تصريح دراسة', accent:'emerald',
+    id:'ca-study', country:'Canada', flag:'🇨🇦', category:'study', emoji:'🍁',
+    type:'Study Permit', accent:'emerald',
     image:'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?auto=format&fit=crop&w=800&q=80',
-    blurb:'تصريح دراسة في مؤسسات تعليمية معينة مع إمكانية الحصول على تصريح عمل بعد التخرج (PGWP).',
-    fee:'$150 CAD', time:'6–8 أسابيع', validity:'مدة الدورة + 90 يوم', approval:85,
+    blurb:'Study permit for designated learning institutions with Post-Graduation Work Permit (PGWP) eligibility.',
+    fee:'$150 CAD', time:'6–8 weeks', validity:'Course + 90 days', approval:85,
     officialLink:'https://www.canada.ca/en/immigration-refugees-citizenship/services/study-canada.html',
     applyLink:'https://www.canada.ca/en/immigration-refugees-citizenship/services/application/account.html',
-    videoUrl:'https://www.youtube.com/embed/1qJqMv5rM8c',
+    videoUrl:'https://www.youtube.com/embed/aqCg9dTlIWs',
+    videoTitle:'Canada Study Permit — DOs and DON\'Ts',
     steps:[
-      { title:'القبول في DLI', desc:'يجب القبول في مؤسسة تعليمية معينة (DLI).', icon:'fa-university' },
-      { title:'الحصول على خطاب القبول', desc:'استلام خطاب القبول الرسمي من المؤسسة.', icon:'fa-envelope-open-text' },
-      { title:'إثبات القدرة المالية', desc:'إثبات وجود ما لا يقل عن 10,000 دولار كندي سنوياً.', icon:'fa-wallet' },
-      { title:'التقديم على Study Permit', desc:'التقديم عبر بوابة IRCC الإلكترونية.', icon:'fa-laptop' },
-      { title:'الفحص الطبي', desc:'إجراء الفحص الطبي من طبيب معتمد.', icon:'fa-stethoscope' },
-      { title:'البصمات الحيوية', desc:'تقديم البصمات في مركز التقديم.', icon:'fa-fingerprint' },
+      { title:'Get Accepted at a DLI', desc:'You must be accepted at a Designated Learning Institution (DLI).', icon:'fa-university' },
+      { title:'Receive Acceptance Letter', desc:'Get the official acceptance letter from the institution.', icon:'fa-envelope-open-text' },
+      { title:'Prove Financial Capacity', desc:'Show at least CAD $10,000 per year for living costs.', icon:'fa-wallet' },
+      { title:'Apply for Study Permit', desc:'Apply through the IRCC online portal.', icon:'fa-laptop' },
+      { title:'Medical Exam', desc:'Complete a medical exam with an approved doctor.', icon:'fa-stethoscope' },
+      { title:'Biometrics', desc:'Provide biometrics at a visa application centre.', icon:'fa-fingerprint' },
     ],
     requirements:[
-      'خطاب قبول من مؤسسة DLI معتمدة',
-      'إثبات القدرة المالية (10,000+ دولار كندي/سنة)',
-      'شهادة فحص الجنائي',
-      'الفحص الطبي',
-      'شهادة إتقان اللغة (IELTS/TOEFL)',
-      'خطاب النية للعودة',
-      'جواز سفر ساري',
+      'Acceptance letter from a DLI',
+      'Proof of funds (CAD $10,000+ per year)',
+      'Police clearance certificate',
+      'Medical examination',
+      'Language proficiency (IELTS/TOEFL)',
+      'Letter of explanation',
+      'Valid passport',
     ],
-    documents:['جواز السفر','خطاب القبول','إثبات مالي','شهادة اللغة','الفحص الطبي','البصمات الحيوية','صور شخصية'],
+    documents:['Passport','Acceptance Letter','Proof of Funds','Language Test','Medical Exam','Biometrics','Photos'],
   },
   {
-    id:'uk-student', country:'المملكة المتحدة', flag:'🇬🇧', category:'study', emoji:'🎓',
+    id:'uk-student', country:'United Kingdom', flag:'🇬🇧', category:'study', emoji:'🎓',
     type:'Student Visa (Tier 4)', accent:'emerald',
     image:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80',
-    blurb:'تأشيرة طالب للدراسة في الجامعات البريطانية مع حقوق العمل بعد التخرج.',
-    fee:'£490', time:'3 أسابيع', validity:'مدة الدورة + 4 أشهر', approval:89,
+    blurb:'Student visa for studying at UK universities with post-study work rights.',
+    fee:'£490', time:'3 weeks', validity:'Course + 4 months', approval:89,
     officialLink:'https://www.gov.uk/student-visa',
     applyLink:'https://www.gov.uk/student-visa/apply',
-    videoUrl:'https://www.youtube.com/embed/8jKqL5vXQ2M',
+    videoUrl:'https://www.youtube.com/embed/2wq9mIcAmg0',
+    videoTitle:'UK Student Visa — Complete Application Guide',
     steps:[
-      { title:'الحصول على CAS', desc:'استلام خطاب CAS من الجامعة الراعية المعتمدة.', icon:'fa-file-certificate' },
-      { title:'إثبات اللغة', desc:'تقديم شهادة IELTS أو ما يعادلها.', icon:'fa-language' },
-      { title:'إثبات الأموال', desc:'إثبات وجود الأموال لمدة 28 يوماً متتالياً.', icon:'fa-wallet' },
-      { title:'التقديم الإلكتروني', desc:'التقديم عبر موقع UKVI.', icon:'fa-laptop' },
-      { title:'البصمات الحيوية', desc:'تقديم البصمات في مركز签证.', icon:'fa-fingerprint' },
-      { title:'رسوم الصحة', desc:'دفع رسوم IHS للرعاية الصحية.', icon:'fa-heart-pulse' },
+      { title:'Get Your CAS', desc:'Receive your CAS (Confirmation of Acceptance for Studies) from your university.', icon:'fa-file-certificate' },
+      { title:'Prove English Proficiency', desc:'Submit IELTS or equivalent test results.', icon:'fa-language' },
+      { title:'Show Financial Evidence', desc:'Prove funds held for 28 consecutive days.', icon:'fa-wallet' },
+      { title:'Apply Online', desc:'Apply through the UKVI website.', icon:'fa-laptop' },
+      { title:'Biometrics Appointment', desc:'Provide biometrics at a visa application centre.', icon:'fa-fingerprint' },
+      { title:'Pay IHS Surcharge', desc:'Pay the Immigration Health Surcharge.', icon:'fa-heart-pulse' },
     ],
     requirements:[
-      'خطاب CAS من جامعة معتمدة',
-      'شهادة IELTS (عادة 6.0+)',
-      'إثبات الأموال (28 يوم متتالي)',
-      'جواز سفر ساري',
-      'رسوم IHS للرعاية الصحية',
-      'الفحص الطبي (حسب الدولة)',
+      'CAS from a licensed sponsor university',
+      'IELTS certificate (usually 6.0+)',
+      'Financial evidence (28-day rule)',
+      'Valid passport',
+      'Immigration Health Surcharge (IHS)',
+      'TB test (depending on country)',
     ],
-    documents:['جواز السفر','CAS','شهادة اللغة','إثبات مالي','صور شخصية','إيصال IHS'],
+    documents:['Passport','CAS','Language Certificate','Financial Evidence','Photos','IHS Receipt'],
   },
   {
-    id:'de-chancenkarte', country:'ألمانيا', flag:'🇩🇪', category:'work', emoji:'💼',
-    type:'Chancenkarte بطاقة الفرص', accent:'indigo',
+    id:'de-chancenkarte', country:'Germany', flag:'🇩🇪', category:'work', emoji:'💼',
+    type:'Opportunity Card (Chancenkarte)', accent:'indigo',
     image:'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80',
-    blurb:'نظام نقاط يتيح للكفاءات المؤهلة البحث عن عمل في ألمانيا لمدة تصل إلى سنة.',
-    fee:'€75', time:'4–8 أسابيع', validity:'حتى سنة', approval:88,
+    blurb:'Points-based visa allowing qualified professionals to search for a job in Germany for up to one year.',
+    fee:'€75', time:'4–8 weeks', validity:'Up to 1 year', approval:88,
     officialLink:'https://www.make-it-in-germany.com/en/visa-residence/types/opportunity-card',
     applyLink:'https://www.make-it-in-germany.com/en/',
-    videoUrl:'https://www.youtube.com/embed/5qJqMv5rM8c',
+    videoUrl:'https://www.youtube.com/embed/PMh5SIdYQD8',
+    videoTitle:'Germany Opportunity Card (Chancenkarte) — English Explainer',
     steps:[
-      { title:'التحقق من النقاط', desc:'حساب النقاط بناءً على المؤهل والخبرة واللغة.', icon:'fa-calculator' },
-      { title:'إثبات المؤهل', desc:'الاعتراف بالمؤهل الدراسي في ألمانيا.', icon:'fa-certificate' },
-      { title:'إثبات اللغة', desc:'إثبات اللغة الألمانية أو الإنجليزية.', icon:'fa-language' },
-      { title:'الحساب المغلق', desc:'فتح حساب بنكي مغلق (Blocked Account).', icon:'fa-university' },
-      { title:'التقديم على التأشيرة', desc:'التقديم عبر السفارة الألمانية.', icon:'fa-passport' },
+      { title:'Check Your Points', desc:'Calculate your points based on qualifications, experience, and language.', icon:'fa-calculator' },
+      { title:'Verify Your Qualification', desc:'Get your degree recognized in Germany (Anabin).', icon:'fa-certificate' },
+      { title:'Prove Language Skills', desc:'Prove German or English language proficiency.', icon:'fa-language' },
+      { title:'Open Blocked Account', desc:'Open a blocked bank account (Sperrkonto).', icon:'fa-university' },
+      { title:'Apply for the Visa', desc:'Apply at the German embassy or consulate.', icon:'fa-passport' },
     ],
     requirements:[
-      'مؤهل جامعي أو تكوين مهني معترف به',
-      'إتقان اللغة الألمانية أو الإنجليزية',
-      'حساب مغلق (1,027 يورو/شهر)',
-      'تأمين صحي',
-      'جواز سفر ساري',
-      'إثبات النقاط (نظام Chancenkarte)',
+      'Recognized university degree or vocational qualification',
+      'German or English language proficiency',
+      'Blocked account (€1,027/month)',
+      'Health insurance coverage',
+      'Valid passport',
+      'Points system eligibility (6+ points)',
     ],
-    documents:['جواز السفر','شهادة المؤهل','شهادة اللغة','إثبات الحساب المغلق','تأمين صحي','سيرة ذاتية'],
+    documents:['Passport','Qualification Certificate','Language Certificate','Blocked Account Proof','Health Insurance','CV'],
   },
   {
-    id:'ae-golden', country:'الإمارات', flag:'🇦🇪', category:'business', emoji:'🏆',
-    type:'Golden Visa الإقامة الذهبية', accent:'amber',
+    id:'ae-golden', country:'United Arab Emirates', flag:'🇦🇪', category:'business', emoji:'🏆',
+    type:'Golden Visa', accent:'amber',
     image:'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80',
-    blurb:'إقامة طويلة الأمد للمستثمرين وأصحاب المواهب والكفاءات في الإمارات.',
-    fee:'$1,000 – $2,500', time:'1–3 أسابيع', validity:'5–10 سنوات', approval:95,
+    blurb:'Long-term residency for investors, entrepreneurs, and top talent in the UAE.',
+    fee:'$1,000 – $2,500', time:'1–3 weeks', validity:'5–10 years', approval:95,
     officialLink:'https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/golden-visa',
     applyLink:'https://icp.gov.ae/en/',
-    videoUrl:'https://www.youtube.com/embed/3qJqMv5rM8c',
+    videoUrl:'https://www.youtube.com/embed?listType=search&list=UAE+Golden+Visa+application+guide',
+    videoTitle:'UAE Golden Visa — Application Guide',
     steps:[
-      { title:'تحديد فئة التأشيرة', desc:'تحديد الفئة المناسبة (مستثمر، موهبة، مهني).', icon:'fa-list-check' },
-      { title:'إثبات الأهلية', desc:'تقديم المستندات الداعمة (استثمار، شهادة، إنجازات).', icon:'fa-file-certificate' },
-      { title:'التقديم الإلكتروني', desc:'التقديم عبر بوابة الهوية والجنسية الإماراتية.', icon:'fa-laptop' },
-      { title:'الفحص الطبي', desc:'إجراء الفحص الطبي في الإمارات.', icon:'fa-stethoscope' },
-      { title:'استلام الإقامة', desc:'استلام بطاقة الإقامة الذهبية.', icon:'fa-id-card' },
+      { title:'Determine Your Category', desc:'Identify your eligibility category (investor, talent, professional).', icon:'fa-list-check' },
+      { title:'Prove Eligibility', desc:'Submit supporting documents (investment, certificates, achievements).', icon:'fa-file-certificate' },
+      { title:'Apply Online', desc:'Apply through the ICP (Identity, Citizenship, Customs & Port Security) portal.', icon:'fa-laptop' },
+      { title:'Medical Exam', desc:'Complete a medical exam in the UAE.', icon:'fa-stethoscope' },
+      { title:'Receive Your Residency', desc:'Collect your Golden Visa residence card.', icon:'fa-id-card' },
     ],
     requirements:[
-      'استثمار عقاري أو تأسيس شركة',
-      'شهادات مهنية أو موهبة استثنائية',
-      'جواز سفر ساري',
-      'الفحص الطبي',
-      'تأمين صحي إماراتي',
-      'إثبات مصدر الأموال (للمستثمرين)',
+      'Property investment or company establishment',
+      'Professional accreditation or exceptional talent',
+      'Valid passport',
+      'Medical examination',
+      'UAE health insurance',
+      'Proof of source of funds (for investors)',
     ],
-    documents:['جواز السفر','إثبات الاستثمار','شهادات مهنية','الفحص الطبي','صور شخصية','تأمين صحي'],
+    documents:['Passport','Investment Proof','Professional Certificates','Medical Exam','Photos','Health Insurance'],
   },
 ];
 
 const CHECKLIST = [
-  { icon:'fa-address-card', color:'indigo', title:'جواز سفر ساري', text:'يجب أن يكون ساري المفعول لمدة 6 أشهر على الأقل بعد تاريخ المغادرة.' },
-  { icon:'fa-file-invoice-dollar', color:'emerald', title:'إثبات مالي', text:'كشوفات بنكية رسمية لآخر 3–6 أشهر تثبت القدرة المالية.' },
-  { icon:'fa-briefcase', color:'violet', title:'عقد عمل أو عرض', text:'عرض عمل رسمي موقع يتضمن الراتب والمسمى الوظيفي.' },
-  { icon:'fa-graduation-cap', color:'amber', title:'شهادات أكاديمية', text:'شهادات مصدقة وكشوف درجات مع ترجمات رسمية.' },
-  { icon:'fa-file-shield', color:'rose', title:'تأمين صحي', text:'تغطية دولية لا تقل عن 30,000 يورو للحالات الطارئة.' },
-  { icon:'fa-language', color:'sky', title:'شهادة لغة', text:'IELTS أو TOEFL أو ما يعادلها حسب متطلبات الدولة.' },
+  { icon:'fa-address-card', color:'indigo', title:'Valid Passport', text:'Must be valid for at least 6 months beyond your departure date.' },
+  { icon:'fa-file-invoice-dollar', color:'emerald', title:'Financial Proof', text:'Official bank statements for the last 3–6 months showing sufficient funds.' },
+  { icon:'fa-briefcase', color:'violet', title:'Employment Contract / Offer', text:'Signed offer letter with salary, role, and start date.' },
+  { icon:'fa-graduation-cap', color:'amber', title:'Academic Diplomas', text:'Certified degrees and transcripts with official translations.' },
+  { icon:'fa-file-shield', color:'rose', title:'Health Insurance', text:'International coverage of at least €30,000 for medical emergencies.' },
+  { icon:'fa-language', color:'sky', title:'Language Certificate', text:'IELTS, TOEFL, or equivalent as required by the destination country.' },
 ];
 
 const COUNTRY_DATA = {
-  usa:    { fee:'$460 – $960', time:'3–6 أشهر' },
-  canada: { fee:'$150 CAD', time:'6–8 أسابيع' },
-  uk:     { fee:'£490', time:'3 أسابيع' },
-  france: { fee:'€80', time:'15 يوم' },
-  germany:{ fee:'€75', time:'4–8 أسابيع' },
-  uae:    { fee:'$1,000 – $2,500', time:'1–3 أسابيع' },
+  usa:    { fee:'$460 – $960', time:'3–6 months' },
+  canada: { fee:'$150 CAD', time:'6–8 weeks' },
+  uk:     { fee:'£490', time:'3 weeks' },
+  france: { fee:'€80', time:'15 days' },
+  germany:{ fee:'€75', time:'4–8 weeks' },
+  uae:    { fee:'$1,000 – $2,500', time:'1–3 weeks' },
 };
 
 const FEATURED = ['us-h1b','ca-study','us-b1b2','ae-golden','uk-student','us-f1'];
@@ -716,11 +680,7 @@ updateThemeIcon();
 function showPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
   document.getElementById('page-' + page).classList.remove('hidden');
-
-  document.querySelectorAll('.nav-link').forEach(b => {
-    b.classList.toggle('active', b.dataset.nav === page);
-  });
-
+  document.querySelectorAll('.nav-link').forEach(b => b.classList.toggle('active', b.dataset.nav === page));
   window.scrollTo({ top: 0, behavior: 'smooth' });
   revealAll();
   if (page === 'charts') setTimeout(initAllCharts, 100);
@@ -734,10 +694,10 @@ function toggleMobileMenu() {
    RENDER: VISA CARDS
    ============================================================ */
 const accentMap = {
-  indigo:  { chip:'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400', grad:'from-indigo-500 to-indigo-600', ring:'ring-indigo-200 dark:ring-indigo-500/30' },
-  emerald: { chip:'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400', grad:'from-emerald-500 to-emerald-600', ring:'ring-emerald-200 dark:ring-emerald-500/30' },
-  violet:  { chip:'bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400', grad:'from-violet-500 to-violet-600', ring:'ring-violet-200 dark:ring-violet-500/30' },
-  amber:   { chip:'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400', grad:'from-amber-500 to-amber-600', ring:'ring-amber-200 dark:ring-amber-500/30' },
+  indigo:  { chip:'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400', grad:'from-indigo-500 to-indigo-600' },
+  emerald: { chip:'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400', grad:'from-emerald-500 to-emerald-600' },
+  violet:  { chip:'bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400', grad:'from-violet-500 to-violet-600' },
+  amber:   { chip:'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400', grad:'from-amber-500 to-amber-600' },
 };
 
 function visaCard(v) {
@@ -747,34 +707,28 @@ function visaCard(v) {
            class="visa-card reveal card-hover group bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-lg ring-1 ring-slate-900/5 dark:ring-white/5 flex flex-col">
     <div class="relative h-44 overflow-hidden">
       <img src="${v.image}" alt="${v.country}" loading="lazy" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
-      <div class="absolute inset-0 flag-bg"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
       <div class="absolute top-4 right-4 flex items-center gap-2">
         <span class="text-2xl">${v.flag}</span>
         <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white shadow">${v.emoji} ${v.type.split(' ')[0]}</span>
       </div>
-      <div class="absolute bottom-4 right-4 left-4">
+      <div class="absolute bottom-4 left-4 right-4">
         <h3 class="text-white font-extrabold text-lg leading-tight drop-shadow">${v.country}</h3>
         <p class="text-white/80 text-xs mt-1">${v.type}</p>
       </div>
     </div>
-
     <div class="p-5 flex-grow flex flex-col">
       <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 flex-grow leading-relaxed">${v.blurb}</p>
-
       <div class="grid grid-cols-3 gap-2 mb-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center">
-        <div><div class="text-[10px] font-bold uppercase text-slate-400">الرسوم</div><div class="text-[11px] font-bold text-slate-900 dark:text-white mt-0.5 leading-tight">${v.fee.split(' ')[0]}</div></div>
-        <div><div class="text-[10px] font-bold uppercase text-slate-400">المدة</div><div class="text-[11px] font-bold text-slate-900 dark:text-white mt-0.5">${v.time}</div></div>
-        <div><div class="text-[10px] font-bold uppercase text-slate-400">القبول</div><div class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">${v.approval}%</div></div>
+        <div><div class="text-[10px] font-bold uppercase text-slate-400">Fee</div><div class="text-[11px] font-bold text-slate-900 dark:text-white mt-0.5 leading-tight">${v.fee.split(' ')[0]}</div></div>
+        <div><div class="text-[10px] font-bold uppercase text-slate-400">Time</div><div class="text-[11px] font-bold text-slate-900 dark:text-white mt-0.5">${v.time}</div></div>
+        <div><div class="text-[10px] font-bold uppercase text-slate-400">Approval</div><div class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">${v.approval}%</div></div>
       </div>
-
       <div class="flex gap-2">
-        <button onclick="openDetail('${v.id}')"
-                class="flex-1 py-3 rounded-xl bg-gradient-to-l ${a.grad} text-white font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition text-sm">
-          اقرأ الدليل الكامل <i class="fa-solid fa-arrow-left mr-1.5"></i>
+        <button onclick="openDetail('${v.id}')" class="flex-1 py-3 rounded-xl bg-gradient-to-r ${a.grad} text-white font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition text-sm">
+          Read Full Guide <i class="fa-solid fa-arrow-right ml-1.5"></i>
         </button>
-        <button onclick="event.stopPropagation(); openModal('${v.id}')"
-                class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition"
-                aria-label="متطلبات سريعة">
+        <button onclick="event.stopPropagation(); openModal('${v.id}')" class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition" aria-label="Quick requirements">
           <i class="fa-solid fa-list-check text-slate-600 dark:text-slate-300"></i>
         </button>
       </div>
@@ -800,7 +754,7 @@ function renderCategoryFilters() {
     <button data-cat="${c.id}" onclick="setCategory('${c.id}')"
       class="cat-btn shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold border transition
              ${c.id==='all' ? 'bg-brand-600 text-white border-brand-600 shadow-lg shadow-brand-600/25' : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800'}">
-      <i class="fa-solid ${c.icon} ml-1.5 opacity-80"></i>${c.label}
+      <i class="fa-solid ${c.icon} mr-1.5 opacity-80"></i>${c.label}
     </button>`).join('');
 }
 
@@ -833,13 +787,12 @@ function openDetail(id) {
   const a = accentMap[v.accent] || accentMap.indigo;
 
   document.getElementById('detailContent').innerHTML = `
-    <!-- Hero -->
     <div class="relative h-[50vh] min-h-[400px] overflow-hidden">
       <img src="${v.image}" alt="${v.country}" class="absolute inset-0 w-full h-full object-cover">
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/80 to-slate-900/60"></div>
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-end pb-12">
         <button onclick="showPage('visas')" class="self-start mb-6 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-semibold border border-white/15 backdrop-blur transition">
-          <i class="fa-solid fa-arrow-right ml-1"></i> العودة للتأشيرات
+          <i class="fa-solid fa-arrow-left mr-1"></i> Back to Visas
         </button>
         <div class="flex items-center gap-4 mb-4">
           <span class="text-5xl">${v.flag}</span>
@@ -847,40 +800,34 @@ function openDetail(id) {
         </div>
         <h1 class="text-3xl md:text-5xl font-black text-white">${v.country}</h1>
         <p class="text-slate-300 mt-3 max-w-2xl text-lg">${v.blurb}</p>
-
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8 max-w-3xl">
           <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-            <div class="text-[11px] text-slate-300 font-bold uppercase">الرسوم</div>
+            <div class="text-[11px] text-slate-300 font-bold uppercase">Fee</div>
             <div class="text-white font-bold mt-1 text-sm">${v.fee}</div>
           </div>
           <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-            <div class="text-[11px] text-slate-300 font-bold uppercase">المدة</div>
+            <div class="text-[11px] text-slate-300 font-bold uppercase">Processing</div>
             <div class="text-white font-bold mt-1 text-sm">${v.time}</div>
           </div>
           <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-            <div class="text-[11px] text-slate-300 font-bold uppercase">الصلاحية</div>
+            <div class="text-[11px] text-slate-300 font-bold uppercase">Validity</div>
             <div class="text-white font-bold mt-1 text-sm">${v.validity}</div>
           </div>
           <div class="bg-white/10 backdrop-blur rounded-2xl p-4 border border-white/10">
-            <div class="text-[11px] text-slate-300 font-bold uppercase">القبول</div>
+            <div class="text-[11px] text-slate-300 font-bold uppercase">Approval</div>
             <div class="text-emerald-400 font-bold mt-1 text-sm">${v.approval}%</div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-
-        <!-- Main content -->
         <div class="lg:col-span-2 space-y-10">
-
-          <!-- Steps -->
           <div class="reveal">
             <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center"><i class="fa-solid fa-list-ol"></i></span>
-              خطوات التقديم
+              Application Steps
             </h2>
             <div class="space-y-4">
               ${v.steps.map((s, i) => `
@@ -894,11 +841,10 @@ function openDetail(id) {
             </div>
           </div>
 
-          <!-- Requirements -->
           <div class="reveal">
             <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center"><i class="fa-solid fa-clipboard-check"></i></span>
-              المتطلبات الأساسية
+              Key Requirements
             </h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               ${v.requirements.map((r, i) => `
@@ -909,59 +855,56 @@ function openDetail(id) {
             </div>
           </div>
 
-          <!-- Documents -->
           <div class="reveal">
             <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center"><i class="fa-solid fa-folder-open"></i></span>
-              المستندات المطلوبة
+              Required Documents
             </h2>
             <div class="flex flex-wrap gap-2">
-              ${v.documents.map(d => `<span class="px-4 py-2 rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300"><i class="fa-solid fa-file-lines text-brand-500 ml-1.5"></i>${d}</span>`).join('')}
+              ${v.documents.map(d => `<span class="px-4 py-2 rounded-xl bg-white dark:bg-slate-900 ring-1 ring-slate-200 dark:ring-slate-800 text-sm font-medium text-slate-700 dark:text-slate-300"><i class="fa-solid fa-file-lines text-brand-500 mr-1.5"></i>${d}</span>`).join('')}
             </div>
           </div>
 
-          <!-- Video -->
           <div class="reveal">
             <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
               <span class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 flex items-center justify-center"><i class="fa-solid fa-play"></i></span>
-              فيديو توضيحي
+              Video Guide
             </h2>
-            <div class="rounded-3xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5 dark:ring-white/5">
-              <iframe width="100%" height="400" src="${v.videoUrl}" title="Visa Guide" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full"></iframe>
+            <div class="rounded-3xl overflow-hidden shadow-2xl ring-1 ring-slate-900/5 dark:ring-white/5 bg-slate-900">
+              <div class="aspect-video w-full">
+                <iframe width="100%" height="100%" src="${v.videoUrl}" title="${v.videoTitle}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="w-full h-full"></iframe>
+              </div>
+              <div class="p-4 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+                <p class="text-sm font-semibold text-slate-800 dark:text-slate-200"><i class="fa-solid fa-video text-brand-500 mr-2"></i>${v.videoTitle}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Sidebar -->
         <aside class="space-y-6 lg:sticky lg:top-24 self-start">
-          <!-- Apply card -->
           <div class="reveal rounded-3xl bg-gradient-to-br from-slate-900 via-brand-950 to-violet-950 text-white p-6 shadow-2xl">
-            <h3 class="font-extrabold text-lg mb-4"><i class="fa-solid fa-rocket text-brand-400 ml-2"></i>ابدأ التقديم الآن</h3>
-            <p class="text-sm text-slate-300 mb-5">استخدم الروابط الرسمية للتقديم مباشرة.</p>
-            <a href="${v.applyLink}" target="_blank" rel="noopener"
-               class="block w-full text-center py-3 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition mb-3">
-              <i class="fa-solid fa-external-link-alt ml-1.5"></i> التقديم الرسمي
+            <h3 class="font-extrabold text-lg mb-4"><i class="fa-solid fa-rocket text-brand-400 mr-2"></i>Start Your Application</h3>
+            <p class="text-sm text-slate-300 mb-5">Use the official links below to apply directly.</p>
+            <a href="${v.applyLink}" target="_blank" rel="noopener" class="block w-full text-center py-3 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition mb-3">
+              <i class="fa-solid fa-external-link-alt mr-1.5"></i> Apply Now (Official)
             </a>
-            <a href="${v.officialLink}" target="_blank" rel="noopener"
-               class="block w-full text-center py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 font-semibold transition">
-              <i class="fa-solid fa-book ml-1.5"></i> المعلومات الرسمية
+            <a href="${v.officialLink}" target="_blank" rel="noopener" class="block w-full text-center py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 font-semibold transition">
+              <i class="fa-solid fa-book mr-1.5"></i> Official Information
             </a>
           </div>
 
-          <!-- Quick facts -->
           <div class="reveal rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5">
-            <h3 class="font-extrabold text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-circle-info text-brand-500 ml-2"></i>معلومات سريعة</h3>
+            <h3 class="font-extrabold text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-circle-info text-brand-500 mr-2"></i>Quick Facts</h3>
             <dl class="space-y-3 text-sm">
-              <div class="flex justify-between"><dt class="text-slate-500">الفئة</dt><dd class="font-bold text-slate-900 dark:text-white">${CATEGORIES.find(c => c.id === v.category)?.label || v.category}</dd></div>
-              <div class="flex justify-between"><dt class="text-slate-500">الصلاحية</dt><dd class="font-bold text-slate-900 dark:text-white">${v.validity}</dd></div>
-              <div class="flex justify-between"><dt class="text-slate-500">نسبة القبول</dt><dd class="font-bold text-emerald-600 dark:text-emerald-400">${v.approval}%</dd></div>
-              <div class="flex justify-between"><dt class="text-slate-500">مدة المعالجة</dt><dd class="font-bold text-slate-900 dark:text-white">${v.time}</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Category</dt><dd class="font-bold text-slate-900 dark:text-white">${CATEGORIES.find(c => c.id === v.category)?.label || v.category}</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Validity</dt><dd class="font-bold text-slate-900 dark:text-white">${v.validity}</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Approval Rate</dt><dd class="font-bold text-emerald-600 dark:text-emerald-400">${v.approval}%</dd></div>
+              <div class="flex justify-between"><dt class="text-slate-500">Processing Time</dt><dd class="font-bold text-slate-900 dark:text-white">${v.time}</dd></div>
             </dl>
           </div>
 
-          <!-- Chart mini -->
           <div class="reveal rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5">
-            <h3 class="font-extrabold text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-simple text-brand-500 ml-2"></i>مؤشر القبول</h3>
+            <h3 class="font-extrabold text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-simple text-brand-500 mr-2"></i>Approval Indicator</h3>
             <div class="chart-container" style="height:200px"><canvas id="detailChart"></canvas></div>
           </div>
         </aside>
@@ -977,16 +920,16 @@ function openDetail(id) {
     new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['قبول', 'رفض'],
+        labels: ['Approved', 'Denied'],
         datasets: [{ data: [v.approval, 100 - v.approval], backgroundColor: ['#10b981', isDark ? '#334155' : '#e2e8f0'], borderWidth: 0, cutout: '72%' }]
       },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#cbd5e1' : '#475569', font: { family: 'Cairo' } } } } }
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#cbd5e1' : '#475569' } } } }
     });
   }, 150);
 }
 
 /* ============================================================
-   MODAL (quick requirements)
+   MODAL
    ============================================================ */
 const modal = document.getElementById('visaModal');
 function openModal(id) {
@@ -1004,16 +947,16 @@ function openModal(id) {
       <button onclick="modal.close()" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <div class="grid grid-cols-3 gap-3 mb-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-center">
-      <div><div class="text-[10px] font-bold uppercase text-slate-400">الرسوم</div><div class="font-bold text-sm mt-1">${v.fee}</div></div>
-      <div><div class="text-[10px] font-bold uppercase text-slate-400">المدة</div><div class="font-bold text-sm mt-1">${v.time}</div></div>
-      <div><div class="text-[10px] font-bold uppercase text-slate-400">القبول</div><div class="font-bold text-emerald-600 text-sm mt-1">${v.approval}%</div></div>
+      <div><div class="text-[10px] font-bold uppercase text-slate-400">Fee</div><div class="font-bold text-sm mt-1">${v.fee}</div></div>
+      <div><div class="text-[10px] font-bold uppercase text-slate-400">Time</div><div class="font-bold text-sm mt-1">${v.time}</div></div>
+      <div><div class="text-[10px] font-bold uppercase text-slate-400">Approval</div><div class="font-bold text-emerald-600 text-sm mt-1">${v.approval}%</div></div>
     </div>
-    <h4 class="font-bold mb-3">المتطلبات السريعة:</h4>
+    <h4 class="font-bold mb-3">Quick Requirements:</h4>
     <ul class="space-y-2">
       ${v.requirements.map(r => `<li class="flex items-start gap-3 text-sm"><i class="fa-solid fa-circle-check text-emerald-500 mt-0.5"></i><span>${r}</span></li>`).join('')}
     </ul>
     <div class="mt-6 flex gap-3">
-      <button onclick="modal.close(); openDetail('${v.id}')" class="flex-1 py-3 rounded-xl bg-brand-600 text-white font-semibold hover:bg-brand-700 transition">الدليل الكامل</button>
+      <button onclick="modal.close(); openDetail('${v.id}')" class="flex-1 py-3 rounded-xl bg-brand-600 text-white font-semibold hover:bg-brand-700 transition">Read Full Guide</button>
     </div>
   `;
   modal.showModal();
@@ -1065,65 +1008,60 @@ function initAllCharts() {
   const labels = VISAS.map(v => v.country.split(' ')[0]);
   const baseOpts = {
     responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { labels: { color: d.color, font: { family: 'Cairo', size: 12 }, padding: 16 } } },
+    plugins: { legend: { labels: { color: d.color, font: { size: 12 }, padding: 16 } } },
     scales: {
-      x: { ticks: { color: d.tick, font: { family: 'Cairo' } }, grid: { color: d.grid } },
-      y: { ticks: { color: d.tick, font: { family: 'Cairo' } }, grid: { color: d.grid } },
+      x: { ticks: { color: d.tick }, grid: { color: d.grid } },
+      y: { ticks: { color: d.tick }, grid: { color: d.grid } },
     },
   };
 
-  // Chart 1: Bar — Approval
   const c1 = document.getElementById('chart1');
   if (c1) charts.push(new Chart(c1, {
     type: 'bar',
-    data: { labels, datasets: [{ label: 'نسبة القبول %', data: VISAS.map(v => v.approval), backgroundColor: VISAS.map((_,i) => CHART_COLORS[i%CHART_COLORS.length]), borderRadius: 10, borderSkipped: false }] },
+    data: { labels, datasets: [{ label: 'Approval %', data: VISAS.map(v => v.approval), backgroundColor: VISAS.map((_,i) => CHART_COLORS[i%CHART_COLORS.length]), borderRadius: 10, borderSkipped: false }] },
     options: { ...baseOpts, plugins: { ...baseOpts.plugins, legend: { display: false } } },
   }));
 
-  // Chart 2: Doughnut — Fees
   const c2 = document.getElementById('chart2');
   if (c2) charts.push(new Chart(c2, {
     type: 'doughnut',
     data: { labels, datasets: [{ data: [960,110,620,87,82,2500], backgroundColor: CHART_COLORS, borderWidth: 0, cutout: '65%' }] },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: d.color, font: { family: 'Cairo' }, padding: 12 } } } },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: d.color, padding: 12 } } } },
   }));
 
-  // Chart 3: Horizontal Bar — Time
   const c3 = document.getElementById('chart3');
   if (c3) charts.push(new Chart(c3, {
     type: 'bar',
-    data: { labels, datasets: [{ label: 'أسابيع', data: [18,7,3,2,6,2], backgroundColor: '#8b5cf6', borderRadius: 10, borderSkipped: false }] },
+    data: { labels, datasets: [{ label: 'Weeks', data: [18,7,3,2,6,2], backgroundColor: '#8b5cf6', borderRadius: 10, borderSkipped: false }] },
     options: { ...baseOpts, indexAxis: 'y', plugins: { ...baseOpts.plugins, legend: { display: false } } },
   }));
 
-  // Chart 4: Radar
   const c4 = document.getElementById('chart4');
   if (c4) charts.push(new Chart(c4, {
     type: 'radar',
     data: {
-      labels: ['الرسوم','المدة','القبول','السهولة','المستندات'],
+      labels: ['Fees','Time','Approval','Ease','Documents'],
       datasets: [
-        { label: 'أمريكا H-1B', data: [70,40,78,55,65], borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,.15)', pointBackgroundColor: '#4f46e5' },
-        { label: 'كندا دراسة', data: [85,70,85,75,80], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.15)', pointBackgroundColor: '#10b981' },
+        { label: 'USA H-1B', data: [70,40,78,55,65], borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,.15)', pointBackgroundColor: '#4f46e5' },
+        { label: 'Canada Study', data: [85,70,85,75,80], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.15)', pointBackgroundColor: '#10b981' },
       ],
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: d.color, font: { family: 'Cairo' } } } },
-      scales: { r: { angleLines: { color: d.grid }, grid: { color: d.grid }, pointLabels: { color: d.color, font: { family: 'Cairo', size: 11 } }, ticks: { display: false, max: 100, min: 0 } } },
+      plugins: { legend: { labels: { color: d.color } } },
+      scales: { r: { angleLines: { color: d.grid }, grid: { color: d.grid }, pointLabels: { color: d.color, font: { size: 11 } }, ticks: { display: false, max: 100, min: 0 } } },
     },
   }));
 
-  // Chart 5: Line
   const c5 = document.getElementById('chart5');
   if (c5) charts.push(new Chart(c5, {
     type: 'line',
     data: {
       labels: ['2020','2021','2022','2023','2024','2025','2026'],
       datasets: [
-        { label: 'أمريكا', data: [72,74,76,77,78,79,78], borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,.1)', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: '#4f46e5' },
-        { label: 'كندا', data: [80,82,83,84,85,86,85], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.1)', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: '#10b981' },
-        { label: 'بريطانيا', data: [84,85,86,87,88,89,89], borderColor: '#8b5cf6', backgroundColor: 'rgba(139,92,246,.1)', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: '#8b5cf6' },
+        { label: 'USA', data: [72,74,76,77,78,79,78], borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,.1)', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: '#4f46e5' },
+        { label: 'Canada', data: [80,82,83,84,85,86,85], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.1)', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: '#10b981' },
+        { label: 'UK', data: [84,85,86,87,88,89,89], borderColor: '#8b5cf6', backgroundColor: 'rgba(139,92,246,.1)', fill: true, tension: .4, pointRadius: 5, pointBackgroundColor: '#8b5cf6' },
       ],
     },
     options: { ...baseOpts, interaction: { intersect: false, mode: 'index' } },
@@ -1135,7 +1073,6 @@ function updateChartsTheme() {
   initAllCharts();
 }
 
-/* Preview charts on home */
 function initPreviewCharts() {
   const d = chartDefaults();
   const p1 = document.getElementById('previewChart');
@@ -1143,8 +1080,8 @@ function initPreviewCharts() {
     p1.dataset.init = '1';
     new Chart(p1, {
       type: 'bar',
-      data: { labels: ['أمريكا','كندا','UK','ألمانيا','الإمارات'], datasets: [{ label: 'نسبة القبول %', data: [78,85,89,88,95], backgroundColor: ['#4f46e5','#10b981','#8b5cf6','#f59e0b','#06b6d4'], borderRadius: 8, borderSkipped: false }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: d.tick, font: { family: 'Cairo' } }, grid: { display: false } }, y: { ticks: { color: d.tick }, grid: { color: d.grid } } } },
+      data: { labels: ['USA','Canada','UK','Germany','UAE'], datasets: [{ label: 'Approval %', data: [78,85,89,88,95], backgroundColor: ['#4f46e5','#10b981','#8b5cf6','#f59e0b','#06b6d4'], borderRadius: 8, borderSkipped: false }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: d.tick }, grid: { display: false } }, y: { ticks: { color: d.tick }, grid: { color: d.grid } } } },
     });
   }
   const p2 = document.getElementById('timeChart');
@@ -1152,8 +1089,8 @@ function initPreviewCharts() {
     p2.dataset.init = '1';
     new Chart(p2, {
       type: 'line',
-      data: { labels: ['أمريكا','كندا','UK','ألمانيا','الإمارات'], datasets: [{ label: 'أسابيع', data: [18,7,3,6,2], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.15)', fill: true, tension: .4, pointRadius: 6, pointBackgroundColor: '#10b981' }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: d.tick, font: { family: 'Cairo' } }, grid: { display: false } }, y: { ticks: { color: d.tick }, grid: { color: d.grid } } } },
+      data: { labels: ['USA','Canada','UK','Germany','UAE'], datasets: [{ label: 'Weeks', data: [18,7,3,6,2], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.15)', fill: true, tension: .4, pointRadius: 6, pointBackgroundColor: '#10b981' }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: d.tick }, grid: { display: false } }, y: { ticks: { color: d.tick }, grid: { color: d.grid } } } },
     });
   }
 }
@@ -1162,10 +1099,10 @@ function initPreviewCharts() {
    CALCULATOR
    ============================================================ */
 const PURPOSES = [
-  { id:'work', label:'عمل', icon:'fa-briefcase' },
-  { id:'study', label:'دراسة', icon:'fa-graduation-cap' },
-  { id:'tourist', label:'سياحة', icon:'fa-plane' },
-  { id:'business', label:'أعمال', icon:'fa-chart-pie' },
+  { id:'work', label:'Work', icon:'fa-briefcase' },
+  { id:'study', label:'Study', icon:'fa-graduation-cap' },
+  { id:'tourist', label:'Tourist', icon:'fa-plane' },
+  { id:'business', label:'Business', icon:'fa-chart-pie' },
 ];
 let calcPurpose = 'work';
 
@@ -1174,7 +1111,7 @@ function renderPurposeChips() {
     <button type="button" data-purpose="${p.id}" onclick="setPurpose('${p.id}')"
       class="purpose-btn px-3 py-2.5 rounded-xl text-sm font-semibold border transition
              ${p.id===calcPurpose ? 'bg-brand-600 text-white border-brand-600' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700'}">
-      <i class="fa-solid ${p.icon} ml-1.5"></i>${p.label}
+      <i class="fa-solid ${p.icon} mr-1.5"></i>${p.label}
     </button>`).join('');
 }
 function setPurpose(p) { calcPurpose = p; renderPurposeChips(); calc(); }
@@ -1184,7 +1121,7 @@ function calc() {
   const edu = document.getElementById('cEdu').value;
   const lang = document.getElementById('cLang').value;
   const exp = parseInt(document.getElementById('cExp').value, 10);
-  document.getElementById('expOut').textContent = exp + ' سنة';
+  document.getElementById('expOut').textContent = exp + ' yr' + (exp === 1 ? '' : 's');
 
   let score = 55;
   score += { phd:20, bachelor:13, diploma:7, highschool:2 }[edu];
@@ -1205,11 +1142,11 @@ function calc() {
    ============================================================ */
 function submitHomeSearch() {
   const q = document.getElementById('homeSearch').value.trim();
-  if (!q) { toast('اكتب دولة للبحث', 'fa-circle-info'); return; }
+  if (!q) { toast('Type a country to search', 'fa-circle-info'); return; }
   showPage('visas');
   document.getElementById('visaSearch').value = q;
   applyVisaSearch();
-  toast(`نتائج البحث عن "${q}"`, 'fa-magnifying-glass');
+  toast(`Results for "${q}"`, 'fa-magnifying-glass');
 }
 function quickSearch(q) { document.getElementById('homeSearch').value = q; submitHomeSearch(); }
 
