@@ -216,6 +216,15 @@ tailwind.config = {
   </section>
 
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <div class="text-center mb-12">
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Get Prepared</span>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mt-2">Essential Documents Checklist</h2>
+      <p class="text-slate-600 dark:text-slate-400 mt-3 max-w-xl mx-auto">Documents almost every visa application will ask for. Prepare these before you start.</p>
+    </div>
+    <div id="checklistGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div class="reveal glass rounded-3xl p-8 shadow-xl">
         <h3 class="font-extrabold text-xl text-slate-900 dark:text-white mb-6"><i class="fa-solid fa-chart-simple text-brand-500 mr-2"></i>Approval Rates by Country</h3>
@@ -283,7 +292,7 @@ tailwind.config = {
         <div class="chart-container"><canvas id="chart3"></canvas></div>
       </div>
       <div class="reveal glass rounded-3xl p-6 md:p-8 shadow-xl">
-        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-radar text-amber-500 mr-2"></i>Comparison Radar</h3>
+        <h3 class="font-extrabold text-lg text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-circle-nodes text-amber-500 mr-2"></i>Comparison Radar</h3>
         <div class="chart-container"><canvas id="chart4"></canvas></div>
       </div>
     </div>
@@ -446,8 +455,8 @@ const VISAS = [
     steps:[
       { title:'Get a Job Offer', desc:'You must have a U.S. employer offering you a formal position in a specialty occupation.', icon:'fa-handshake' },
       { title:'Labor Condition Application (LCA)', desc:'Your employer files an LCA with the Department of Labor.', icon:'fa-file-signature' },
-      { title:'File Form I-129', desc:'Employer submits Form I-129 to USCIS on your behalf.', icon:'fa-file-export' },
-      { title:'Electronic Registration (Lottery)', desc:'Register during the annual H-1B cap registration window.', icon:'fa-laptop' },
+      { title:'Electronic Registration (Lottery)', desc:'Your employer registers you during the annual H-1B cap window (usually March).', icon:'fa-laptop' },
+      { title:'File Form I-129', desc:'If selected in the lottery, the employer submits Form I-129 to USCIS.', icon:'fa-file-export' },
       { title:'Embassy Interview', desc:'After approval, submit DS-160 and attend your U.S. embassy interview.', icon:'fa-comments' },
       { title:'Travel to the U.S.', desc:'You may enter up to 10 days before your start date.', icon:'fa-plane-departure' },
     ],
@@ -612,8 +621,8 @@ const VISAS = [
     fee:'$1,000 – $2,500', time:'1–3 weeks', validity:'5–10 years', approval:95,
     officialLink:'https://u.ae/en/information-and-services/visa-and-emirates-id/residence-visas/golden-visa',
     applyLink:'https://icp.gov.ae/en/',
-    videoUrl:'https://www.youtube.com/embed?listType=search&list=UAE+Golden+Visa+application+guide',
-    videoTitle:'UAE Golden Visa — Application Guide',
+    videoUrl:'https://www.youtube.com/embed/5wrki6-RmxI',
+    videoTitle:'Dubai Golden Visa Application — Step-by-Step Guide',
     steps:[
       { title:'Determine Your Category', desc:'Identify your eligibility category (investor, talent, professional).', icon:'fa-list-check' },
       { title:'Prove Eligibility', desc:'Submit supporting documents (investment, certificates, achievements).', icon:'fa-file-certificate' },
@@ -1069,29 +1078,30 @@ function initAllCharts() {
 }
 
 function updateChartsTheme() {
-  if (document.getElementById('page-charts').classList.contains('hidden')) return;
-  initAllCharts();
+  if (!document.getElementById('page-charts').classList.contains('hidden')) initAllCharts();
+  if (!document.getElementById('page-home').classList.contains('hidden')) initPreviewCharts();
 }
 
+let previewCharts = [];
 function initPreviewCharts() {
+  previewCharts.forEach(c => { try { c.destroy(); } catch(e){} });
+  previewCharts = [];
   const d = chartDefaults();
   const p1 = document.getElementById('previewChart');
-  if (p1 && !p1.dataset.init) {
-    p1.dataset.init = '1';
-    new Chart(p1, {
+  if (p1) {
+    previewCharts.push(new Chart(p1, {
       type: 'bar',
       data: { labels: ['USA','Canada','UK','Germany','UAE'], datasets: [{ label: 'Approval %', data: [78,85,89,88,95], backgroundColor: ['#4f46e5','#10b981','#8b5cf6','#f59e0b','#06b6d4'], borderRadius: 8, borderSkipped: false }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: d.tick }, grid: { display: false } }, y: { ticks: { color: d.tick }, grid: { color: d.grid } } } },
-    });
+    }));
   }
   const p2 = document.getElementById('timeChart');
-  if (p2 && !p2.dataset.init) {
-    p2.dataset.init = '1';
-    new Chart(p2, {
+  if (p2) {
+    previewCharts.push(new Chart(p2, {
       type: 'line',
       data: { labels: ['USA','Canada','UK','Germany','UAE'], datasets: [{ label: 'Weeks', data: [18,7,3,6,2], borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,.15)', fill: true, tension: .4, pointRadius: 6, pointBackgroundColor: '#10b981' }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: d.tick }, grid: { display: false } }, y: { ticks: { color: d.tick }, grid: { color: d.grid } } } },
-    });
+    }));
   }
 }
 
