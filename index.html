@@ -97,6 +97,10 @@ tailwind.config = {
     body { background: #fff !important; }
     .reveal { opacity: 1 !important; transform: none !important; }
   }
+
+  #reportView { display: none; }
+  body.report-mode header, body.report-mode footer, body.report-mode main { display: none !important; }
+  body.report-mode #reportView { display: block !important; background: #fff; color: #1e293b; padding: 40px 20px; }
 </style>
 </head>
 
@@ -122,9 +126,24 @@ tailwind.config = {
       <button data-nav="tools" onclick="showPage('tools')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-calculator mr-1.5 opacity-70"></i>Calculator</button>
       <button data-nav="assistant" onclick="showPage('assistant')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-wand-magic-sparkles mr-1.5 opacity-70"></i>AI Advisor</button>
       <button data-nav="faq" onclick="showPage('faq')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-circle-question mr-1.5 opacity-70"></i>FAQ</button>
+      <button data-nav="trip" onclick="showPage('trip')" class="nav-link px-4 py-2 rounded-xl transition relative"><i class="fa-solid fa-route mr-1.5 opacity-70"></i>My Trip
+        <span id="tripCount" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-brand-500 text-white text-[10px] font-bold flex items-center justify-center">0</span>
+      </button>
+      <button data-nav="destinations" onclick="showPage('destinations')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-map-location-dot mr-1.5 opacity-70"></i>Destinations</button>
+      <button data-nav="pricing" onclick="showPage('pricing')" class="nav-link px-4 py-2 rounded-xl transition"><i class="fa-solid fa-crown mr-1.5 opacity-70"></i>Pricing</button>
     </nav>
 
     <div class="flex items-center gap-2">
+      <div class="relative">
+        <button id="authBtn" onclick="toggleAuthMenu()" class="h-10 px-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200 transition">
+          <span id="authLabel"><i class="fa-solid fa-user mr-1"></i><span class="hidden sm:inline">Sign In</span></span>
+        </button>
+        <div id="authMenu" class="hidden absolute right-0 top-12 w-56 rounded-2xl bg-white dark:bg-slate-900 shadow-2xl ring-1 ring-slate-900/5 dark:ring-white/10 p-2 z-50">
+          <button onclick="showPage('account'); document.getElementById('authMenu').classList.add('hidden')" class="block w-full text-left px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"><i class="fa-solid fa-id-card mr-2 text-brand-500"></i>My Account</button>
+          <button onclick="showPage('pricing'); document.getElementById('authMenu').classList.add('hidden')" class="block w-full text-left px-3 py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-50 dark:hover:bg-slate-800"><i class="fa-solid fa-crown mr-2 text-amber-500"></i>My Plan: <b id="menuPlan">Free</b></button>
+          <button id="logoutBtn" onclick="logout()" class="hidden w-full text-left px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10"><i class="fa-solid fa-right-from-bracket mr-2"></i>Log out</button>
+        </div>
+      </div>
       <button onclick="showPage('visas'); setTimeout(() => setCategory('fav'), 80)" aria-label="Favorites" class="relative w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition">
         <i class="fa-solid fa-heart text-rose-500"></i>
         <span id="favCount" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center">0</span>
@@ -146,6 +165,9 @@ tailwind.config = {
     <button onclick="showPage('tools');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Calculator</button>
     <button onclick="showPage('assistant');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">AI Advisor</button>
     <button onclick="showPage('faq');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">FAQ</button>
+    <button onclick="showPage('trip');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">My Trip</button>
+    <button onclick="showPage('destinations');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Destinations</button>
+    <button onclick="showPage('pricing');toggleMobileMenu()" class="block w-full text-left px-3 py-2.5 rounded-lg font-medium hover:bg-brand-50 dark:hover:bg-slate-800">Pricing</button>
   </div>
 </header>
 
@@ -457,12 +479,115 @@ tailwind.config = {
   </div>
 </section>
 
+<!-- ========== DESTINATIONS ========== -->
+<section id="page-destinations" class="page hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="text-center max-w-3xl mx-auto mb-10">
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Explore the World</span>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">Tourist Destinations</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-4">Landmarks with live maps and hand-picked hotels for every country in our visa database.</p>
+    </div>
+    <div class="relative mb-8 max-w-xl mx-auto">
+      <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+      <input id="destSearch" type="search" placeholder="Search destination or city..." class="w-full pl-11 pr-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-slate-100">
+    </div>
+    <div id="destGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+    <p id="destEmpty" class="hidden text-center py-16 text-slate-500">No destinations match your search.</p>
+  </div>
+</section>
+
+<!-- ========== PRICING ========== -->
+<section id="page-pricing" class="page hidden">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="text-center mb-12">
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Go Premium</span>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">Simple, Honest Pricing</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-4">Start free. Upgrade when you need more power. Cancel anytime.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+      <div class="glass rounded-3xl p-7 shadow-xl flex flex-col">
+        <h3 class="font-extrabold text-lg">Free</h3>
+        <div class="mt-3"><span class="text-4xl font-black">$0</span><span class="text-slate-500 text-sm">/forever</span></div>
+        <ul class="mt-5 space-y-2.5 text-sm text-slate-600 dark:text-slate-400 flex-grow">
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>All visa guides (40+ countries)</li>
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Fee calculator & comparisons</li>
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Favorites & trip planner</li>
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Destinations & landmark maps</li>
+        </ul>
+        <button onclick="subscribePlan('Free')" class="mt-6 w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-800 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition">Get Started</button>
+      </div>
+      <div class="relative rounded-3xl p-7 shadow-2xl flex flex-col bg-gradient-to-br from-brand-600 via-violet-600 to-fuchsia-600 text-white ring-4 ring-brand-500/20 scale-[1.03]">
+        <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-amber-400 text-amber-950 text-xs font-black shadow-lg">MOST POPULAR</span>
+        <h3 class="font-extrabold text-lg">Pro</h3>
+        <div class="mt-3"><span class="text-4xl font-black">$9</span><span class="text-white/70 text-sm">/month</span></div>
+        <ul class="mt-5 space-y-2.5 text-sm text-white/85 flex-grow">
+          <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>Everything in Free</li>
+          <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>Unlimited AI Advisor quizzes</li>
+          <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>Personal PDF reports</li>
+          <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>Application tracking & reminders</li>
+          <li><i class="fa-solid fa-check text-emerald-300 mr-2"></i>Priority email support</li>
+        </ul>
+        <button onclick="subscribePlan('Pro')" class="mt-6 w-full py-3 rounded-xl bg-white text-brand-700 font-extrabold hover:bg-slate-100 transition shadow-lg">Subscribe to Pro</button>
+      </div>
+      <div class="glass rounded-3xl p-7 shadow-xl flex flex-col">
+        <h3 class="font-extrabold text-lg">Premium</h3>
+        <div class="mt-3"><span class="text-4xl font-black">$19</span><span class="text-slate-500 text-sm">/month</span></div>
+        <ul class="mt-5 space-y-2.5 text-sm text-slate-600 dark:text-slate-400 flex-grow">
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Everything in Pro</li>
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Hotel deal alerts</li>
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Early access to new guides</li>
+          <li><i class="fa-solid fa-check text-emerald-500 mr-2"></i>Consultation discounts</li>
+        </ul>
+        <button onclick="subscribePlan('Premium')" class="mt-6 w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:opacity-85 transition">Subscribe to Premium</button>
+      </div>
+    </div>
+    <p class="text-center text-xs text-slate-400 mt-8">Demo checkout — no real payment is processed in this preview.</p>
+  </div>
+</section>
+
+<!-- ========== ACCOUNT ========== -->
+<section id="page-account" class="page hidden">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="text-center mb-10">
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Dashboard</span>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">My Account</h1>
+    </div>
+    <div id="accountContent"></div>
+  </div>
+</section>
+
+<!-- ========== TRIP PLANNER ========== -->
+<section id="page-trip" class="page hidden">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <div class="text-center mb-10">
+      <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Itinerary Builder</span>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-3">My Trip Planner</h1>
+      <p class="text-slate-600 dark:text-slate-400 mt-4">Combining multiple destinations? Build one itinerary — track total government fees and get the recommended application order.</p>
+    </div>
+
+    <div id="tripEmpty" class="hidden text-center py-20">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-brand-50 dark:bg-brand-500/10 text-brand-500 flex items-center justify-center text-3xl mb-5"><i class="fa-solid fa-route"></i></div>
+      <h3 class="font-extrabold text-xl text-slate-900 dark:text-white">Your trip is empty</h3>
+      <p class="text-sm text-slate-500 mt-2 mb-6">Add visas to your trip from any visa card or guide page.</p>
+      <button onclick="showPage('visas')" class="px-6 py-3 rounded-xl bg-brand-600 text-white font-bold hover:bg-brand-700 transition shadow-lg shadow-brand-600/25">Browse Visas</button>
+    </div>
+
+    <div id="tripContent" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-4" id="tripList"></div>
+      <div class="space-y-4 lg:sticky lg:top-24 self-start" id="tripSummary"></div>
+    </div>
+  </div>
+</section>
+
 <!-- ========== VISA DETAIL (Dynamic) ========== -->
 <section id="page-detail" class="page hidden">
   <div id="detailContent"></div>
 </section>
 
 </main>
+
+<!-- ============ PRINTABLE REPORT (quiz PDF export) ============ -->
+<section id="reportView" style="display:none"></section>
 
 <!-- ============ FOOTER ============ -->
 <footer class="bg-slate-900 dark:bg-black text-slate-400 py-12 mt-20 border-t border-slate-800">
@@ -504,6 +629,26 @@ tailwind.config = {
   <i class="fa-solid fa-arrow-up"></i>
 </button>
 
+<dialog id="mapModal" class="rounded-3xl p-0 max-w-3xl w-[94vw] bg-white dark:bg-slate-900 overflow-hidden border-0 shadow-2xl">
+  <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+    <h3 id="mapTitle" class="font-extrabold text-slate-900 dark:text-white text-sm"></h3>
+    <button onclick="mapModal.close()" aria-label="Close" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <iframe id="mapFrame" title="Map" class="w-full border-0" style="height:420px" loading="lazy"></iframe>
+</dialog>
+
+<dialog id="applyModal" class="rounded-3xl p-0 max-w-lg w-[92vw] bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-2xl border-0 max-h-[90vh] overflow-y-auto">
+  <div id="applyBody" class="p-6 md:p-8"></div>
+</dialog>
+
+<dialog id="authModal" class="rounded-3xl p-0 max-w-md w-[92vw] bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-2xl border-0">
+  <div id="authBody" class="p-6 md:p-8"></div>
+</dialog>
+
+<dialog id="checkoutModal" class="rounded-3xl p-0 max-w-md w-[92vw] bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 shadow-2xl border-0">
+  <div id="checkoutBody" class="p-6 md:p-8"></div>
+</dialog>
+
 <!-- ============ TOAST ============ -->
 <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 hidden">
   <div class="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl shadow-2xl text-sm font-medium flex items-center gap-2">
@@ -533,6 +678,7 @@ const VISAS = [
     blurb:'Work visa for specialty occupations requiring theoretical or technical expertise.',
     fee:'$460 – $960', time:'3–6 months', validity:'Up to 3 years', approval:78,
     feeMin:460,
+    trend:[68,70,73,75,76,78,78],
     rejections:[
       'Insufficient evidence of specialty-occupation qualifications',
       'Employer failed to prove ability to pay the offered wage',
@@ -569,6 +715,7 @@ const VISAS = [
     blurb:'Visa for international students enrolled in full-time academic programs in the U.S.',
     fee:'$185 + $350 SEVIS + $250 Integrity Fee', time:'2–4 weeks', validity:'Duration of Study + 60 days', approval:85,
     feeMin:185,
+    trend:[80,81,83,84,84,85,85],
     rejections:[
       'Unable to prove non-immigrant intent / ties to home country',
       'Insufficient or unverifiable financial evidence',
@@ -606,6 +753,7 @@ const VISAS = [
     blurb:'Visa for travelers visiting the U.S. for tourism, medical treatment, or temporary business.',
     fee:'$185', time:'2–4 weeks', validity:'Up to 10 years', approval:82,
     feeMin:185,
+    trend:[76,77,79,80,81,82,82],
     rejections:[
       'Weak ties to home country (job, property, family)',
       'Unclear purpose or inconsistent travel plan',
@@ -641,6 +789,7 @@ const VISAS = [
     blurb:'Study permit for designated learning institutions with Post-Graduation Work Permit (PGWP) eligibility.',
     fee:'$150 CAD', time:'6–8 weeks', validity:'Course + 90 days', approval:85,
     feeMin:150,
+    trend:[78,80,82,83,84,85,85],
     rejections:[
       'Study plan not credible or inconsistent with academic history',
       'Proof of funds below CAD $10,000/year',
@@ -677,6 +826,7 @@ const VISAS = [
     blurb:'Student visa for studying at UK universities with post-study work rights.',
     fee:'£490', time:'3 weeks', validity:'Course + 4 months', approval:89,
     feeMin:490,
+    trend:[84,85,86,87,88,89,89],
     rejections:[
       'Funds not held for the required 28 consecutive days',
       'CAS information mismatch or expired CAS',
@@ -712,6 +862,7 @@ const VISAS = [
     blurb:'Points-based visa allowing qualified professionals to search for a job in Germany for up to one year.',
     fee:'€75', time:'4–8 weeks', validity:'Up to 1 year', approval:88,
     feeMin:75,
+    trend:[80,82,84,85,86,87,88],
     rejections:[
       'Qualification not recognized (Anabin) or incomplete',
       'Below 6 points on the Chancenkarte scoring system',
@@ -746,6 +897,7 @@ const VISAS = [
     blurb:'Long-term residency for investors, entrepreneurs, and top talent in the UAE.',
     fee:'$1,000 – $2,500', time:'1–3 weeks', validity:'5–10 years', approval:95,
     feeMin:1000,
+    trend:[90,91,92,93,94,95,95],
     rejections:[
       'Investment value below the AED 2 million threshold',
       'Property not fully paid or ineligible off-plan project',
@@ -773,6 +925,4214 @@ const VISAS = [
     ],
     documents:['Passport','Investment Proof','Professional Certificates','Medical Exam','Photos','Health Insurance'],
   },
+];
+
+/* ============================================================
+   EXTENDED DATASET — all continents (33 additional visas)
+   ============================================================ 
+const NEW_VISAS = [
+  {
+    "id": "fr-tour",
+    "country": "France",
+    "flag": "🇫🇷",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "violet",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by France — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/5wrki6-RmxI",
+    "videoTitle": "France Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Fran",
+        "desc": "Complete the Schengen application form via the official France visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the France embassy or VFS/Global vi",
+        "desc": "Book your appointment at the France embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "sp-tour",
+    "country": "Spain",
+    "flag": "🇪🇸",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Spain — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "Spain Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Spai",
+        "desc": "Complete the Schengen application form via the official Spain visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Spain embassy or VFS/Global vis",
+        "desc": "Book your appointment at the Spain embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "it-tour",
+    "country": "Italy",
+    "flag": "🇮🇹",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Italy — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "Italy Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Ital",
+        "desc": "Complete the Schengen application form via the official Italy visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Italy embassy or VFS/Global vis",
+        "desc": "Book your appointment at the Italy embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "po-tour",
+    "country": "Portugal",
+    "flag": "🇵🇹",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "indigo",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Portugal — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/5DCqqOpQnSc",
+    "videoTitle": "Portugal Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Port",
+        "desc": "Complete the Schengen application form via the official Portugal visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Portugal embassy or VFS/Global ",
+        "desc": "Book your appointment at the Portugal embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "ne-tour",
+    "country": "Netherlands",
+    "flag": "🇳🇱",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Netherlands — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/2wq9mIcAmg0",
+    "videoTitle": "Netherlands Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Neth",
+        "desc": "Complete the Schengen application form via the official Netherlands visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Netherlands embassy or VFS/Glob",
+        "desc": "Book your appointment at the Netherlands embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "gr-tour",
+    "country": "Greece",
+    "flag": "🇬🇷",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "violet",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Greece — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/5wrki6-RmxI",
+    "videoTitle": "Greece Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Gree",
+        "desc": "Complete the Schengen application form via the official Greece visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Greece embassy or VFS/Global vi",
+        "desc": "Book your appointment at the Greece embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "po-tour",
+    "country": "Poland",
+    "flag": "🇵🇱",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "violet",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Poland — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/5wrki6-RmxI",
+    "videoTitle": "Poland Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Pola",
+        "desc": "Complete the Schengen application form via the official Poland visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Poland embassy or VFS/Global vi",
+        "desc": "Book your appointment at the Poland embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "au-tour",
+    "country": "Austria",
+    "flag": "🇦🇹",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Austria — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/S0umQ0AARzs",
+    "videoTitle": "Austria Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Aust",
+        "desc": "Complete the Schengen application form via the official Austria visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Austria embassy or VFS/Global v",
+        "desc": "Book your appointment at the Austria embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "sw-tour",
+    "country": "Sweden",
+    "flag": "🇸🇪",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "violet",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Sweden — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/5wrki6-RmxI",
+    "videoTitle": "Sweden Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Swed",
+        "desc": "Complete the Schengen application form via the official Sweden visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Sweden embassy or VFS/Global vi",
+        "desc": "Book your appointment at the Sweden embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "cz-tour",
+    "country": "Czechia",
+    "flag": "🇨🇿",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Schengen Short-Stay Visa (Type C)",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Short-stay Schengen visa issued by Czechia — one visa grants access to all 29 Schengen states for up to 90 days.",
+    "fee": "€80",
+    "time": "15–30 days",
+    "validity": "Up to 90 days per 180",
+    "approval": 90,
+    "officialLink": "https://home-affairs.ec.europa.eu/",
+    "applyLink": "https://france-visas.gouv.fr/en/web/france-visas/",
+    "videoUrl": "https://www.youtube.com/embed/S0umQ0AARzs",
+    "videoTitle": "Czechia Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check if you need a visa",
+        "desc": "Check if you need a visa — many nationalities enter the Schengen zone visa-free for 90 days",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the Schengen application form via the official Czec",
+        "desc": "Complete the Schengen application form via the official Czechia visa portal",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Book your appointment at the Czechia embassy or VFS/Global v",
+        "desc": "Book your appointment at the Czechia embassy or VFS/Global visa centre",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Prepare documents: proof of funds (~€80/day), travel insuran",
+        "desc": "Prepare documents: proof of funds (~€80/day), travel insurance (min €30,000), flight & hotel bookings",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Attend your appointment: biometrics (fingerprints + photo) a",
+        "desc": "Attend your appointment: biometrics (fingerprints + photo) and a short interview",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Track your application and collect your passport with the vi",
+        "desc": "Track your application and collect your passport with the visa sticker",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 3+ months beyond departure, issued within 10 years",
+      "Proof of accommodation for the entire stay",
+      "Proof of financial means (~€80 per day)",
+      "Travel medical insurance covering €30,000 across Schengen",
+      "Return flight reservation",
+      "Detailed day-by-day itinerary",
+      "Employment/study proof and bank statements (3–6 months)"
+    ],
+    "documents": [
+      "Passport",
+      "Application Form",
+      "Photos",
+      "Travel Insurance",
+      "Flight Reservation",
+      "Hotel Bookings",
+      "Bank Statements",
+      "Employment Letter"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Insufficient or unverifiable proof of funds",
+      "Unclear travel purpose or inconsistent itinerary",
+      "Doubt about intent to return home (weak ties)",
+      "Travel insurance below the required €30,000 coverage"
+    ]
+  },
+  {
+    "id": "ja-tour",
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Temporary Visitor Visa",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for Japan — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$22 – $28",
+    "time": "5–10 days",
+    "validity": "90 days",
+    "approval": 92,
+    "officialLink": "https://mofa.go.jp/j_info/visit/visa/",
+    "applyLink": "https://www.mofa.go.jp/j_info/visit/visa/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "Japan Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for Japan",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of Japan",
+        "desc": "Apply online through the official e-Visa portal of Japan",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter Japan within the validity window and keep the approval",
+        "desc": "Enter Japan within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 22,
+    "trend": [
+      85,
+      87,
+      89,
+      91,
+      92,
+      93,
+      92
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "so-tour",
+    "country": "South Korea",
+    "flag": "🇰🇷",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "K-ETA / Tourist Visa",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for South Korea — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$10 – $50",
+    "time": "1–3 days",
+    "validity": "90 days",
+    "approval": 95,
+    "officialLink": "https://k-eta.go.kr/portal/apply/index.do",
+    "applyLink": "https://www.k-eta.go.kr/portal/apply/index.do",
+    "videoUrl": "https://www.youtube.com/embed/2wq9mIcAmg0",
+    "videoTitle": "South Korea Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for South Korea",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of South Kor",
+        "desc": "Apply online through the official e-Visa portal of South Korea",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter South Korea within the validity window and keep the ap",
+        "desc": "Enter South Korea within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 10,
+    "trend": [
+      88,
+      90,
+      92,
+      94,
+      95,
+      96,
+      95
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "ch-tour",
+    "country": "China",
+    "flag": "🇨🇳",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "L Tourist Visa",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for China — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$30 – $140",
+    "time": "4–7 days",
+    "validity": "30–90 days",
+    "approval": 88,
+    "officialLink": "https://visaforchina.cn/",
+    "applyLink": "https://www.visaforchina.cn/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "China Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for China",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of China",
+        "desc": "Apply online through the official e-Visa portal of China",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter China within the validity window and keep the approval",
+        "desc": "Enter China within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 30,
+    "trend": [
+      81,
+      83,
+      85,
+      87,
+      88,
+      89,
+      88
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "th-tour",
+    "country": "Thailand",
+    "flag": "🇹🇭",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist Visa / Exemption",
+    "accent": "indigo",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for Thailand — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$40",
+    "time": "3–10 days",
+    "validity": "60 days",
+    "approval": 96,
+    "officialLink": "https://thaievisa.go.th/",
+    "applyLink": "https://www.thaievisa.go.th/",
+    "videoUrl": "https://www.youtube.com/embed/5DCqqOpQnSc",
+    "videoTitle": "Thailand Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for Thailand",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of Thailand",
+        "desc": "Apply online through the official e-Visa portal of Thailand",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter Thailand within the validity window and keep the appro",
+        "desc": "Enter Thailand within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 40,
+    "trend": [
+      89,
+      91,
+      93,
+      95,
+      96,
+      97,
+      96
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "vi-tour",
+    "country": "Vietnam",
+    "flag": "🇻🇳",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "e-Visa",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for Vietnam — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$25",
+    "time": "3–5 days",
+    "validity": "30–90 days",
+    "approval": 93,
+    "officialLink": "https://evisa.gov.vn/",
+    "applyLink": "https://evisa.gov.vn/",
+    "videoUrl": "https://www.youtube.com/embed/S0umQ0AARzs",
+    "videoTitle": "Vietnam Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for Vietnam",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of Vietnam",
+        "desc": "Apply online through the official e-Visa portal of Vietnam",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter Vietnam within the validity window and keep the approv",
+        "desc": "Enter Vietnam within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 25,
+    "trend": [
+      86,
+      88,
+      90,
+      92,
+      93,
+      94,
+      93
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "si-tour",
+    "country": "Singapore",
+    "flag": "🇸🇬",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Visa-Free Entry (most nationalities)",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for Singapore — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$0 – $30",
+    "time": "1–5 days",
+    "validity": "30–90 days",
+    "approval": 97,
+    "officialLink": "https://ica.gov.sg/",
+    "applyLink": "https://www.ica.gov.sg/",
+    "videoUrl": "https://www.youtube.com/embed/24jJjLKx87Q",
+    "videoTitle": "Singapore Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for Singapore",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of Singapore",
+        "desc": "Apply online through the official e-Visa portal of Singapore",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter Singapore within the validity window and keep the appr",
+        "desc": "Enter Singapore within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 0,
+    "trend": [
+      90,
+      92,
+      94,
+      96,
+      97,
+      98,
+      97
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "in-tour",
+    "country": "Indonesia",
+    "flag": "🇮🇩",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "e-VOA / Tourist Visa",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for Indonesia — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$35",
+    "time": "1–3 days",
+    "validity": "30 days",
+    "approval": 94,
+    "officialLink": "https://evisa.imigrasi.go.id/",
+    "applyLink": "https://evisa.imigrasi.go.id/",
+    "videoUrl": "https://www.youtube.com/embed/24jJjLKx87Q",
+    "videoTitle": "Indonesia Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for Indonesia",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of Indonesia",
+        "desc": "Apply online through the official e-Visa portal of Indonesia",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter Indonesia within the validity window and keep the appr",
+        "desc": "Enter Indonesia within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 35,
+    "trend": [
+      87,
+      89,
+      91,
+      93,
+      94,
+      95,
+      94
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "ph-tour",
+    "country": "Philippines",
+    "flag": "🇵🇭",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist Visa (9A)",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for Philippines — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$30 – $60",
+    "time": "5–15 days",
+    "validity": "30–59 days",
+    "approval": 91,
+    "officialLink": "https://immigration.gov.ph/",
+    "applyLink": "https://www.immigration.gov.ph/",
+    "videoUrl": "https://www.youtube.com/embed/2wq9mIcAmg0",
+    "videoTitle": "Philippines Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for Philippines",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of Philippin",
+        "desc": "Apply online through the official e-Visa portal of Philippines",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter Philippines within the validity window and keep the ap",
+        "desc": "Enter Philippines within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 30,
+    "trend": [
+      84,
+      86,
+      88,
+      90,
+      91,
+      92,
+      91
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "ma-tour",
+    "country": "Malaysia",
+    "flag": "🇲🇾",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "eVisa / Visa-Free Entry",
+    "accent": "indigo",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry for Malaysia — e-visa or visa-free for most nationalities, famous for culture, food and landscapes.",
+    "fee": "$0 – $45",
+    "time": "1–3 days",
+    "validity": "30–90 days",
+    "approval": 96,
+    "officialLink": "https://malaysiavisa.imi.gov.my/",
+    "applyLink": "https://malaysiavisa.imi.gov.my/",
+    "videoUrl": "https://www.youtube.com/embed/5DCqqOpQnSc",
+    "videoTitle": "Malaysia Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Check visa exemption",
+        "desc": "Check visa exemption — many nationalities get visa-free entry or visa on arrival for Malaysia",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Apply online through the official e-Visa portal of Malaysia",
+        "desc": "Apply online through the official e-Visa portal of Malaysia",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload passport scan and a recent photo",
+        "desc": "Upload passport scan and a recent photo",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee by card",
+        "desc": "Pay the government fee by card",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your approval by email (print a copy for boarding)",
+        "desc": "Receive your approval by email (print a copy for boarding)",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Enter Malaysia within the validity window and keep the appro",
+        "desc": "Enter Malaysia within the validity window and keep the approval with your passport",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months beyond arrival",
+      "Recent passport-style photo (digital)",
+      "Return or onward flight ticket",
+      "Proof of accommodation (hotel booking or host address)",
+      "Sufficient funds for the stay",
+      "Valid payment card for the online fee"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Return Ticket",
+      "Hotel Booking",
+      "e-Visa Approval Printout"
+    ],
+    "feeMin": 0,
+    "trend": [
+      89,
+      91,
+      93,
+      95,
+      96,
+      97,
+      96
+    ],
+    "rejections": [
+      "Passport validity less than 6 months",
+      "Blurry or non-compliant photo upload",
+      "Criminal record not disclosed where required",
+      "Return/onward ticket missing"
+    ]
+  },
+  {
+    "id": "br-tour",
+    "country": "Brazil",
+    "flag": "🇧🇷",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist Visa (eVisa for eligible nationalities)",
+    "accent": "violet",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry to Brazil — visa-free for many nationalities; home to world-class archaeological and natural wonders.",
+    "fee": "$80",
+    "time": "5–10 days",
+    "validity": "90 days",
+    "approval": 90,
+    "officialLink": "https://www.gov.br/mre/",
+    "applyLink": "https://www.gov.br/mre/",
+    "videoUrl": "https://www.youtube.com/embed/5wrki6-RmxI",
+    "videoTitle": "Brazil Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Confirm your nationality's entry regime",
+        "desc": "Confirm your nationality's entry regime — many nationalities enter Brazil visa-free",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the online visa or entry form where required for Br",
+        "desc": "Complete the online visa or entry form where required for Brazil",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Prepare proof of onward travel and sufficient funds",
+        "desc": "Prepare proof of onward travel and sufficient funds",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the reciprocity or entry fee online if applicable",
+        "desc": "Pay the reciprocity or entry fee online if applicable",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your entry stamp at the border",
+        "desc": "Receive your entry stamp at the border — enjoy Brazil",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Extend your stay at the local immigration office if needed",
+        "desc": "Extend your stay at the local immigration office if needed",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid for the duration of stay",
+      "Onward or return ticket",
+      "Proof of funds (bank card/cash)",
+      "Accommodation address in the country",
+      "Fee payment receipt (where applicable)",
+      "Yellow fever certificate (select nationalities/routes)"
+    ],
+    "documents": [
+      "Passport",
+      "Return Ticket",
+      "Hotel Address",
+      "Bank Card",
+      "Fee Receipt"
+    ],
+    "feeMin": 80,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "No onward ticket out of the country",
+      "Insufficient funds shown at entry",
+      "Passport damaged or close to expiry",
+      "Overstay record in the region (MERCOSUR shared records)"
+    ]
+  },
+  {
+    "id": "me-tour",
+    "country": "Mexico",
+    "flag": "🇲🇽",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Visitor Visa (FMM)",
+    "accent": "violet",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry to Mexico — visa-free for many nationalities; home to world-class archaeological and natural wonders.",
+    "fee": "$0 – $48",
+    "time": "0–10 days",
+    "validity": "180 days",
+    "approval": 89,
+    "officialLink": "https://www.inm.gob.mx/",
+    "applyLink": "https://www.inm.gob.mx/",
+    "videoUrl": "https://www.youtube.com/embed/5wrki6-RmxI",
+    "videoTitle": "Mexico Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Confirm your nationality's entry regime",
+        "desc": "Confirm your nationality's entry regime — many nationalities enter Mexico visa-free",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the online visa or entry form where required for Me",
+        "desc": "Complete the online visa or entry form where required for Mexico",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Prepare proof of onward travel and sufficient funds",
+        "desc": "Prepare proof of onward travel and sufficient funds",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the reciprocity or entry fee online if applicable",
+        "desc": "Pay the reciprocity or entry fee online if applicable",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your entry stamp at the border",
+        "desc": "Receive your entry stamp at the border — enjoy Mexico",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Extend your stay at the local immigration office if needed",
+        "desc": "Extend your stay at the local immigration office if needed",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid for the duration of stay",
+      "Onward or return ticket",
+      "Proof of funds (bank card/cash)",
+      "Accommodation address in the country",
+      "Fee payment receipt (where applicable)",
+      "Yellow fever certificate (select nationalities/routes)"
+    ],
+    "documents": [
+      "Passport",
+      "Return Ticket",
+      "Hotel Address",
+      "Bank Card",
+      "Fee Receipt"
+    ],
+    "feeMin": 0,
+    "trend": [
+      82,
+      84,
+      86,
+      88,
+      89,
+      90,
+      89
+    ],
+    "rejections": [
+      "No onward ticket out of the country",
+      "Insufficient funds shown at entry",
+      "Passport damaged or close to expiry",
+      "Overstay record in the region (MERCOSUR shared records)"
+    ]
+  },
+  {
+    "id": "ar-tour",
+    "country": "Argentina",
+    "flag": "🇦🇷",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist Visa / AVE",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry to Argentina — visa-free for many nationalities; home to world-class archaeological and natural wonders.",
+    "fee": "$0 – $200",
+    "time": "1–15 days",
+    "validity": "90 days",
+    "approval": 92,
+    "officialLink": "https://www.argentina.gob.ar/",
+    "applyLink": "https://www.argentina.gob.ar/",
+    "videoUrl": "https://www.youtube.com/embed/24jJjLKx87Q",
+    "videoTitle": "Argentina Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Confirm your nationality's entry regime",
+        "desc": "Confirm your nationality's entry regime — many nationalities enter Argentina visa-free",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the online visa or entry form where required for Ar",
+        "desc": "Complete the online visa or entry form where required for Argentina",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Prepare proof of onward travel and sufficient funds",
+        "desc": "Prepare proof of onward travel and sufficient funds",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the reciprocity or entry fee online if applicable",
+        "desc": "Pay the reciprocity or entry fee online if applicable",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your entry stamp at the border",
+        "desc": "Receive your entry stamp at the border — enjoy Argentina",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Extend your stay at the local immigration office if needed",
+        "desc": "Extend your stay at the local immigration office if needed",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid for the duration of stay",
+      "Onward or return ticket",
+      "Proof of funds (bank card/cash)",
+      "Accommodation address in the country",
+      "Fee payment receipt (where applicable)",
+      "Yellow fever certificate (select nationalities/routes)"
+    ],
+    "documents": [
+      "Passport",
+      "Return Ticket",
+      "Hotel Address",
+      "Bank Card",
+      "Fee Receipt"
+    ],
+    "feeMin": 0,
+    "trend": [
+      85,
+      87,
+      89,
+      91,
+      92,
+      93,
+      92
+    ],
+    "rejections": [
+      "No onward ticket out of the country",
+      "Insufficient funds shown at entry",
+      "Passport damaged or close to expiry",
+      "Overstay record in the region (MERCOSUR shared records)"
+    ]
+  },
+  {
+    "id": "ch-tour",
+    "country": "Chile",
+    "flag": "🇨🇱",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist Visa / Exemption",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry to Chile — visa-free for many nationalities; home to world-class archaeological and natural wonders.",
+    "fee": "$0 – $30",
+    "time": "0–15 days",
+    "validity": "90 days",
+    "approval": 93,
+    "officialLink": "https://serviciomigraciones.cl/",
+    "applyLink": "https://serviciomigraciones.cl/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "Chile Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Confirm your nationality's entry regime",
+        "desc": "Confirm your nationality's entry regime — many nationalities enter Chile visa-free",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the online visa or entry form where required for Ch",
+        "desc": "Complete the online visa or entry form where required for Chile",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Prepare proof of onward travel and sufficient funds",
+        "desc": "Prepare proof of onward travel and sufficient funds",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the reciprocity or entry fee online if applicable",
+        "desc": "Pay the reciprocity or entry fee online if applicable",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your entry stamp at the border",
+        "desc": "Receive your entry stamp at the border — enjoy Chile",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Extend your stay at the local immigration office if needed",
+        "desc": "Extend your stay at the local immigration office if needed",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid for the duration of stay",
+      "Onward or return ticket",
+      "Proof of funds (bank card/cash)",
+      "Accommodation address in the country",
+      "Fee payment receipt (where applicable)",
+      "Yellow fever certificate (select nationalities/routes)"
+    ],
+    "documents": [
+      "Passport",
+      "Return Ticket",
+      "Hotel Address",
+      "Bank Card",
+      "Fee Receipt"
+    ],
+    "feeMin": 0,
+    "trend": [
+      86,
+      88,
+      90,
+      92,
+      93,
+      94,
+      93
+    ],
+    "rejections": [
+      "No onward ticket out of the country",
+      "Insufficient funds shown at entry",
+      "Passport damaged or close to expiry",
+      "Overstay record in the region (MERCOSUR shared records)"
+    ]
+  },
+  {
+    "id": "co-tour",
+    "country": "Colombia",
+    "flag": "🇨🇴",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Visitor Visa (V)",
+    "accent": "indigo",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry to Colombia — visa-free for many nationalities; home to world-class archaeological and natural wonders.",
+    "fee": "$0 – $52",
+    "time": "5–15 days",
+    "validity": "90 days",
+    "approval": 92,
+    "officialLink": "https://www.cancilleria.gov.co/",
+    "applyLink": "https://www.cancilleria.gov.co/",
+    "videoUrl": "https://www.youtube.com/embed/5DCqqOpQnSc",
+    "videoTitle": "Colombia Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Confirm your nationality's entry regime",
+        "desc": "Confirm your nationality's entry regime — many nationalities enter Colombia visa-free",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the online visa or entry form where required for Co",
+        "desc": "Complete the online visa or entry form where required for Colombia",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Prepare proof of onward travel and sufficient funds",
+        "desc": "Prepare proof of onward travel and sufficient funds",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the reciprocity or entry fee online if applicable",
+        "desc": "Pay the reciprocity or entry fee online if applicable",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your entry stamp at the border",
+        "desc": "Receive your entry stamp at the border — enjoy Colombia",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Extend your stay at the local immigration office if needed",
+        "desc": "Extend your stay at the local immigration office if needed",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid for the duration of stay",
+      "Onward or return ticket",
+      "Proof of funds (bank card/cash)",
+      "Accommodation address in the country",
+      "Fee payment receipt (where applicable)",
+      "Yellow fever certificate (select nationalities/routes)"
+    ],
+    "documents": [
+      "Passport",
+      "Return Ticket",
+      "Hotel Address",
+      "Bank Card",
+      "Fee Receipt"
+    ],
+    "feeMin": 0,
+    "trend": [
+      85,
+      87,
+      89,
+      91,
+      92,
+      93,
+      92
+    ],
+    "rejections": [
+      "No onward ticket out of the country",
+      "Insufficient funds shown at entry",
+      "Passport damaged or close to expiry",
+      "Overstay record in the region (MERCOSUR shared records)"
+    ]
+  },
+  {
+    "id": "pe-tour",
+    "country": "Peru",
+    "flag": "🇵🇪",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist Visa / Exemption",
+    "accent": "indigo",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Tourist entry to Peru — visa-free for many nationalities; home to world-class archaeological and natural wonders.",
+    "fee": "$0 – $30",
+    "time": "0–15 days",
+    "validity": "90–183 days",
+    "approval": 94,
+    "officialLink": "https://www.gob.pe/",
+    "applyLink": "https://www.gob.pe/",
+    "videoUrl": "https://www.youtube.com/embed/2wq9mIcAmg0",
+    "videoTitle": "Peru Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Confirm your nationality's entry regime",
+        "desc": "Confirm your nationality's entry regime — many nationalities enter Peru visa-free",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Complete the online visa or entry form where required for Pe",
+        "desc": "Complete the online visa or entry form where required for Peru",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Prepare proof of onward travel and sufficient funds",
+        "desc": "Prepare proof of onward travel and sufficient funds",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the reciprocity or entry fee online if applicable",
+        "desc": "Pay the reciprocity or entry fee online if applicable",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Receive your entry stamp at the border",
+        "desc": "Receive your entry stamp at the border — enjoy Peru",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Extend your stay at the local immigration office if needed",
+        "desc": "Extend your stay at the local immigration office if needed",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid for the duration of stay",
+      "Onward or return ticket",
+      "Proof of funds (bank card/cash)",
+      "Accommodation address in the country",
+      "Fee payment receipt (where applicable)",
+      "Yellow fever certificate (select nationalities/routes)"
+    ],
+    "documents": [
+      "Passport",
+      "Return Ticket",
+      "Hotel Address",
+      "Bank Card",
+      "Fee Receipt"
+    ],
+    "feeMin": 0,
+    "trend": [
+      87,
+      89,
+      91,
+      93,
+      94,
+      95,
+      94
+    ],
+    "rejections": [
+      "No onward ticket out of the country",
+      "Insufficient funds shown at entry",
+      "Passport damaged or close to expiry",
+      "Overstay record in the region (MERCOSUR shared records)"
+    ]
+  },
+  {
+    "id": "au-tour",
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Visitor Visa (Subclass 600)",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for Australia — apply online where available; check the official portal for your nationality.",
+    "fee": "AUD $190",
+    "time": "15–30 days",
+    "validity": "1–12 months",
+    "approval": 90,
+    "officialLink": "https://immi.homeaffairs.gov.au/",
+    "applyLink": "https://immi.homeaffairs.gov.au/",
+    "videoUrl": "https://www.youtube.com/embed/24jJjLKx87Q",
+    "videoTitle": "Australia Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of Australia",
+        "desc": "Open the official immigration portal of Australia",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 125,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  },
+  {
+    "id": "ne-tour",
+    "country": "New Zealand",
+    "flag": "🇳🇿",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "NZeTA / Visitor Visa",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for New Zealand — apply online where available; check the official portal for your nationality.",
+    "fee": "NZD $17 – $211",
+    "time": "1–20 days",
+    "validity": "90 days – 2 years",
+    "approval": 93,
+    "officialLink": "https://www.immigration.govt.nz/",
+    "applyLink": "https://www.immigration.govt.nz/",
+    "videoUrl": "https://www.youtube.com/embed/2wq9mIcAmg0",
+    "videoTitle": "New Zealand Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of New Zealand",
+        "desc": "Open the official immigration portal of New Zealand",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 11,
+    "trend": [
+      86,
+      88,
+      90,
+      92,
+      93,
+      94,
+      93
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  },
+  {
+    "id": "tu-tour",
+    "country": "Turkey",
+    "flag": "🇹🇷",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "e-Visa",
+    "accent": "violet",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for Turkey — apply online where available; check the official portal for your nationality.",
+    "fee": "$20 – $60",
+    "time": "24–72 hours",
+    "validity": "30–90 days",
+    "approval": 95,
+    "officialLink": "https://www.evisa.gov.tr/",
+    "applyLink": "https://www.evisa.gov.tr/",
+    "videoUrl": "https://www.youtube.com/embed/5wrki6-RmxI",
+    "videoTitle": "Turkey Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of Turkey",
+        "desc": "Open the official immigration portal of Turkey",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 20,
+    "trend": [
+      88,
+      90,
+      92,
+      94,
+      95,
+      96,
+      95
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  },
+  {
+    "id": "eg-tour",
+    "country": "Egypt",
+    "flag": "🇪🇬",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "e-Visa / Tourist Visa",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for Egypt — apply online where available; check the official portal for your nationality.",
+    "fee": "$25",
+    "time": "3–7 days",
+    "validity": "30 days",
+    "approval": 92,
+    "officialLink": "https://www.visa2egypt.gov.eg/",
+    "applyLink": "https://www.visa2egypt.gov.eg/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "Egypt Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of Egypt",
+        "desc": "Open the official immigration portal of Egypt",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 25,
+    "trend": [
+      85,
+      87,
+      89,
+      91,
+      92,
+      93,
+      92
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  },
+  {
+    "id": "mo-tour",
+    "country": "Morocco",
+    "flag": "🇲🇦",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist Visa (70+ exempt nationalities)",
+    "accent": "amber",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for Morocco — apply online where available; check the official portal for your nationality.",
+    "fee": "$0 – $27",
+    "time": "0–10 days",
+    "validity": "90 days",
+    "approval": 95,
+    "officialLink": "https://www.diplomatie.ma/",
+    "applyLink": "https://www.diplomatie.ma/",
+    "videoUrl": "https://www.youtube.com/embed/S0umQ0AARzs",
+    "videoTitle": "Morocco Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of Morocco",
+        "desc": "Open the official immigration portal of Morocco",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 0,
+    "trend": [
+      88,
+      90,
+      92,
+      94,
+      95,
+      96,
+      95
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  },
+  {
+    "id": "sa-tour",
+    "country": "Saudi Arabia",
+    "flag": "🇸🇦",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Tourist eVisa",
+    "accent": "indigo",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for Saudi Arabia — apply online where available; check the official portal for your nationality.",
+    "fee": "SAR 535 (~$143)",
+    "time": "5 min – 72 hours",
+    "validity": "1 year (multiple entry)",
+    "approval": 97,
+    "officialLink": "https://www.visitsaudi.com/",
+    "applyLink": "https://www.visitsaudi.com/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "Saudi Arabia Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of Saudi Arabia",
+        "desc": "Open the official immigration portal of Saudi Arabia",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 143,
+    "trend": [
+      90,
+      92,
+      94,
+      96,
+      97,
+      98,
+      97
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  },
+  {
+    "id": "so-tour",
+    "country": "South Africa",
+    "flag": "🇿🇦",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "Visitor Visa",
+    "accent": "indigo",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for South Africa — apply online where available; check the official portal for your nationality.",
+    "fee": "$0 – $35",
+    "time": "5–15 days",
+    "validity": "90 days",
+    "approval": 90,
+    "officialLink": "https://www.dha.gov.za/",
+    "applyLink": "https://www.dha.gov.za/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "South Africa Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of South Africa",
+        "desc": "Open the official immigration portal of South Africa",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 0,
+    "trend": [
+      83,
+      85,
+      87,
+      89,
+      90,
+      91,
+      90
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  },
+  {
+    "id": "in-tour",
+    "country": "India",
+    "flag": "🇮🇳",
+    "category": "tourist",
+    "emoji": "✈️",
+    "type": "e-Tourist Visa",
+    "accent": "emerald",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "blurb": "Visitor visa for India — apply online where available; check the official portal for your nationality.",
+    "fee": "$25 – $80",
+    "time": "2–5 days",
+    "validity": "30–180 days",
+    "approval": 93,
+    "officialLink": "https://indianvisaonline.gov.in/",
+    "applyLink": "https://indianvisaonline.gov.in/",
+    "videoUrl": "https://www.youtube.com/embed/PMh5SIdYQD8",
+    "videoTitle": "India Tourist Visa — Step-by-Step Guide",
+    "steps": [
+      {
+        "title": "Open the official immigration portal of India",
+        "desc": "Open the official immigration portal of India",
+        "icon": "fa-globe"
+      },
+      {
+        "title": "Create an account and choose the correct visitor visa stream",
+        "desc": "Create an account and choose the correct visitor visa stream",
+        "icon": "fa-file-export"
+      },
+      {
+        "title": "Upload documents: passport, photo, funds proof and itinerary",
+        "desc": "Upload documents: passport, photo, funds proof and itinerary",
+        "icon": "fa-calendar-check"
+      },
+      {
+        "title": "Pay the government fee online",
+        "desc": "Pay the government fee online",
+        "icon": "fa-wallet"
+      },
+      {
+        "title": "Provide biometrics at a visa centre if requested",
+        "desc": "Provide biometrics at a visa centre if requested",
+        "icon": "fa-fingerprint"
+      },
+      {
+        "title": "Receive your visa or eVisa by email and verify every detail",
+        "desc": "Receive your visa or eVisa by email and verify every detail",
+        "icon": "fa-passport"
+      }
+    ],
+    "requirements": [
+      "Passport valid 6+ months",
+      "Recent compliant photo",
+      "Proof of funds for the full stay",
+      "Genuine visitor intent and home ties",
+      "Health/character declarations",
+      "Biometrics at an approved centre (if requested)"
+    ],
+    "documents": [
+      "Passport",
+      "Photo",
+      "Bank Statements",
+      "Itinerary",
+      "Hotel Booking",
+      "Health Declaration"
+    ],
+    "feeMin": 25,
+    "trend": [
+      86,
+      88,
+      90,
+      92,
+      93,
+      94,
+      93
+    ],
+    "rejections": [
+      "Genuine visitor intention not demonstrated",
+      "Funds evidence weak or recently deposited in bulk",
+      "Health or character declaration issues",
+      "Incomplete application form or wrong visa stream selected"
+    ]
+  }
+];
+VISAS.push(...NEW_VISAS);
+
+const DESTINATIONS = [
+  {
+    "country": "France",
+    "flag": "🇫🇷",
+    "city": "Paris",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "visaId": "fr-tour",
+    "landmarks": [
+      {
+        "name": "Eiffel Tower",
+        "lat": 48.8584,
+        "lon": 2.2945
+      },
+      {
+        "name": "Louvre Museum",
+        "lat": 48.8606,
+        "lon": 2.3376
+      },
+      {
+        "name": "Palace of Versailles",
+        "lat": 48.8049,
+        "lon": 2.1204
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Paris Grand Palace Hotel",
+        "stars": 5,
+        "price": 110,
+        "link": "https://www.booking.com/searchresults.html?ss=Paris"
+      },
+      {
+        "name": "City Center Suites Paris",
+        "stars": 4,
+        "price": 60,
+        "link": "https://www.booking.com/searchresults.html?ss=Paris"
+      }
+    ]
+  },
+  {
+    "country": "Spain",
+    "flag": "🇪🇸",
+    "city": "Barcelona",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "visaId": "sp-tour",
+    "landmarks": [
+      {
+        "name": "Sagrada Família",
+        "lat": 41.4036,
+        "lon": 2.1744
+      },
+      {
+        "name": "Alhambra, Granada",
+        "lat": 37.176,
+        "lon": -3.5881
+      },
+      {
+        "name": "Park Güell",
+        "lat": 41.4145,
+        "lon": 2.1527
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Barcelona Grand Palace Hotel",
+        "stars": 5,
+        "price": 123,
+        "link": "https://www.booking.com/searchresults.html?ss=Barcelona"
+      },
+      {
+        "name": "City Center Suites Barcelona",
+        "stars": 4,
+        "price": 71,
+        "link": "https://www.booking.com/searchresults.html?ss=Barcelona"
+      }
+    ]
+  },
+  {
+    "country": "Italy",
+    "flag": "🇮🇹",
+    "city": "Rome",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "visaId": "it-tour",
+    "landmarks": [
+      {
+        "name": "Colosseum",
+        "lat": 41.8902,
+        "lon": 12.4922
+      },
+      {
+        "name": "Venice Grand Canal",
+        "lat": 45.4408,
+        "lon": 12.3155
+      },
+      {
+        "name": "Leaning Tower of Pisa",
+        "lat": 43.723,
+        "lon": 10.3966
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Rome Grand Palace Hotel",
+        "stars": 5,
+        "price": 136,
+        "link": "https://www.booking.com/searchresults.html?ss=Rome"
+      },
+      {
+        "name": "City Center Suites Rome",
+        "stars": 4,
+        "price": 82,
+        "link": "https://www.booking.com/searchresults.html?ss=Rome"
+      }
+    ]
+  },
+  {
+    "country": "Portugal",
+    "flag": "🇵🇹",
+    "city": "Lisbon",
+    "image": "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?auto=format&fit=crop&w=800&q=80",
+    "visaId": "po-tour",
+    "landmarks": [
+      {
+        "name": "Belém Tower",
+        "lat": 38.6916,
+        "lon": -9.216
+      },
+      {
+        "name": "Pena Palace, Sintra",
+        "lat": 38.7876,
+        "lon": -9.3906
+      },
+      {
+        "name": "Livraria Lello, Porto",
+        "lat": 41.1469,
+        "lon": -8.6148
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Lisbon Grand Palace Hotel",
+        "stars": 5,
+        "price": 149,
+        "link": "https://www.booking.com/searchresults.html?ss=Lisbon"
+      },
+      {
+        "name": "City Center Suites Lisbon",
+        "stars": 4,
+        "price": 93,
+        "link": "https://www.booking.com/searchresults.html?ss=Lisbon"
+      }
+    ]
+  },
+  {
+    "country": "Netherlands",
+    "flag": "🇳🇱",
+    "city": "Amsterdam",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ne-tour",
+    "landmarks": [
+      {
+        "name": "Rijksmuseum",
+        "lat": 52.36,
+        "lon": 4.8852
+      },
+      {
+        "name": "Anne Frank House",
+        "lat": 52.3752,
+        "lon": 4.8839
+      },
+      {
+        "name": "Keukenhof Gardens",
+        "lat": 52.2763,
+        "lon": 4.5483
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Amsterdam Grand Palace Hotel",
+        "stars": 5,
+        "price": 162,
+        "link": "https://www.booking.com/searchresults.html?ss=Amsterdam"
+      },
+      {
+        "name": "City Center Suites Amsterdam",
+        "stars": 4,
+        "price": 104,
+        "link": "https://www.booking.com/searchresults.html?ss=Amsterdam"
+      }
+    ]
+  },
+  {
+    "country": "Greece",
+    "flag": "🇬🇷",
+    "city": "Athens",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "visaId": "gr-tour",
+    "landmarks": [
+      {
+        "name": "Acropolis",
+        "lat": 37.9715,
+        "lon": 23.7267
+      },
+      {
+        "name": "Oia, Santorini",
+        "lat": 36.461,
+        "lon": 25.376
+      },
+      {
+        "name": "Ancient Delphi",
+        "lat": 38.4824,
+        "lon": 22.501
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Athens Grand Palace Hotel",
+        "stars": 5,
+        "price": 175,
+        "link": "https://www.booking.com/searchresults.html?ss=Athens"
+      },
+      {
+        "name": "City Center Suites Athens",
+        "stars": 4,
+        "price": 115,
+        "link": "https://www.booking.com/searchresults.html?ss=Athens"
+      }
+    ]
+  },
+  {
+    "country": "Poland",
+    "flag": "🇵🇱",
+    "city": "Kraków",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "visaId": "po-tour",
+    "landmarks": [
+      {
+        "name": "Wawel Castle",
+        "lat": 50.0547,
+        "lon": 19.9355
+      },
+      {
+        "name": "Warsaw Old Town",
+        "lat": 52.2497,
+        "lon": 21.0122
+      },
+      {
+        "name": "Wieliczka Salt Mine",
+        "lat": 49.979,
+        "lon": 20.0639
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Kraków Grand Palace Hotel",
+        "stars": 5,
+        "price": 188,
+        "link": "https://www.booking.com/searchresults.html?ss=Kraków"
+      },
+      {
+        "name": "City Center Suites Kraków",
+        "stars": 4,
+        "price": 126,
+        "link": "https://www.booking.com/searchresults.html?ss=Kraków"
+      }
+    ]
+  },
+  {
+    "country": "Austria",
+    "flag": "🇦🇹",
+    "city": "Vienna",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "visaId": "au-tour",
+    "landmarks": [
+      {
+        "name": "Schönbrunn Palace",
+        "lat": 48.1845,
+        "lon": 16.3122
+      },
+      {
+        "name": "Hallstatt Village",
+        "lat": 47.5622,
+        "lon": 13.6493
+      },
+      {
+        "name": "Belvedere Palace",
+        "lat": 48.191,
+        "lon": 16.3806
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Vienna Grand Palace Hotel",
+        "stars": 5,
+        "price": 201,
+        "link": "https://www.booking.com/searchresults.html?ss=Vienna"
+      },
+      {
+        "name": "City Center Suites Vienna",
+        "stars": 4,
+        "price": 137,
+        "link": "https://www.booking.com/searchresults.html?ss=Vienna"
+      }
+    ]
+  },
+  {
+    "country": "Sweden",
+    "flag": "🇸🇪",
+    "city": "Stockholm",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "visaId": "sw-tour",
+    "landmarks": [
+      {
+        "name": "Gamla Stan (Old Town)",
+        "lat": 59.3257,
+        "lon": 18.0717
+      },
+      {
+        "name": "Vasa Museum",
+        "lat": 59.328,
+        "lon": 18.0914
+      },
+      {
+        "name": "Stockholm City Hall",
+        "lat": 59.3275,
+        "lon": 18.0544
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Stockholm Grand Palace Hotel",
+        "stars": 5,
+        "price": 214,
+        "link": "https://www.booking.com/searchresults.html?ss=Stockholm"
+      },
+      {
+        "name": "City Center Suites Stockholm",
+        "stars": 4,
+        "price": 68,
+        "link": "https://www.booking.com/searchresults.html?ss=Stockholm"
+      }
+    ]
+  },
+  {
+    "country": "Czechia",
+    "flag": "🇨🇿",
+    "city": "Prague",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "visaId": "cz-tour",
+    "landmarks": [
+      {
+        "name": "Charles Bridge",
+        "lat": 50.0865,
+        "lon": 14.4114
+      },
+      {
+        "name": "Prague Castle",
+        "lat": 50.0909,
+        "lon": 14.3986
+      },
+      {
+        "name": "Old Town Square",
+        "lat": 50.0875,
+        "lon": 14.4213
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Prague Grand Palace Hotel",
+        "stars": 5,
+        "price": 227,
+        "link": "https://www.booking.com/searchresults.html?ss=Prague"
+      },
+      {
+        "name": "City Center Suites Prague",
+        "stars": 4,
+        "price": 79,
+        "link": "https://www.booking.com/searchresults.html?ss=Prague"
+      }
+    ]
+  },
+  {
+    "country": "Japan",
+    "flag": "🇯🇵",
+    "city": "Tokyo",
+    "image": "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ja-tour",
+    "landmarks": [
+      {
+        "name": "Mount Fuji",
+        "lat": 35.3606,
+        "lon": 138.7274
+      },
+      {
+        "name": "Fushimi Inari Shrine, Kyoto",
+        "lat": 34.9671,
+        "lon": 135.7727
+      },
+      {
+        "name": "Tokyo Skytree",
+        "lat": 35.7101,
+        "lon": 139.8107
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Tokyo Grand Palace Hotel",
+        "stars": 5,
+        "price": 240,
+        "link": "https://www.booking.com/searchresults.html?ss=Tokyo"
+      },
+      {
+        "name": "City Center Suites Tokyo",
+        "stars": 4,
+        "price": 90,
+        "link": "https://www.booking.com/searchresults.html?ss=Tokyo"
+      }
+    ]
+  },
+  {
+    "country": "South Korea",
+    "flag": "🇰🇷",
+    "city": "Seoul",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "visaId": "so-tour",
+    "landmarks": [
+      {
+        "name": "Gyeongbokgung Palace",
+        "lat": 37.5796,
+        "lon": 126.977
+      },
+      {
+        "name": "N Seoul Tower",
+        "lat": 37.5512,
+        "lon": 126.9882
+      },
+      {
+        "name": "Seongsan Ilchulbong, Jeju",
+        "lat": 33.4581,
+        "lon": 126.9426
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Seoul Grand Palace Hotel",
+        "stars": 5,
+        "price": 113,
+        "link": "https://www.booking.com/searchresults.html?ss=Seoul"
+      },
+      {
+        "name": "City Center Suites Seoul",
+        "stars": 4,
+        "price": 101,
+        "link": "https://www.booking.com/searchresults.html?ss=Seoul"
+      }
+    ]
+  },
+  {
+    "country": "China",
+    "flag": "🇨🇳",
+    "city": "Beijing",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ch-tour",
+    "landmarks": [
+      {
+        "name": "Great Wall (Badaling)",
+        "lat": 40.359,
+        "lon": 116.02
+      },
+      {
+        "name": "Forbidden City",
+        "lat": 39.9163,
+        "lon": 116.3972
+      },
+      {
+        "name": "Terracotta Army, Xi'an",
+        "lat": 34.3843,
+        "lon": 109.2785
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Beijing Grand Palace Hotel",
+        "stars": 5,
+        "price": 126,
+        "link": "https://www.booking.com/searchresults.html?ss=Beijing"
+      },
+      {
+        "name": "City Center Suites Beijing",
+        "stars": 4,
+        "price": 112,
+        "link": "https://www.booking.com/searchresults.html?ss=Beijing"
+      }
+    ]
+  },
+  {
+    "country": "Thailand",
+    "flag": "🇹🇭",
+    "city": "Bangkok",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "visaId": "th-tour",
+    "landmarks": [
+      {
+        "name": "Grand Palace",
+        "lat": 13.75,
+        "lon": 100.4913
+      },
+      {
+        "name": "Wat Arun",
+        "lat": 13.7437,
+        "lon": 100.4889
+      },
+      {
+        "name": "Phi Phi Islands",
+        "lat": 7.7407,
+        "lon": 98.7784
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Bangkok Grand Palace Hotel",
+        "stars": 5,
+        "price": 139,
+        "link": "https://www.booking.com/searchresults.html?ss=Bangkok"
+      },
+      {
+        "name": "City Center Suites Bangkok",
+        "stars": 4,
+        "price": 123,
+        "link": "https://www.booking.com/searchresults.html?ss=Bangkok"
+      }
+    ]
+  },
+  {
+    "country": "Vietnam",
+    "flag": "🇻🇳",
+    "city": "Hanoi",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "visaId": "vi-tour",
+    "landmarks": [
+      {
+        "name": "Ha Long Bay",
+        "lat": 20.9101,
+        "lon": 107.1839
+      },
+      {
+        "name": "Hoi An Ancient Town",
+        "lat": 15.8801,
+        "lon": 108.338
+      },
+      {
+        "name": "Cu Chi Tunnels",
+        "lat": 11.1433,
+        "lon": 106.4767
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Hanoi Grand Palace Hotel",
+        "stars": 5,
+        "price": 152,
+        "link": "https://www.booking.com/searchresults.html?ss=Hanoi"
+      },
+      {
+        "name": "City Center Suites Hanoi",
+        "stars": 4,
+        "price": 134,
+        "link": "https://www.booking.com/searchresults.html?ss=Hanoi"
+      }
+    ]
+  },
+  {
+    "country": "Singapore",
+    "flag": "🇸🇬",
+    "city": "Singapore",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "visaId": "si-tour",
+    "landmarks": [
+      {
+        "name": "Marina Bay Sands",
+        "lat": 1.2834,
+        "lon": 103.8607
+      },
+      {
+        "name": "Gardens by the Bay",
+        "lat": 1.2816,
+        "lon": 103.8636
+      },
+      {
+        "name": "Sentosa Island",
+        "lat": 1.2494,
+        "lon": 103.8303
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Singapore Grand Palace Hotel",
+        "stars": 5,
+        "price": 165,
+        "link": "https://www.booking.com/searchresults.html?ss=Singapore"
+      },
+      {
+        "name": "City Center Suites Singapore",
+        "stars": 4,
+        "price": 65,
+        "link": "https://www.booking.com/searchresults.html?ss=Singapore"
+      }
+    ]
+  },
+  {
+    "country": "Indonesia",
+    "flag": "🇮🇩",
+    "city": "Bali",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "visaId": "in-tour",
+    "landmarks": [
+      {
+        "name": "Borobudur Temple",
+        "lat": -7.6079,
+        "lon": 110.2038
+      },
+      {
+        "name": "Ubud, Bali",
+        "lat": -8.5069,
+        "lon": 115.2625
+      },
+      {
+        "name": "Mount Bromo",
+        "lat": -7.9425,
+        "lon": 112.953
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Bali Grand Palace Hotel",
+        "stars": 5,
+        "price": 178,
+        "link": "https://www.booking.com/searchresults.html?ss=Bali"
+      },
+      {
+        "name": "City Center Suites Bali",
+        "stars": 4,
+        "price": 76,
+        "link": "https://www.booking.com/searchresults.html?ss=Bali"
+      }
+    ]
+  },
+  {
+    "country": "Philippines",
+    "flag": "🇵🇭",
+    "city": "Manila",
+    "image": "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ph-tour",
+    "landmarks": [
+      {
+        "name": "El Nido, Palawan",
+        "lat": 11.1955,
+        "lon": 119.4073
+      },
+      {
+        "name": "Chocolate Hills, Bohol",
+        "lat": 9.8297,
+        "lon": 124.144
+      },
+      {
+        "name": "Intramuros, Manila",
+        "lat": 14.5896,
+        "lon": 120.975
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Manila Grand Palace Hotel",
+        "stars": 5,
+        "price": 191,
+        "link": "https://www.booking.com/searchresults.html?ss=Manila"
+      },
+      {
+        "name": "City Center Suites Manila",
+        "stars": 4,
+        "price": 87,
+        "link": "https://www.booking.com/searchresults.html?ss=Manila"
+      }
+    ]
+  },
+  {
+    "country": "Malaysia",
+    "flag": "🇲🇾",
+    "city": "Kuala Lumpur",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ma-tour",
+    "landmarks": [
+      {
+        "name": "Petronas Twin Towers",
+        "lat": 3.1579,
+        "lon": 101.7116
+      },
+      {
+        "name": "Batu Caves",
+        "lat": 3.2379,
+        "lon": 101.6838
+      },
+      {
+        "name": "Langkawi Sky Bridge",
+        "lat": 6.3721,
+        "lon": 99.6656
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Kuala Lumpur Grand Palace Hotel",
+        "stars": 5,
+        "price": 204,
+        "link": "https://www.booking.com/searchresults.html?ss=Kuala+Lumpur"
+      },
+      {
+        "name": "City Center Suites Kuala Lumpur",
+        "stars": 4,
+        "price": 98,
+        "link": "https://www.booking.com/searchresults.html?ss=Kuala+Lumpur"
+      }
+    ]
+  },
+  {
+    "country": "Brazil",
+    "flag": "🇧🇷",
+    "city": "Rio de Janeiro",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "visaId": "br-tour",
+    "landmarks": [
+      {
+        "name": "Christ the Redeemer",
+        "lat": -22.9519,
+        "lon": -43.2105
+      },
+      {
+        "name": "Sugarloaf Mountain",
+        "lat": -22.9487,
+        "lon": -43.1547
+      },
+      {
+        "name": "Iguazu Falls",
+        "lat": -25.6953,
+        "lon": -54.4367
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Rio de Janeiro Grand Palace Hotel",
+        "stars": 5,
+        "price": 217,
+        "link": "https://www.booking.com/searchresults.html?ss=Rio+de+Janeiro"
+      },
+      {
+        "name": "City Center Suites Rio de Janeiro",
+        "stars": 4,
+        "price": 109,
+        "link": "https://www.booking.com/searchresults.html?ss=Rio+de+Janeiro"
+      }
+    ]
+  },
+  {
+    "country": "Mexico",
+    "flag": "🇲🇽",
+    "city": "Mexico City",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "visaId": "me-tour",
+    "landmarks": [
+      {
+        "name": "Chichén Itzá",
+        "lat": 20.6843,
+        "lon": -88.5678
+      },
+      {
+        "name": "Teotihuacan Pyramids",
+        "lat": 19.6925,
+        "lon": -98.8438
+      },
+      {
+        "name": "Cancún Beaches",
+        "lat": 21.1619,
+        "lon": -86.8515
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Mexico City Grand Palace Hotel",
+        "stars": 5,
+        "price": 230,
+        "link": "https://www.booking.com/searchresults.html?ss=Mexico+City"
+      },
+      {
+        "name": "City Center Suites Mexico City",
+        "stars": 4,
+        "price": 120,
+        "link": "https://www.booking.com/searchresults.html?ss=Mexico+City"
+      }
+    ]
+  },
+  {
+    "country": "Argentina",
+    "flag": "🇦🇷",
+    "city": "Buenos Aires",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ar-tour",
+    "landmarks": [
+      {
+        "name": "Perito Moreno Glacier",
+        "lat": -50.4714,
+        "lon": -73.0266
+      },
+      {
+        "name": "Iguazu Falls (Argentine side)",
+        "lat": -25.6823,
+        "lon": -54.4447
+      },
+      {
+        "name": "Obelisco de Buenos Aires",
+        "lat": -34.6037,
+        "lon": -58.3816
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Buenos Aires Grand Palace Hotel",
+        "stars": 5,
+        "price": 243,
+        "link": "https://www.booking.com/searchresults.html?ss=Buenos+Aires"
+      },
+      {
+        "name": "City Center Suites Buenos Aires",
+        "stars": 4,
+        "price": 131,
+        "link": "https://www.booking.com/searchresults.html?ss=Buenos+Aires"
+      }
+    ]
+  },
+  {
+    "country": "Chile",
+    "flag": "🇨🇱",
+    "city": "Santiago",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ch-tour",
+    "landmarks": [
+      {
+        "name": "Torres del Paine",
+        "lat": -50.9423,
+        "lon": -73.4068
+      },
+      {
+        "name": "Rapa Nui (Easter Island)",
+        "lat": -27.1127,
+        "lon": -109.3497
+      },
+      {
+        "name": "San Cristóbal Hill",
+        "lat": -33.4254,
+        "lon": -70.6328
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Santiago Grand Palace Hotel",
+        "stars": 5,
+        "price": 116,
+        "link": "https://www.booking.com/searchresults.html?ss=Santiago"
+      },
+      {
+        "name": "City Center Suites Santiago",
+        "stars": 4,
+        "price": 62,
+        "link": "https://www.booking.com/searchresults.html?ss=Santiago"
+      }
+    ]
+  },
+  {
+    "country": "Colombia",
+    "flag": "🇨🇴",
+    "city": "Bogotá",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "visaId": "co-tour",
+    "landmarks": [
+      {
+        "name": "Walled City of Cartagena",
+        "lat": 10.4236,
+        "lon": -75.5513
+      },
+      {
+        "name": "Monserrate",
+        "lat": 4.6059,
+        "lon": -74.0554
+      },
+      {
+        "name": "Cocora Valley, Salento",
+        "lat": 4.6376,
+        "lon": -75.5703
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Bogotá Grand Palace Hotel",
+        "stars": 5,
+        "price": 129,
+        "link": "https://www.booking.com/searchresults.html?ss=Bogotá"
+      },
+      {
+        "name": "City Center Suites Bogotá",
+        "stars": 4,
+        "price": 73,
+        "link": "https://www.booking.com/searchresults.html?ss=Bogotá"
+      }
+    ]
+  },
+  {
+    "country": "Peru",
+    "flag": "🇵🇪",
+    "city": "Lima",
+    "image": "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?auto=format&fit=crop&w=800&q=80",
+    "visaId": "pe-tour",
+    "landmarks": [
+      {
+        "name": "Machu Picchu",
+        "lat": -13.1631,
+        "lon": -72.545
+      },
+      {
+        "name": "Plaza de Armas, Cusco",
+        "lat": -13.5167,
+        "lon": -71.9783
+      },
+      {
+        "name": "Miraflores, Lima",
+        "lat": -12.1219,
+        "lon": -77.0297
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Lima Grand Palace Hotel",
+        "stars": 5,
+        "price": 142,
+        "link": "https://www.booking.com/searchresults.html?ss=Lima"
+      },
+      {
+        "name": "City Center Suites Lima",
+        "stars": 4,
+        "price": 84,
+        "link": "https://www.booking.com/searchresults.html?ss=Lima"
+      }
+    ]
+  },
+  {
+    "country": "Australia",
+    "flag": "🇦🇺",
+    "city": "Sydney",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "visaId": "au-tour",
+    "landmarks": [
+      {
+        "name": "Sydney Opera House",
+        "lat": -33.8568,
+        "lon": 151.2153
+      },
+      {
+        "name": "Great Barrier Reef",
+        "lat": -18.2871,
+        "lon": 147.6992
+      },
+      {
+        "name": "Uluru",
+        "lat": -25.3444,
+        "lon": 131.0369
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Sydney Grand Palace Hotel",
+        "stars": 5,
+        "price": 155,
+        "link": "https://www.booking.com/searchresults.html?ss=Sydney"
+      },
+      {
+        "name": "City Center Suites Sydney",
+        "stars": 4,
+        "price": 95,
+        "link": "https://www.booking.com/searchresults.html?ss=Sydney"
+      }
+    ]
+  },
+  {
+    "country": "New Zealand",
+    "flag": "🇳🇿",
+    "city": "Auckland",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ne-tour",
+    "landmarks": [
+      {
+        "name": "Milford Sound",
+        "lat": -44.6414,
+        "lon": 167.8984
+      },
+      {
+        "name": "Sky Tower Auckland",
+        "lat": -36.8485,
+        "lon": 174.7625
+      },
+      {
+        "name": "Hobbiton, Matamata",
+        "lat": -37.8721,
+        "lon": 175.683
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Auckland Grand Palace Hotel",
+        "stars": 5,
+        "price": 168,
+        "link": "https://www.booking.com/searchresults.html?ss=Auckland"
+      },
+      {
+        "name": "City Center Suites Auckland",
+        "stars": 4,
+        "price": 106,
+        "link": "https://www.booking.com/searchresults.html?ss=Auckland"
+      }
+    ]
+  },
+  {
+    "country": "Turkey",
+    "flag": "🇹🇷",
+    "city": "Istanbul",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "visaId": "tu-tour",
+    "landmarks": [
+      {
+        "name": "Hagia Sophia",
+        "lat": 41.0086,
+        "lon": 28.9802
+      },
+      {
+        "name": "Cappadocia",
+        "lat": 38.6431,
+        "lon": 34.828
+      },
+      {
+        "name": "Pamukkale Travertines",
+        "lat": 37.9137,
+        "lon": 29.1187
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Istanbul Grand Palace Hotel",
+        "stars": 5,
+        "price": 181,
+        "link": "https://www.booking.com/searchresults.html?ss=Istanbul"
+      },
+      {
+        "name": "City Center Suites Istanbul",
+        "stars": 4,
+        "price": 117,
+        "link": "https://www.booking.com/searchresults.html?ss=Istanbul"
+      }
+    ]
+  },
+  {
+    "country": "Egypt",
+    "flag": "🇪🇬",
+    "city": "Cairo",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "visaId": "eg-tour",
+    "landmarks": [
+      {
+        "name": "Pyramids of Giza",
+        "lat": 29.9792,
+        "lon": 31.1342
+      },
+      {
+        "name": "Luxor Temple",
+        "lat": 25.6995,
+        "lon": 32.6391
+      },
+      {
+        "name": "Abu Simbel Temples",
+        "lat": 22.3372,
+        "lon": 31.6255
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Cairo Grand Palace Hotel",
+        "stars": 5,
+        "price": 194,
+        "link": "https://www.booking.com/searchresults.html?ss=Cairo"
+      },
+      {
+        "name": "City Center Suites Cairo",
+        "stars": 4,
+        "price": 128,
+        "link": "https://www.booking.com/searchresults.html?ss=Cairo"
+      }
+    ]
+  },
+  {
+    "country": "Morocco",
+    "flag": "🇲🇦",
+    "city": "Marrakech",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "visaId": "mo-tour",
+    "landmarks": [
+      {
+        "name": "Jemaa el-Fnaa, Marrakech",
+        "lat": 31.6258,
+        "lon": -7.9891
+      },
+      {
+        "name": "Chefchaouen (Blue City)",
+        "lat": 35.1688,
+        "lon": -5.2636
+      },
+      {
+        "name": "Hassan II Mosque, Casablanca",
+        "lat": 33.6084,
+        "lon": -7.6327
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Marrakech Grand Palace Hotel",
+        "stars": 5,
+        "price": 207,
+        "link": "https://www.booking.com/searchresults.html?ss=Marrakech"
+      },
+      {
+        "name": "City Center Suites Marrakech",
+        "stars": 4,
+        "price": 139,
+        "link": "https://www.booking.com/searchresults.html?ss=Marrakech"
+      }
+    ]
+  },
+  {
+    "country": "Saudi Arabia",
+    "flag": "🇸🇦",
+    "city": "Riyadh",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "visaId": "sa-tour",
+    "landmarks": [
+      {
+        "name": "Hegra (Madain Saleh), Al-Ula",
+        "lat": 26.7806,
+        "lon": 37.955
+      },
+      {
+        "name": "Edge of the World",
+        "lat": 24.7936,
+        "lon": 46.405
+      },
+      {
+        "name": "Al-Balad, Jeddah",
+        "lat": 21.4858,
+        "lon": 39.1963
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Riyadh Grand Palace Hotel",
+        "stars": 5,
+        "price": 220,
+        "link": "https://www.booking.com/searchresults.html?ss=Riyadh"
+      },
+      {
+        "name": "City Center Suites Riyadh",
+        "stars": 4,
+        "price": 70,
+        "link": "https://www.booking.com/searchresults.html?ss=Riyadh"
+      }
+    ]
+  },
+  {
+    "country": "South Africa",
+    "flag": "🇿🇦",
+    "city": "Cape Town",
+    "image": "https://images.unsplash.com/photo-1519834785169-98be25ec3f84?auto=format&fit=crop&w=800&q=80",
+    "visaId": "so-tour",
+    "landmarks": [
+      {
+        "name": "Table Mountain",
+        "lat": -33.9628,
+        "lon": 18.4098
+      },
+      {
+        "name": "Kruger National Park",
+        "lat": -24.006,
+        "lon": 31.585
+      },
+      {
+        "name": "Robben Island",
+        "lat": -33.8076,
+        "lon": 18.372
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Cape Town Grand Palace Hotel",
+        "stars": 5,
+        "price": 233,
+        "link": "https://www.booking.com/searchresults.html?ss=Cape+Town"
+      },
+      {
+        "name": "City Center Suites Cape Town",
+        "stars": 4,
+        "price": 81,
+        "link": "https://www.booking.com/searchresults.html?ss=Cape+Town"
+      }
+    ]
+  },
+  {
+    "country": "India",
+    "flag": "🇮🇳",
+    "city": "New Delhi",
+    "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=800&q=80",
+    "visaId": "in-tour",
+    "landmarks": [
+      {
+        "name": "Taj Mahal, Agra",
+        "lat": 27.1751,
+        "lon": 78.0421
+      },
+      {
+        "name": "Amber Fort, Jaipur",
+        "lat": 26.9855,
+        "lon": 75.8513
+      },
+      {
+        "name": "Varanasi Ghats",
+        "lat": 25.3109,
+        "lon": 82.9739
+      }
+    ],
+    "hotels": [
+      {
+        "name": "New Delhi Grand Palace Hotel",
+        "stars": 5,
+        "price": 246,
+        "link": "https://www.booking.com/searchresults.html?ss=New+Delhi"
+      },
+      {
+        "name": "City Center Suites New Delhi",
+        "stars": 4,
+        "price": 92,
+        "link": "https://www.booking.com/searchresults.html?ss=New+Delhi"
+      }
+    ]
+  },
+  {
+    "country": "United States",
+    "flag": "🇺🇸",
+    "city": "New York",
+    "image": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=800&q=80",
+    "visaId": "us-b1b2",
+    "landmarks": [
+      {
+        "name": "Statue of Liberty",
+        "lat": 40.6892,
+        "lon": -74.0445
+      },
+      {
+        "name": "Grand Canyon",
+        "lat": 36.1069,
+        "lon": -112.1129
+      },
+      {
+        "name": "Times Square",
+        "lat": 40.758,
+        "lon": -73.9855
+      }
+    ],
+    "hotels": [
+      {
+        "name": "New York Grand Palace Hotel",
+        "stars": 5,
+        "price": 119,
+        "link": "https://www.booking.com/searchresults.html?ss=New+York"
+      },
+      {
+        "name": "City Center Suites New York",
+        "stars": 4,
+        "price": 103,
+        "link": "https://www.booking.com/searchresults.html?ss=New+York"
+      }
+    ]
+  },
+  {
+    "country": "Canada",
+    "flag": "🇨🇦",
+    "city": "Toronto",
+    "image": "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ca-study",
+    "landmarks": [
+      {
+        "name": "Niagara Falls",
+        "lat": 43.0962,
+        "lon": -79.0377
+      },
+      {
+        "name": "Banff National Park",
+        "lat": 51.1784,
+        "lon": -115.5708
+      },
+      {
+        "name": "CN Tower",
+        "lat": 43.6426,
+        "lon": -79.3871
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Toronto Grand Palace Hotel",
+        "stars": 5,
+        "price": 132,
+        "link": "https://www.booking.com/searchresults.html?ss=Toronto"
+      },
+      {
+        "name": "City Center Suites Toronto",
+        "stars": 4,
+        "price": 114,
+        "link": "https://www.booking.com/searchresults.html?ss=Toronto"
+      }
+    ]
+  },
+  {
+    "country": "United Kingdom",
+    "flag": "🇬🇧",
+    "city": "London",
+    "image": "https://images.unsplash.com/photo-1485738422979-f5c462d49f74?auto=format&fit=crop&w=800&q=80",
+    "visaId": "uk-student",
+    "landmarks": [
+      {
+        "name": "Big Ben & Parliament",
+        "lat": 51.5007,
+        "lon": -0.1246
+      },
+      {
+        "name": "Tower of London",
+        "lat": 51.5081,
+        "lon": -0.0759
+      },
+      {
+        "name": "Stonehenge",
+        "lat": 51.1789,
+        "lon": -1.8262
+      }
+    ],
+    "hotels": [
+      {
+        "name": "London Grand Palace Hotel",
+        "stars": 5,
+        "price": 145,
+        "link": "https://www.booking.com/searchresults.html?ss=London"
+      },
+      {
+        "name": "City Center Suites London",
+        "stars": 4,
+        "price": 125,
+        "link": "https://www.booking.com/searchresults.html?ss=London"
+      }
+    ]
+  },
+  {
+    "country": "Germany",
+    "flag": "🇩🇪",
+    "city": "Berlin",
+    "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=800&q=80",
+    "visaId": "de-chancenkarte",
+    "landmarks": [
+      {
+        "name": "Brandenburg Gate",
+        "lat": 52.5163,
+        "lon": 13.3777
+      },
+      {
+        "name": "Neuschwanstein Castle",
+        "lat": 47.5576,
+        "lon": 10.7498
+      },
+      {
+        "name": "Cologne Cathedral",
+        "lat": 50.9413,
+        "lon": 6.9583
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Berlin Grand Palace Hotel",
+        "stars": 5,
+        "price": 158,
+        "link": "https://www.booking.com/searchresults.html?ss=Berlin"
+      },
+      {
+        "name": "City Center Suites Berlin",
+        "stars": 4,
+        "price": 136,
+        "link": "https://www.booking.com/searchresults.html?ss=Berlin"
+      }
+    ]
+  },
+  {
+    "country": "United Arab Emirates",
+    "flag": "🇦🇪",
+    "city": "Dubai",
+    "image": "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    "visaId": "ae-golden",
+    "landmarks": [
+      {
+        "name": "Burj Khalifa",
+        "lat": 25.1972,
+        "lon": 55.2744
+      },
+      {
+        "name": "Sheikh Zayed Grand Mosque, Abu Dhabi",
+        "lat": 24.4128,
+        "lon": 54.475
+      },
+      {
+        "name": "Dubai Marina",
+        "lat": 25.0805,
+        "lon": 55.1403
+      }
+    ],
+    "hotels": [
+      {
+        "name": "Dubai Grand Palace Hotel",
+        "stars": 5,
+        "price": 171,
+        "link": "https://www.booking.com/searchresults.html?ss=Dubai"
+      },
+      {
+        "name": "City Center Suites Dubai",
+        "stars": 4,
+        "price": 67,
+        "link": "https://www.booking.com/searchresults.html?ss=Dubai"
+      }
+    ]
+  }
 ];
 
 const CHECKLIST = [
@@ -826,6 +5186,9 @@ function showPage(page) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   revealAll();
   if (page === 'charts') setTimeout(initAllCharts, 100);
+  if (page === 'trip') renderTripPage();
+  if (page === 'destinations') renderDestinations();
+  if (page === 'account') renderAccountPage();
 }
 
 function toggleMobileMenu() {
@@ -878,9 +5241,14 @@ function visaCard(v) {
         <label class="flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 cursor-pointer select-none">
           <input type="checkbox" class="compare-check accent-brand-600 w-3.5 h-3.5" data-id="${v.id}" onchange="toggleCompare('${v.id}', this.checked)"> Compare
         </label>
-        <button onclick="toggleFav('${v.id}')" class="fav-btn text-slate-300 dark:text-slate-600 hover:text-rose-500 transition" data-fav="${v.id}" aria-label="Save to favorites">
-          <i class="fa-solid fa-heart text-lg"></i>
-        </button>
+        <div class="flex items-center gap-3">
+          <button onclick="toggleTrip('${v.id}')" class="trip-btn text-slate-300 dark:text-slate-600 hover:text-brand-500 transition" data-trip="${v.id}" aria-label="Add to trip planner">
+            <i class="fa-solid fa-route text-lg"></i>
+          </button>
+          <button onclick="toggleFav('${v.id}')" class="fav-btn text-slate-300 dark:text-slate-600 hover:text-rose-500 transition" data-fav="${v.id}" aria-label="Save to favorites">
+            <i class="fa-solid fa-heart text-lg"></i>
+          </button>
+        </div>
       </div>
     </div>
   </article>`;
@@ -951,6 +5319,9 @@ function openDetail(id) {
           </button>
           <button onclick="toggleFav('${v.id}')" class="fav-btn px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold border border-white/15 backdrop-blur transition" data-fav="${v.id}">
             <i class="fa-solid fa-heart mr-1"></i> <span>Save</span>
+          </button>
+          <button onclick="toggleTrip('${v.id}')" class="trip-btn px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-sm font-semibold border border-white/15 backdrop-blur transition" data-trip="${v.id}">
+            <i class="fa-solid fa-route mr-1"></i> <span>Trip</span>
           </button>
         </div>
         <div class="flex items-center gap-4 mb-4">
@@ -1058,6 +5429,9 @@ function openDetail(id) {
           <div class="reveal rounded-3xl bg-gradient-to-br from-slate-900 via-brand-950 to-violet-950 text-white p-6 shadow-2xl">
             <h3 class="font-extrabold text-lg mb-4"><i class="fa-solid fa-rocket text-brand-400 mr-2"></i>Start Your Application</h3>
             <p class="text-sm text-slate-300 mb-5">Use the official links below to apply directly.</p>
+            <button onclick="openApply('${v.id}')" class="block w-full text-center py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold hover:from-emerald-600 hover:to-emerald-700 transition mb-3 shadow-lg shadow-emerald-600/30">
+              <i class="fa-solid fa-paper-plane mr-1.5"></i> Start Application
+            </button>
             <a href="${v.applyLink}" target="_blank" rel="noopener" class="block w-full text-center py-3 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition mb-3">
               <i class="fa-solid fa-external-link-alt mr-1.5"></i> Apply Now (Official)
             </a>
@@ -1090,6 +5464,12 @@ function openDetail(id) {
           </div>
 
           <div class="reveal rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5">
+            <h3 class="font-extrabold text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-line text-brand-500 mr-2"></i>Approval History 2020–2026</h3>
+            <div class="chart-container" style="height:190px"><canvas id="trendChart"></canvas></div>
+            <p class="text-[11px] text-slate-400 mt-3">Indicative historical estimates — not official statistics.</p>
+          </div>
+
+          <div class="reveal rounded-3xl bg-white dark:bg-slate-900 p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5">
             <h3 class="font-extrabold text-slate-900 dark:text-white mb-4"><i class="fa-solid fa-chart-simple text-brand-500 mr-2"></i>Approval Indicator</h3>
             <div class="chart-container" style="height:200px"><canvas id="detailChart"></canvas></div>
           </div>
@@ -1113,6 +5493,21 @@ function openDetail(id) {
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#cbd5e1' : '#475569' } } } }
     });
+    const tctx = document.getElementById('trendChart');
+    if (tctx) {
+      new Chart(tctx, {
+        type: 'line',
+        data: {
+          labels: ['2020','2021','2022','2023','2024','2025','2026'],
+          datasets: [{ label: 'Approval %', data: v.trend, borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,.12)', fill: true, tension: .4, pointRadius: 4, pointBackgroundColor: '#6366f1' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: isDark ? '#94a3b8' : '#64748b', font: { size: 10 } }, grid: { display: false } },
+            y: { min: 50, max: 100, ticks: { color: isDark ? '#94a3b8' : '#64748b', font: { size: 10 } }, grid: { color: isDark ? 'rgba(148,163,184,.1)' : 'rgba(100,116,139,.1)' } }
+          } }
+      });
+    }
   }, 150);
 }
 
@@ -1660,7 +6055,10 @@ function showQuizResults() {
     <div class="text-center mb-6">
       <span class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400">Your matches</span>
       <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white mt-2">Best visas for your profile</h2>
-      <button onclick="resetQuiz()" class="mt-3 text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline"><i class="fa-solid fa-rotate-left mr-1"></i>Retake quiz</button>
+      <div class="mt-4 flex flex-wrap justify-center gap-3">
+        <button onclick="resetQuiz()" class="text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline"><i class="fa-solid fa-rotate-left mr-1"></i>Retake quiz</button>
+        <button onclick="downloadReport()" class="px-5 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm hover:opacity-85 transition shadow-lg"><i class="fa-solid fa-file-pdf mr-1.5"></i>Download Report (PDF)</button>
+      </div>
     </div>
     ${res.map((r, i) => `
       <div class="glass rounded-3xl p-6 shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 mb-4" style="animation: slideUp .5s ${i * 0.12}s cubic-bezier(.16,1,.3,1) both">
@@ -1730,6 +6128,474 @@ document.addEventListener('keydown', e => {
 /* ============================================================
    INIT
    ============================================================ */
+/* ============================================================
+   TRIP PLANNER (localStorage itinerary)
+   ============================================================ */
+let trip = JSON.parse(localStorage.getItem('gvtrip') || '[]');
+
+function toggleTrip(id) {
+  const i = trip.indexOf(id);
+  if (i > -1) { trip.splice(i, 1); toast('Removed from trip', 'fa-route'); }
+  else { trip.push(id); toast('Added to your trip'); }
+  localStorage.setItem('gvtrip', JSON.stringify(trip));
+  updateTripBadge();
+  paintTripBtns();
+  if (!document.getElementById('page-trip').classList.contains('hidden')) renderTripPage();
+}
+function paintTripBtns() {
+  document.querySelectorAll('.trip-btn').forEach(b => {
+    const on = trip.includes(b.dataset.trip);
+    if (b.closest('#detailContent')) {
+      b.style.color = on ? '#818cf8' : '';
+      const sp = b.querySelector('span');
+      if (sp) sp.textContent = on ? 'In Trip' : 'Trip';
+    } else {
+      b.classList.toggle('text-brand-500', on);
+      b.classList.toggle('text-slate-300', !on);
+      b.classList.toggle('dark:text-slate-600', !on);
+    }
+  });
+}
+function updateTripBadge() {
+  const c = document.getElementById('tripCount');
+  if (!c) return;
+  c.textContent = trip.length;
+  c.classList.toggle('hidden', trip.length === 0);
+}
+function moveTrip(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= trip.length) return;
+  const t = trip[i]; trip[i] = trip[j]; trip[j] = t;
+  localStorage.setItem('gvtrip', JSON.stringify(trip));
+  renderTripPage();
+}
+function clearTrip() {
+  trip = [];
+  localStorage.setItem('gvtrip', '[]');
+  updateTripBadge(); paintTripBtns(); renderTripPage();
+  toast('Trip cleared', 'fa-trash');
+}
+function renderTripPage() {
+  const empty = document.getElementById('tripEmpty');
+  const content = document.getElementById('tripContent');
+  if (!empty || !content) return;
+  if (!trip.length) { empty.classList.remove('hidden'); content.classList.add('hidden'); return; }
+  empty.classList.add('hidden'); content.classList.remove('hidden');
+  const items = trip.map(id => VISAS.find(v => v.id === id)).filter(Boolean);
+
+  document.getElementById('tripList').innerHTML = items.map((v, i) => `
+    <div class="glass rounded-2xl p-5 shadow-lg ring-1 ring-slate-900/5 dark:ring-white/5 flex flex-col sm:flex-row sm:items-center gap-4" style="animation: slideUp .45s ${i * 0.08}s cubic-bezier(.16,1,.3,1) both">
+      <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 flex items-center justify-center font-black shrink-0">${i + 1}</div>
+      <div class="text-3xl shrink-0">${v.flag}</div>
+      <div class="flex-1 min-w-0">
+        <div class="font-extrabold text-slate-900 dark:text-white">${v.country}</div>
+        <div class="text-xs text-brand-600 dark:text-brand-400 font-semibold">${v.type}</div>
+        <div class="text-xs text-slate-500 mt-1">Fee: <b class="text-slate-700 dark:text-slate-300">${v.fee}</b> · Processing: <b class="text-slate-700 dark:text-slate-300">${v.time}</b> · Validity: ${v.validity}</div>
+      </div>
+      <div class="flex gap-1.5 shrink-0">
+        <button onclick="moveTrip(${i}, -1)" ${i === 0 ? 'disabled' : ''} aria-label="Move up" class="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-30 transition"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+        <button onclick="moveTrip(${i}, 1)" ${i === items.length - 1 ? 'disabled' : ''} aria-label="Move down" class="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-30 transition"><i class="fa-solid fa-arrow-down text-xs"></i></button>
+        <button onclick="toggleTrip('${v.id}')" aria-label="Remove" class="w-9 h-9 rounded-lg bg-rose-50 dark:bg-rose-500/10 text-rose-500 hover:bg-rose-100 dark:hover:bg-rose-500/20 transition"><i class="fa-solid fa-trash text-xs"></i></button>
+      </div>
+    </div>`).join('');
+
+  const totalFee = items.reduce((s, v) => s + (v.feeMin || 0), 0);
+  const byTime = [...items].sort((a, b) => parseInt(b.time, 10) - parseInt(a.time, 10));
+  document.getElementById('tripSummary').innerHTML = `
+    <div class="rounded-3xl bg-gradient-to-br from-slate-900 via-brand-950 to-violet-950 text-white p-6 shadow-2xl">
+      <h3 class="font-extrabold text-lg mb-4"><i class="fa-solid fa-calculator text-brand-400 mr-2"></i>Trip Summary</h3>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+          <div class="text-xs text-slate-300">Destinations</div>
+          <div class="text-xl font-black mt-1">${items.length}</div>
+        </div>
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-4">
+          <div class="text-xs text-slate-300">Govt. fees (min)</div>
+          <div class="text-xl font-black mt-1 font-mono">$${totalFee.toLocaleString()}</div>
+        </div>
+      </div>
+      <div class="mt-5">
+        <div class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-2">Recommended application order</div>
+        <ol class="space-y-2">
+          ${byTime.map((v, i) => `<li class="flex items-center gap-2.5 text-sm">
+            <span class="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center text-xs font-black shrink-0">${i + 1}</span>
+            <span class="flex-1">${v.flag} ${v.country}</span>
+            <span class="text-slate-400 text-xs font-mono">${v.time}</span>
+          </li>`).join('')}
+        </ol>
+        <p class="text-[11px] text-slate-400 mt-2"><i class="fa-solid fa-lightbulb mr-1"></i>Apply for the longest-processing visa first.</p>
+      </div>
+      <button onclick="window.print()" class="mt-5 w-full py-3 rounded-xl bg-white text-slate-900 font-bold hover:bg-slate-100 transition no-print"><i class="fa-solid fa-print mr-1.5"></i> Print Itinerary</button>
+      <button onclick="clearTrip()" class="mt-2 w-full py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 font-semibold transition text-sm no-print">Clear trip</button>
+    </div>`;
+}
+
+/* ============================================================
+   PERSONAL REPORT (PDF export via print)
+   ============================================================ */
+function downloadReport() {
+  const res = computeMatches(quiz);
+  const top = res[0].v;
+  const prof = [
+    ['Goal', (PURPOSES.find(p => p.id === quiz.purpose) || {}).label || quiz.purpose],
+    ['Education', { phd: "PhD / Master's", bachelor: "Bachelor's", diploma: 'Vocational / Diploma', highschool: 'High school' }[quiz.edu]],
+    ['Language', { native: 'Native / Bilingual', advanced: 'Advanced (C1)', intermediate: 'Intermediate (B2)', beginner: 'Beginner' }[quiz.lang]],
+    ['Budget', '$' + quiz.budget.toLocaleString()],
+    ['Timing', { any: 'No rush', fast: 'ASAP', flex: 'Flexible' }[quiz.speed]],
+  ];
+  const h2 = 'font-size:16px;font-weight:800;margin-top:26px;border-bottom:2px solid #4f46e5;padding-bottom:6px;';
+  document.getElementById('reportView').innerHTML = `
+    <div style="max-width:800px;margin:0 auto;font-family:'Plus Jakarta Sans',system-ui,sans-serif;">
+      <h1 style="font-size:26px;font-weight:900;margin:0;">GlobalVisa Pro — Personal Visa Report</h1>
+      <p style="color:#64748b;font-size:12px;margin-top:4px;">Generated on ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} · Illustrative estimates only — not legal advice.</p>
+
+      <h2 style="${h2}">Your Profile</h2>
+      <table style="width:100%;font-size:13px;border-collapse:collapse;">
+        ${prof.map(([k, v]) => `<tr><td style="padding:5px 0;color:#64748b;">${k}</td><td style="padding:5px 0;font-weight:700;text-align:right;">${v}</td></tr>`).join('')}
+      </table>
+
+      <h2 style="${h2}">Top 3 Visa Matches</h2>
+      ${res.map((r, i) => `
+        <div style="margin-top:10px;padding:13px 15px;border:1px solid #e2e8f0;border-radius:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+            <strong style="font-size:13px;">${['1st', '2nd', '3rd'][i]} — ${r.v.flag} ${r.v.country}: ${r.v.type}</strong>
+            <span style="font-weight:900;color:#4f46e5;white-space:nowrap;">${r.s}% match</span>
+          </div>
+          <div style="font-size:12px;color:#64748b;margin-top:4px;">Fee: ${r.v.fee} · Processing: ${r.v.time} · Validity: ${r.v.validity} · Approval rate: ${r.v.approval}%</div>
+        </div>`).join('')}
+
+      <h2 style="${h2}">${top.flag} Recommended: ${top.type} — Application Steps</h2>
+      <ol style="font-size:13px;padding-left:20px;line-height:1.9;">
+        ${top.steps.map(s => `<li><strong>${s.title}</strong> — ${s.desc}</li>`).join('')}
+      </ol>
+
+      <h2 style="${h2}">Key Requirements</h2>
+      <ul style="font-size:13px;padding-left:20px;line-height:1.8;">
+        ${top.requirements.map(r => `<li>${r}</li>`).join('')}
+      </ul>
+
+      <h2 style="${h2}">Common Rejection Reasons to Avoid</h2>
+      <ul style="font-size:13px;padding-left:20px;line-height:1.8;">
+        ${top.rejections.map(r => `<li>${r}</li>`).join('')}
+      </ul>
+
+      <p style="margin-top:26px;padding:12px 14px;background:#fef3c7;border-radius:10px;font-size:12px;color:#92400e;">
+        <strong>Disclaimer:</strong> All fees, timelines, and approval percentages are illustrative estimates. Always verify with the official embassy or immigration authority of your destination before applying.
+      </p>
+      <p style="font-size:11px;color:#94a3b8;margin-top:14px;">© 2026 GlobalVisa Pro — Visa Intelligence Hub</p>
+    </div>`;
+  document.body.classList.add('report-mode');
+  window.print();
+  setTimeout(() => document.body.classList.remove('report-mode'), 600);
+}
+window.onafterprint = () => document.body.classList.remove('report-mode');
+
+/* ============================================================
+   DESTINATIONS — landmarks, live OSM maps & hotel picks
+   ============================================================ */
+const mapModal = document.getElementById('mapModal');
+mapModal.addEventListener('click', e => {
+  const r = mapModal.getBoundingClientRect();
+  if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) mapModal.close();
+});
+
+function openMap(lat, lon, title) {
+  document.getElementById('mapTitle').textContent = '📍 ' + title;
+  document.getElementById('mapFrame').src =
+    `https://www.openstreetmap.org/export/embed.html?bbox=${(lon - 0.06).toFixed(4)}%2C${(lat - 0.04).toFixed(4)}%2C${(lon + 0.06).toFixed(4)}%2C${(lat + 0.04).toFixed(4)}&layer=mapnik&marker=${lat}%2C${lon}`;
+  mapModal.showModal();
+}
+
+function registerHotel(name) {
+  let h = JSON.parse(localStorage.getItem('gvhotels') || '[]');
+  if (h.includes(name)) { toast('Already in your hotel list', 'fa-circle-info'); return; }
+  h.push(name);
+  localStorage.setItem('gvhotels', JSON.stringify(h));
+  toast('Hotel registered: ' + name);
+}
+
+function renderDestinations(filter = '') {
+  const grid = document.getElementById('destGrid');
+  if (!grid) return;
+  const q = filter.toLowerCase().trim();
+  const items = DESTINATIONS.filter(d => !q || (d.country + ' ' + d.city).toLowerCase().includes(q));
+  document.getElementById('destEmpty').classList.toggle('hidden', items.length > 0);
+  grid.innerHTML = items.map((d, i) => `
+    <article class="reveal glass rounded-3xl overflow-hidden shadow-xl ring-1 ring-slate-900/5 dark:ring-white/5 card-hover flex flex-col" style="transition-delay:${Math.min(i, 8) * 40}ms">
+      <div class="relative h-40 overflow-hidden">
+        <img src="${d.image}" alt="${d.country}" loading="lazy" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 to-transparent"></div>
+        <div class="absolute bottom-3 left-4 right-4">
+          <h3 class="text-white font-extrabold text-lg drop-shadow">${d.flag} ${d.country}</h3>
+          <p class="text-white/75 text-xs"><i class="fa-solid fa-location-dot mr-1"></i>${d.city}</p>
+        </div>
+      </div>
+      <div class="p-5 flex-grow flex flex-col gap-4">
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-widest text-brand-600 dark:text-brand-400 mb-2"><i class="fa-solid fa-monument mr-1"></i>Top landmarks</h4>
+          <ul class="space-y-1.5">
+            ${d.landmarks.map(l => `
+              <li class="flex items-center justify-between gap-2 text-sm">
+                <span class="text-slate-700 dark:text-slate-300 truncate">${l.name}</span>
+                <button onclick="openMap(${l.lat}, ${l.lon}, '${l.name.replace(/'/g, "\\'")} — ${d.country}')" class="shrink-0 text-[11px] font-bold text-brand-600 dark:text-brand-400 hover:underline whitespace-nowrap"><i class="fa-solid fa-map-location-dot mr-1"></i>Locate</button>
+              </li>`).join('')}
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-2"><i class="fa-solid fa-hotel mr-1"></i>Where to stay</h4>
+          <ul class="space-y-2">
+            ${d.hotels.map(h => `
+              <li class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50">
+                <div class="min-w-0">
+                  <div class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">${h.name}</div>
+                  <div class="text-[11px]"><span class="text-amber-500">${'★'.repeat(h.stars)}</span> <span class="text-slate-500 font-mono">from $${h.price}/night</span></div>
+                </div>
+                <div class="flex gap-1.5 shrink-0">
+                  <button onclick="registerHotel('${h.name.replace(/'/g, "\\'")}')" title="Register interest" class="w-8 h-8 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 hover:bg-brand-100 dark:hover:bg-brand-500/20 transition flex items-center justify-center"><i class="fa-solid fa-bookmark text-xs"></i></button>
+                  <a href="${h.link}" target="_blank" rel="noopener" class="px-3 h-8 rounded-lg bg-emerald-600 text-white text-xs font-bold flex items-center hover:bg-emerald-700 transition">Book</a>
+                </div>
+              </li>`).join('')}
+          </ul>
+        </div>
+        <button onclick="${d.visaId ? `openDetail('${d.visaId}')` : `toast('Visa guide coming soon for this destination', 'fa-clock')`}" class="mt-auto w-full py-3 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm hover:opacity-85 transition">
+          <i class="fa-solid fa-passport mr-1.5"></i> Tourist Visa Guide
+        </button>
+      </div>
+    </article>`).join('');
+  revealAll();
+}
+
+/* ============================================================
+   AUTH (demo accounts — localStorage)
+   ============================================================ */
+let user = JSON.parse(localStorage.getItem('gvuser') || 'null');
+let pendingPlan = null;
+let authMode = 'in';
+const authModal = document.getElementById('authModal');
+
+function toggleAuthMenu() {
+  if (!user) { openAuthModal('in'); return; }
+  document.getElementById('authMenu').classList.toggle('hidden');
+}
+function openAuthModal(mode) {
+  authMode = mode;
+  document.getElementById('authBody').innerHTML = `
+    <div class="flex items-start justify-between mb-5">
+      <div>
+        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">${mode === 'up' ? 'Create your account' : 'Welcome back'}</h2>
+        <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-lock mr-1"></i>Demo account — your data never leaves this device.</p>
+      </div>
+      <button onclick="authModal.close()" aria-label="Close" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="space-y-3">
+      ${mode === 'up' ? '<input id="auName" type="text" placeholder="Full name" class="calc-input">' : ''}
+      <input id="auEmail" type="email" placeholder="Email address" class="calc-input">
+      <input id="auPass" type="password" placeholder="Password (min 6 characters)" class="calc-input">
+      <button onclick="submitAuth()" class="w-full py-3 rounded-xl bg-brand-600 text-white font-bold hover:bg-brand-700 transition shadow-lg shadow-brand-600/25">${mode === 'up' ? 'Sign Up Free' : 'Sign In'}</button>
+      <button onclick="openAuthModal('${mode === 'up' ? 'in' : 'up'}')" class="w-full text-sm font-semibold text-brand-600 dark:text-brand-400 hover:underline">
+        ${mode === 'up' ? 'Already have an account? Sign in' : 'New here? Create a free account'}
+      </button>
+    </div>`;
+  authModal.showModal();
+}
+function submitAuth() {
+  const email = document.getElementById('auEmail').value.trim();
+  const pass = document.getElementById('auPass').value;
+  const name = authMode === 'up' ? document.getElementById('auName').value.trim() : (email.split('@')[0] || 'Traveler');
+  if (!email.includes('@')) { toast('Please enter a valid email', 'fa-circle-info'); return; }
+  if (pass.length < 6) { toast('Password must be at least 6 characters', 'fa-circle-info'); return; }
+  if (authMode === 'up' && name.length < 2) { toast('Please enter your name', 'fa-circle-info'); return; }
+  user = { name, email, plan: (user && user.plan) || 'Free' };
+  localStorage.setItem('gvuser', JSON.stringify(user));
+  authModal.close();
+  updateAuthUI();
+  toast((authMode === 'up' ? 'Welcome, ' : 'Welcome back, ') + name + '!');
+  if (pendingPlan) { const p = pendingPlan; pendingPlan = null; subscribePlan(p); }
+}
+function logout() {
+  user = null;
+  localStorage.removeItem('gvuser');
+  updateAuthUI();
+  toast('Logged out', 'fa-right-from-bracket');
+}
+function updateAuthUI() {
+  const label = document.getElementById('authLabel');
+  const menu = document.getElementById('authMenu');
+  if (menu) menu.classList.add('hidden');
+  if (user) {
+    label.innerHTML = `<span class="w-6 h-6 rounded-full bg-gradient-to-br from-brand-500 to-violet-600 text-white text-xs font-black flex items-center justify-center">${user.name.charAt(0).toUpperCase()}</span><span class="hidden sm:inline">${user.name.split(' ')[0]}</span><i class="fa-solid fa-chevron-down text-xs opacity-60"></i>`;
+    document.getElementById('logoutBtn').classList.remove('hidden');
+    document.getElementById('menuPlan').textContent = user.plan || 'Free';
+  } else {
+    label.innerHTML = '<i class="fa-solid fa-user mr-1"></i><span class="hidden sm:inline">Sign In</span>';
+    document.getElementById('logoutBtn').classList.add('hidden');
+  }
+  renderAccountPage();
+}
+document.addEventListener('click', e => {
+  const menu = document.getElementById('authMenu');
+  if (menu && !menu.classList.contains('hidden') && !e.target.closest('#authMenu') && !e.target.closest('#authBtn')) menu.classList.add('hidden');
+});
+
+/* ============================================================
+   APPLICATIONS (demo submission — localStorage)
+   ============================================================ */
+const applyModal = document.getElementById('applyModal');
+function getApps() { return JSON.parse(localStorage.getItem('gvapps') || '[]'); }
+
+function openApply(visaId) {
+  const v = VISAS.find(x => x.id === visaId);
+  if (!v) return;
+  document.getElementById('applyBody').innerHTML = `
+    <div class="flex items-start justify-between mb-5">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">${v.flag}</span>
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Visa Application</h2>
+          <p class="text-xs text-brand-600 dark:text-brand-400 font-semibold">${v.type} — ${v.country}</p>
+        </div>
+      </div>
+      <button onclick="applyModal.close()" aria-label="Close" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="p-3 mb-4 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-200 text-xs flex gap-2">
+      <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"></i>Demo form — submissions are stored locally on your device and are NOT sent to any embassy.
+    </div>
+    <div class="space-y-3">
+      <input id="apName" type="text" placeholder="Full name (as written in passport)" class="calc-input">
+      <input id="apPassport" type="text" placeholder="Passport number" class="calc-input">
+      <input id="apNationality" type="text" placeholder="Nationality" class="calc-input">
+      <input id="apEmail" type="email" placeholder="Email address" class="calc-input">
+      <div>
+        <label class="block text-xs font-bold text-slate-500 mb-1">Intended travel date</label>
+        <input id="apDate" type="date" class="calc-input">
+      </div>
+      <button onclick="submitApplication('${v.id}')" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold hover:from-emerald-600 hover:to-emerald-700 transition shadow-lg shadow-emerald-600/30">
+        <i class="fa-solid fa-paper-plane mr-1.5"></i>Submit Application
+      </button>
+    </div>`;
+  applyModal.showModal();
+}
+function submitApplication(visaId) {
+  const name = document.getElementById('apName').value.trim();
+  const passport = document.getElementById('apPassport').value.trim();
+  const email = document.getElementById('apEmail').value.trim();
+  const date = document.getElementById('apDate').value;
+  if (name.length < 3 || passport.length < 4) { toast('Please complete your name and passport number', 'fa-circle-info'); return; }
+  if (!email.includes('@')) { toast('Please enter a valid email', 'fa-circle-info'); return; }
+  const apps = getApps();
+  apps.push({ visaId, name, passport, email, date, status: 'Draft submitted', ts: Date.now() });
+  localStorage.setItem('gvapps', JSON.stringify(apps));
+  applyModal.close();
+  toast('Application saved to your account');
+  renderAccountPage();
+}
+function cancelApplication(i) {
+  const apps = getApps();
+  apps.splice(i, 1);
+  localStorage.setItem('gvapps', JSON.stringify(apps));
+  renderAccountPage();
+  toast('Application cancelled', 'fa-trash');
+}
+
+/* ============================================================
+   SUBSCRIPTIONS (demo checkout)
+   ============================================================ */
+const PLANS = { Free: 0, Pro: 9, Premium: 19 };
+const checkoutModal = document.getElementById('checkoutModal');
+let chosenPlan = null;
+
+function subscribePlan(plan) {
+  if (!user) { pendingPlan = plan; toast('Please sign in first', 'fa-circle-info'); openAuthModal('up'); return; }
+  chosenPlan = plan;
+  document.getElementById('checkoutBody').innerHTML = `
+    <div class="flex items-start justify-between mb-5">
+      <div>
+        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Subscribe to ${plan}</h2>
+        <p class="text-sm text-slate-500">$${PLANS[plan]}/month · cancel anytime</p>
+      </div>
+      <button onclick="checkoutModal.close()" aria-label="Close" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="p-3 mb-4 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-800 dark:text-amber-200 text-xs flex gap-2">
+      <i class="fa-solid fa-triangle-exclamation mt-0.5 shrink-0"></i>Demo checkout — no real payment is processed in this preview.
+    </div>
+    <div class="space-y-3">
+      <input id="ccNum" type="text" placeholder="Card number (demo)" class="calc-input font-mono">
+      <div class="grid grid-cols-2 gap-3">
+        <input id="ccExp" type="text" placeholder="MM/YY" class="calc-input font-mono">
+        <input id="ccCvc" type="text" placeholder="CVC" class="calc-input font-mono">
+      </div>
+      <button onclick="completeCheckout()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-white font-bold hover:from-amber-600 hover:to-amber-700 transition shadow-lg shadow-amber-600/30">
+        <i class="fa-solid fa-lock mr-1.5"></i>Pay $${PLANS[plan]}.00 — Demo
+      </button>
+    </div>`;
+  checkoutModal.showModal();
+}
+function completeCheckout() {
+  user.plan = chosenPlan;
+  localStorage.setItem('gvuser', JSON.stringify(user));
+  checkoutModal.close();
+  updateAuthUI();
+  toast('Welcome to ' + chosenPlan + '!', 'fa-crown');
+}
+
+/* ============================================================
+   ACCOUNT DASHBOARD
+   ============================================================ */
+function renderAccountPage() {
+  const box = document.getElementById('accountContent');
+  if (!box) return;
+  const apps = getApps();
+  const prog = getProgress();
+  const doneSteps = Object.values(prog).reduce((s, arr) => s + arr.filter(Boolean).length, 0);
+  const hotels = JSON.parse(localStorage.getItem('gvhotels') || '[]');
+  if (!user) {
+    box.innerHTML = `
+      <div class="text-center py-20 glass rounded-3xl shadow-xl">
+        <div class="w-20 h-20 mx-auto rounded-3xl bg-brand-50 dark:bg-brand-500/10 text-brand-500 flex items-center justify-center text-3xl mb-5"><i class="fa-solid fa-user-lock"></i></div>
+        <h3 class="font-extrabold text-xl text-slate-900 dark:text-white">Sign in to view your account</h3>
+        <p class="text-sm text-slate-500 mt-2 mb-6">Track applications, favorites, trips, hotels and your subscription — all in one place.</p>
+        <button onclick="openAuthModal('in')" class="px-6 py-3 rounded-xl bg-brand-600 text-white font-bold hover:bg-brand-700 transition shadow-lg shadow-brand-600/25">Sign In / Sign Up</button>
+      </div>`;
+    return;
+  }
+  box.innerHTML = `
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="glass rounded-3xl p-6 shadow-xl text-center">
+        <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-brand-500 to-violet-600 text-white text-3xl font-black flex items-center justify-center shadow-lg shadow-brand-500/30">${user.name.charAt(0).toUpperCase()}</div>
+        <h3 class="font-extrabold text-lg mt-4 text-slate-900 dark:text-white">${user.name}</h3>
+        <p class="text-sm text-slate-500">${user.email}</p>
+        <span class="inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-bold ${user.plan !== 'Free' ? 'bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-500'}"><i class="fa-solid fa-crown mr-1"></i>${user.plan} Plan</span>
+        ${user.plan === 'Free' ? '<button onclick="showPage(\'pricing\')" class="block w-full mt-4 py-3 rounded-xl bg-brand-600 text-white font-bold hover:bg-brand-700 transition">Upgrade to Pro</button>' : ''}
+      </div>
+      <div class="lg:col-span-2 grid grid-cols-2 sm:grid-cols-4 gap-3 content-start">
+        ${[['Applications', apps.length, 'fa-paper-plane', 'brand'], ['Favorites', favs.length, 'fa-heart', 'rose'], ['Trip stops', trip.length, 'fa-route', 'emerald'], ['Steps done', doneSteps, 'fa-list-check', 'violet'], ['Hotels saved', hotels.length, 'fa-hotel', 'amber'], ['Reports', 1, 'fa-file-pdf', 'sky']]
+          .map(([l, n, ic, c]) => `
+          <div class="glass rounded-2xl p-4 shadow-lg text-center">
+            <div class="w-10 h-10 mx-auto rounded-xl bg-${c}-50 dark:bg-${c}-500/10 text-${c}-500 dark:text-${c}-400 flex items-center justify-center mb-2"><i class="fa-solid ${ic}"></i></div>
+            <div class="text-2xl font-black text-slate-900 dark:text-white">${n}</div>
+            <div class="text-xs text-slate-500">${l}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="glass rounded-3xl p-6 shadow-xl mt-8">
+      <h3 class="font-extrabold text-lg mb-4 text-slate-900 dark:text-white"><i class="fa-solid fa-paper-plane text-brand-500 mr-2"></i>My Applications</h3>
+      ${apps.length ? `<div class="space-y-3">${apps.map((a, i) => {
+        const v = VISAS.find(x => x.id === a.visaId) || {};
+        return `
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50">
+          <span class="text-2xl">${v.flag || '🛂'}</span>
+          <div class="flex-1 min-w-0">
+            <div class="font-bold text-sm text-slate-900 dark:text-white">${v.country || ''} — ${v.type || a.visaId}</div>
+            <div class="text-xs text-slate-500">Applicant: ${a.name} · Passport: ${a.passport} · Travel: ${a.date || 'not set'}</div>
+          </div>
+          <span class="px-3 py-1.5 rounded-full text-[11px] font-bold bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shrink-0">${a.status}</span>
+          <button onclick="cancelApplication(${i})" class="text-rose-500 hover:text-rose-600 text-xs font-bold shrink-0"><i class="fa-solid fa-trash mr-1"></i>Cancel</button>
+        </div>`;
+      }).join('')}</div>`
+      : '<p class="text-sm text-slate-500 text-center py-8">No applications yet. <button onclick="showPage(\'visas\')" class="font-bold text-brand-600 dark:text-brand-400 hover:underline">Browse visas and apply</button></p>'}
+    </div>`;
+}
+
 renderCategoryFilters();
 renderVisaGrid('all');
 renderFeatured();
@@ -1743,6 +6609,12 @@ initFaqPage();
 initAssistant();
 initCountUp();
 initBackToTop();
+updateTripBadge();
+paintTripBtns();
+updateAuthUI();
+renderDestinations();
+const destSearchEl = document.getElementById('destSearch');
+if (destSearchEl) destSearchEl.addEventListener('input', e => renderDestinations(e.target.value));
 
 document.getElementById('visaSearch').addEventListener('input', applyVisaSearch);
 document.getElementById('homeSearch').addEventListener('keydown', e => { if (e.key === 'Enter') submitHomeSearch(); });
